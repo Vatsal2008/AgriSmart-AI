@@ -1,0 +1,29 @@
+label,plantdoc / val_field,plantvillage / train,plantvillage / val_lab,plantwild_v1 / train,plantwild_v2 / train,train total
+Apple___Apple_scab,92,503,127,0,244,747
+Apple___Cedar_apple_rust,105,223,52,0,127,350
+Apple___healthy,87,1359,286,405,0,1764
+Blueberry___healthy,115,1178,324,255,0,1433
+Cherry_(including_sour)___healthy,57,731,123,275,0,1006
+Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot,61,425,88,0,86,511
+Corn_(maize)___Common_rust_,114,975,217,0,149,1124
+Corn_(maize)___Northern_Leaf_Blight,180,779,206,0,112,891
+Grape___Black_rot,77,1012,168,0,114,1126
+Grape___healthy,73,323,100,190,0,513
+Peach___healthy,108,289,71,140,0,429
+"Pepper,_bell___Bacterial_spot",78,831,166,0,51,882
+"Pepper,_bell___healthy",42,1195,283,231,0,1426
+Potato___Early_blight,155,836,164,0,88,924
+Potato___Late_blight,198,788,212,0,99,887
+Raspberry___healthy,118,209,162,157,0,366
+Soybean___healthy,64,4117,973,227,0,4344
+Squash___Powdery_mildew,126,1463,372,0,162,1625
+Strawberry___healthy,94,376,80,175,0,551
+Tomato___Bacterial_spot,104,1691,436,0,97,1788
+Tomato___Early_blight,77,785,215,0,138,923
+Tomato___Late_blight,103,1537,372,0,147,1684
+Tomato___Leaf_Mold,91,780,172,0,139,919
+Tomato___Septoria_leaf_spot,147,1434,337,0,89,1523
+Tomato___Spider_mites Two-spotted_spider_mite,2,1356,320,0,0,1356
+Tomato___Tomato_Yellow_Leaf_Curl_Virus,233,4257,1100,0,81,4338
+Tomato___Tomato_mosaic_virus,53,307,66,0,52,359
+Tomato___healthy,52,1263,328,205,0,1468

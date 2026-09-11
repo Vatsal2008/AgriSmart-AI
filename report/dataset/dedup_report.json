@@ -1,0 +1,55 @@
+{
+  "built": "2026-09-10 14:35 UTC",
+  "classes": 28,
+  "images": {
+    "train": 35257,
+    "val_lab": 7520,
+    "val_field": 2806
+  },
+  "images_by_source": {
+    "plantvillage": 38542,
+    "plantdoc": 2806,
+    "plantwild_v1": 2260,
+    "plantwild_v2": 1975
+  },
+  "plantvillage": {
+    "not_in_official_lists": 0,
+    "moved_to_keep_leaves_together": 52,
+    "without_segmented": 1193
+  },
+  "dedup": {
+    "plantdoc": {
+      "duplicate": 58,
+      "kept": 2806,
+      "label_conflict": 58
+    },
+    "plantseg": {
+      "duplicate": 2014,
+      "label_conflict": 62,
+      "plantdoc_lookalike": 259
+    },
+    "plantwild_v1": {
+      "duplicate": 36,
+      "kept": 2260,
+      "label_conflict": 20,
+      "plantdoc_lookalike": 140
+    },
+    "plantwild_v2": {
+      "duplicate": 39,
+      "kept": 1975,
+      "label_conflict": 62,
+      "plantdoc_lookalike": 260
+    }
+  },
+  "thresholds": {
+    "leak_cosine": 0.93,
+    "leak_hamming": 10,
+    "dup_cosine": 0.96,
+    "dup_hamming": 6
+  },
+  "unreadable": {},
+  "classes_without_training_images": [],
+  "classes_without_field_validation": [],
+  "size_gb": 1.33,
+  "runtime_min": 13.4
+}

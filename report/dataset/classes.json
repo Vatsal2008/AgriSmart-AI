@@ -1,0 +1,176 @@
+{
+  "labels": [
+    "Apple___Apple_scab",
+    "Apple___Cedar_apple_rust",
+    "Apple___healthy",
+    "Blueberry___healthy",
+    "Cherry_(including_sour)___healthy",
+    "Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot",
+    "Corn_(maize)___Common_rust_",
+    "Corn_(maize)___Northern_Leaf_Blight",
+    "Grape___Black_rot",
+    "Grape___healthy",
+    "Peach___healthy",
+    "Pepper,_bell___Bacterial_spot",
+    "Pepper,_bell___healthy",
+    "Potato___Early_blight",
+    "Potato___Late_blight",
+    "Raspberry___healthy",
+    "Soybean___healthy",
+    "Squash___Powdery_mildew",
+    "Strawberry___healthy",
+    "Tomato___Bacterial_spot",
+    "Tomato___Early_blight",
+    "Tomato___Late_blight",
+    "Tomato___Leaf_Mold",
+    "Tomato___Septoria_leaf_spot",
+    "Tomato___Spider_mites Two-spotted_spider_mite",
+    "Tomato___Tomato_Yellow_Leaf_Curl_Virus",
+    "Tomato___Tomato_mosaic_virus",
+    "Tomato___healthy"
+  ],
+  "class_map": {
+    "Apple___Apple_scab": {
+      "plantdoc": "apple scab leaf",
+      "field_disease": "apple scab",
+      "field_healthy": null
+    },
+    "Apple___Cedar_apple_rust": {
+      "plantdoc": "apple rust leaf",
+      "field_disease": "apple rust",
+      "field_healthy": null
+    },
+    "Apple___healthy": {
+      "plantdoc": "apple leaf",
+      "field_disease": null,
+      "field_healthy": "apple leaf"
+    },
+    "Blueberry___healthy": {
+      "plantdoc": "blueberry leaf",
+      "field_disease": null,
+      "field_healthy": "blueberry leaf"
+    },
+    "Cherry_(including_sour)___healthy": {
+      "plantdoc": "cherry leaf",
+      "field_disease": null,
+      "field_healthy": "cherry leaf"
+    },
+    "Corn_(maize)___Cercospora_leaf_spot Gray_leaf_spot": {
+      "plantdoc": "corn gray leaf spot",
+      "field_disease": "corn gray leaf spot",
+      "field_healthy": null
+    },
+    "Corn_(maize)___Common_rust_": {
+      "plantdoc": "corn rust leaf",
+      "field_disease": "corn rust",
+      "field_healthy": null
+    },
+    "Corn_(maize)___Northern_Leaf_Blight": {
+      "plantdoc": "corn leaf blight",
+      "field_disease": "corn northern leaf blight",
+      "field_healthy": null
+    },
+    "Grape___Black_rot": {
+      "plantdoc": "grape leaf black rot",
+      "field_disease": "grape black rot",
+      "field_healthy": null
+    },
+    "Grape___healthy": {
+      "plantdoc": "grape leaf",
+      "field_disease": null,
+      "field_healthy": "grape leaf"
+    },
+    "Peach___healthy": {
+      "plantdoc": "peach leaf",
+      "field_disease": null,
+      "field_healthy": "peach leaf"
+    },
+    "Pepper,_bell___Bacterial_spot": {
+      "plantdoc": "bell pepper leaf spot",
+      "field_disease": "bell pepper bacterial spot",
+      "field_healthy": null
+    },
+    "Pepper,_bell___healthy": {
+      "plantdoc": "bell pepper leaf",
+      "field_disease": null,
+      "field_healthy": "bell pepper leaf"
+    },
+    "Potato___Early_blight": {
+      "plantdoc": "potato leaf early blight",
+      "field_disease": "potato early blight",
+      "field_healthy": null
+    },
+    "Potato___Late_blight": {
+      "plantdoc": "potato leaf late blight",
+      "field_disease": "potato late blight",
+      "field_healthy": null
+    },
+    "Raspberry___healthy": {
+      "plantdoc": "raspberry leaf",
+      "field_disease": null,
+      "field_healthy": "raspberry leaf"
+    },
+    "Soybean___healthy": {
+      "plantdoc": "soyabean leaf",
+      "field_disease": null,
+      "field_healthy": "soybean leaf"
+    },
+    "Squash___Powdery_mildew": {
+      "plantdoc": "squash powdery mildew leaf",
+      "field_disease": "squash powdery mildew",
+      "field_healthy": null
+    },
+    "Strawberry___healthy": {
+      "plantdoc": "strawberry leaf",
+      "field_disease": null,
+      "field_healthy": "strawberry leaf"
+    },
+    "Tomato___Bacterial_spot": {
+      "plantdoc": "tomato leaf bacterial spot",
+      "field_disease": "tomato bacterial leaf spot",
+      "field_healthy": null
+    },
+    "Tomato___Early_blight": {
+      "plantdoc": "tomato early blight leaf",
+      "field_disease": "tomato early blight",
+      "field_healthy": null
+    },
+    "Tomato___Late_blight": {
+      "plantdoc": "tomato leaf late blight",
+      "field_disease": "tomato late blight",
+      "field_healthy": null
+    },
+    "Tomato___Leaf_Mold": {
+      "plantdoc": "tomato mold leaf",
+      "field_disease": "tomato leaf mold",
+      "field_healthy": null
+    },
+    "Tomato___Septoria_leaf_spot": {
+      "plantdoc": "tomato septoria leaf spot",
+      "field_disease": "tomato septoria leaf spot",
+      "field_healthy": null
+    },
+    "Tomato___Spider_mites Two-spotted_spider_mite": {
+      "plantdoc": "tomato two spotted spider mites leaf",
+      "field_disease": null,
+      "field_healthy": null
+    },
+    "Tomato___Tomato_Yellow_Leaf_Curl_Virus": {
+      "plantdoc": "tomato leaf yellow virus",
+      "field_disease": "tomato yellow leaf curl virus",
+      "field_healthy": null
+    },
+    "Tomato___Tomato_mosaic_virus": {
+      "plantdoc": "tomato leaf mosaic virus",
+      "field_disease": "tomato mosaic virus",
+      "field_healthy": null
+    },
+    "Tomato___healthy": {
+      "plantdoc": "tomato leaf",
+      "field_disease": null,
+      "field_healthy": "tomato leaf"
+    }
+  },
+  "backgrounds": "backgrounds.zip",
+  "segmented": "pv_segmented.zip"
+}
