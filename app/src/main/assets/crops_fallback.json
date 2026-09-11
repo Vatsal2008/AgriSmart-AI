@@ -1,0 +1,113 @@
+{
+  "version": "2026-09-11",
+  "crops": [
+    {
+      "id": "apple",
+      "name": "Apple",
+      "coverage": "full",
+      "coverage_note": null,
+      "classes": ["apple_scab", "apple_cedar_rust", "apple_healthy"]
+    },
+    {
+      "id": "bell_pepper",
+      "name": "Bell pepper",
+      "coverage": "full",
+      "coverage_note": null,
+      "classes": ["pepper_bacterial_spot", "pepper_healthy"]
+    },
+    {
+      "id": "blueberry",
+      "name": "Blueberry",
+      "coverage": "healthy_only",
+      "coverage_note": "Can only confirm a healthy leaf",
+      "classes": ["blueberry_healthy"]
+    },
+    {
+      "id": "cherry",
+      "name": "Cherry",
+      "coverage": "healthy_only",
+      "coverage_note": "Can only confirm a healthy leaf",
+      "classes": ["cherry_healthy"]
+    },
+    {
+      "id": "corn",
+      "name": "Corn (maize)",
+      "coverage": "diseases_only",
+      "coverage_note": "Can name 3 corn diseases; cannot confirm a healthy leaf yet.",
+      "classes": ["corn_gray_leaf_spot", "corn_common_rust", "corn_northern_leaf_blight"]
+    },
+    {
+      "id": "grape",
+      "name": "Grape",
+      "coverage": "full",
+      "coverage_note": null,
+      "classes": ["grape_black_rot", "grape_healthy"]
+    },
+    {
+      "id": "peach",
+      "name": "Peach",
+      "coverage": "healthy_only",
+      "coverage_note": "Can only confirm a healthy leaf",
+      "classes": ["peach_healthy"]
+    },
+    {
+      "id": "potato",
+      "name": "Potato",
+      "coverage": "diseases_only",
+      "coverage_note": "Can't confirm a healthy leaf",
+      "classes": ["potato_early_blight", "potato_late_blight"]
+    },
+    {
+      "id": "raspberry",
+      "name": "Raspberry",
+      "coverage": "healthy_only",
+      "coverage_note": "Can only confirm a healthy leaf",
+      "classes": ["raspberry_healthy"]
+    },
+    {
+      "id": "soybean",
+      "name": "Soybean",
+      "coverage": "healthy_only",
+      "coverage_note": "Can only confirm a healthy leaf",
+      "classes": ["soybean_healthy"]
+    },
+    {
+      "id": "squash",
+      "name": "Squash",
+      "coverage": "diseases_only",
+      "coverage_note": "Can't confirm a healthy leaf",
+      "classes": ["squash_powdery_mildew"]
+    },
+    {
+      "id": "strawberry",
+      "name": "Strawberry",
+      "coverage": "healthy_only",
+      "coverage_note": "Can only confirm a healthy leaf",
+      "classes": ["strawberry_healthy"]
+    },
+    {
+      "id": "tomato",
+      "name": "Tomato",
+      "coverage": "full",
+      "coverage_note": null,
+      "classes": [
+        "tomato_bacterial_spot",
+        "tomato_early_blight",
+        "tomato_late_blight",
+        "tomato_leaf_mold",
+        "tomato_septoria_leaf_spot",
+        "tomato_spider_mites",
+        "tomato_mosaic_virus",
+        "tomato_yellow_leaf_curl_virus",
+        "tomato_healthy"
+      ]
+    },
+    {
+      "id": "other",
+      "name": "Others",
+      "coverage": "full",
+      "coverage_note": "Best match among supported plants",
+      "classes": []
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "test_id": "srv_9e8d7c",
+  "client_test_id": "6e3a4b0c-9d3f-7d7b-2a0b-3f4e5d6c7b8a",
+  "model_version": "model-v2",
+  "status": "unsupported",
+  "crop": { "id": "other", "name": "Others" },
+  "crop_check": { "matches_selection": false, "detected_crop": null },
+  "disease": null,
+  "confidence": 0.20,
+  "confidence_level": "low",
+  "alternatives": [],
+  "coverage_note": "Best match among supported plants",
+  "advice": {
+    "summary": "We cannot check this plant species yet.",
+    "steps": ["Select one of our supported crops from the list."],
+    "prevention": [],
+    "source": "AgriSmart support check"
+  },
+  "quality": { "warnings": [] }
+}

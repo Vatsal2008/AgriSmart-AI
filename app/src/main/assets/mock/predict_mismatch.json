@@ -1,0 +1,20 @@
+{
+  "test_id": "srv_1a2b3c",
+  "client_test_id": "7f4b5c1d-0e4a-8e8c-3b1c-4a5b6c7d8e9f",
+  "model_version": "model-v2",
+  "status": "crop_mismatch",
+  "crop": { "id": "tomato", "name": "Tomato" },
+  "crop_check": { "matches_selection": false, "detected_crop": { "id": "potato", "name": "Potato" } },
+  "disease": null,
+  "confidence": 0.88,
+  "confidence_level": "high",
+  "alternatives": [],
+  "coverage_note": null,
+  "advice": {
+    "summary": "This leaf appears to belong to a potato plant instead of tomato.",
+    "steps": ["Confirm your crop selection to continue analysis."],
+    "prevention": [],
+    "source": "Crop mismatch detection"
+  },
+  "quality": { "warnings": [] }
+}

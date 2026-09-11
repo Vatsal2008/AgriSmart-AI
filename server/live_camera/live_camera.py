@@ -19,7 +19,7 @@ from pathlib import Path
 import torch
 from PIL import Image
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "model"))
 import predict  # noqa: E402  (model/predict.py)
 
@@ -110,8 +110,21 @@ class Handler(BaseHTTPRequestHandler):
         pass
 
 
+def get_wifi_ip():
+    import socket
+    try:
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.connect(("8.8.8.8", 80))
+        ip = s.getsockname()[0]
+        s.close()
+        return ip
+    except Exception:
+        return "127.0.0.1"
+
+
 def main():
     ap = argparse.ArgumentParser(description="AgriSmart live camera scanner")
+    ap.add_argument("--host", type=str, default="0.0.0.0", help="host interface to bind (default 0.0.0.0 for Wi-Fi)")
     ap.add_argument("--port", type=int, default=8765)
     ap.add_argument("--no-browser", action="store_true", help="don't open a browser tab")
     ap.add_argument("--threads", type=int, default=4, help="CPU threads the model may use (default 4)")
@@ -128,13 +141,22 @@ def main():
     print(f"Model ready in {time.perf_counter() - t:.1f}s", flush=True)
 
     try:
-        server = ThreadingHTTPServer(("127.0.0.1", args.port), Handler)  # this laptop only
+        server = ThreadingHTTPServer((args.host, args.port), Handler)
     except OSError:
-        sys.exit(f"Port {args.port} is already in use. Try: python app/live_camera.py --port {args.port + 1}")
-    url = f"http://127.0.0.1:{args.port}/"
-    print(f"AgriSmart live scan: {url}   (press Ctrl+C to stop)", flush=True)
+        sys.exit(f"Port {args.port} is already in use. Try: python live_camera.py --port {args.port + 1}")
+    
+    wifi_ip = get_wifi_ip()
+    local_url = f"http://127.0.0.1:{args.port}/"
+    wifi_url = f"http://{wifi_ip}:{args.port}/"
+    
+    print("\n=======================================================", flush=True)
+    print(" AgriSmart Model Server is LIVE on Wi-Fi!", flush=True)
+    print(f" Web Browser (Laptop): {local_url}", flush=True)
+    print(f" Mobile App (Wi-Fi URL): {wifi_url}", flush=True)
+    print("=======================================================\n", flush=True)
+    
     if not args.no_browser:
-        webbrowser.open(url)
+        webbrowser.open(local_url)
     try:
         server.serve_forever()
     except KeyboardInterrupt:

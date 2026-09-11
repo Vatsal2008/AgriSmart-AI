@@ -1,0 +1,23 @@
+{
+  "test_id": "srv_7a1b2c",
+  "client_test_id": "4c1e2f8a-7b1d-5b5f-0e8f-1d2c3b4a5e6f",
+  "model_version": "model-v2",
+  "status": "healthy",
+  "crop": { "id": "apple", "name": "Apple" },
+  "crop_check": { "matches_selection": true, "detected_crop": { "id": "apple", "name": "Apple" } },
+  "disease": null,
+  "confidence": 0.95,
+  "confidence_level": "high",
+  "alternatives": [],
+  "coverage_note": null,
+  "advice": {
+    "summary": "Your leaf shows no signs of disease.",
+    "steps": [
+      "Keep monitoring your plant weekly.",
+      "Ensure proper sunlight and watering routine."
+    ],
+    "prevention": ["Prune dead branches early."],
+    "source": "Extension advice"
+  },
+  "quality": { "warnings": [] }
+}

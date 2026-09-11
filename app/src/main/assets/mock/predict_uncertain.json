@@ -1,0 +1,23 @@
+{
+  "test_id": "srv_3c4d5e",
+  "client_test_id": "5d2f3a9b-8c2e-6c6a-1f9a-2e3d4c5b6a7b",
+  "model_version": "model-v2",
+  "status": "uncertain",
+  "crop": { "id": "corn", "name": "Corn (maize)" },
+  "crop_check": { "matches_selection": true, "detected_crop": { "id": "corn", "name": "Corn (maize)" } },
+  "disease": null,
+  "confidence": 0.42,
+  "confidence_level": "low",
+  "alternatives": [],
+  "coverage_note": "Can name 3 corn diseases; cannot confirm a healthy leaf yet.",
+  "advice": {
+    "summary": "We are not sure about this photo.",
+    "steps": [
+      "Take another photo closer in daylight.",
+      "Ensure only one leaf fills the frame."
+    ],
+    "prevention": [],
+    "source": "AgriSmart confidence check"
+  },
+  "quality": { "warnings": ["LOW_CONFIDENCE"] }
+}

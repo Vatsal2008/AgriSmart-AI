@@ -16,3 +16,17 @@ model/**/*.part
 # Local Kaggle downloads and logs
 runs/
 *.log
+
+# Android & Gradle
+.gradle/
+app/.gradle/
+app/build/
+build/
+.idea/
+app/.idea/
+*.iml
+local.properties
+app/local.properties
+*.apk
+*.aar
+
