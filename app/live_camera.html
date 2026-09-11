@@ -1,0 +1,441 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AgriSmart Live Scan</title>
+<style>
+  :root {
+    --ground: #f3f5ef;
+    --panel: #ffffff;
+    --ink: #16211a;
+    --muted: #5b685e;
+    --line: #dce3d8;
+    --stage: #0e1511;
+    --leaf: #2e7a38;
+    --leaf-soft: #e2efe0;
+    --warn: #a9530e;
+    --warn-soft: #f8e6d4;
+    --unsure: #626870;
+    --unsure-soft: #e9ebee;
+    --bad: #b3261e;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --ground: #0c120e;
+      --panel: #141c16;
+      --ink: #e5eee4;
+      --muted: #97a89a;
+      --line: #253028;
+      --stage: #040705;
+      --leaf: #6bc16f;
+      --leaf-soft: #17301a;
+      --warn: #eea05a;
+      --warn-soft: #3a2614;
+      --unsure: #a6adb4;
+      --unsure-soft: #22272c;
+      --bad: #f2887f;
+    }
+  }
+  * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  html, body { margin: 0; }
+  body {
+    background: var(--ground);
+    color: var(--ink);
+    font: 15px/1.5 "Segoe UI", system-ui, -apple-system, Roboto, sans-serif;
+    min-height: 100vh;
+  }
+
+  .bar {
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    padding: 12px 24px; background: var(--panel); border-bottom: 1px solid var(--line);
+  }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 650; }
+  .brand .mark { width: 18px; height: 18px; background: var(--leaf); border-radius: 0 70% 0 70%; }
+  .brand .sub { color: var(--muted); font-weight: 400; }
+  .conn { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .conn .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--unsure); }
+  .conn.ok .dot { background: var(--leaf); }
+  .conn.bad { color: var(--bad); }
+  .conn.bad .dot { background: var(--bad); }
+
+  .wrap {
+    display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(300px, 1fr); gap: 24px;
+    max-width: 1280px; margin: 0 auto; padding: 24px; align-items: start;
+  }
+  @media (max-width: 900px) { .wrap { grid-template-columns: 1fr; padding: 16px; } }
+
+  .viewport { position: relative; aspect-ratio: 16 / 9; background: var(--stage); border-radius: 14px; overflow: hidden; }
+  video { display: block; width: 100%; height: 100%; object-fit: contain; }
+  video.mirror { transform: scaleX(-1); }
+  .box {
+    position: absolute; left: 50%; top: 50%; height: 70%; aspect-ratio: 1 / 1;
+    transform: translate(-50%, -50%); border-radius: 12px; pointer-events: none;
+    box-shadow: 0 0 0 100vmax rgba(0, 0, 0, 0.38);
+  }
+  .viewport.portrait .box { height: auto; width: 70%; }
+  .box i { position: absolute; width: 30px; height: 30px; border: 3px solid #ffffff; transition: border-color 0.2s; }
+  .box i:nth-child(1) { top: -3px; left: -3px; border-right: 0; border-bottom: 0; border-top-left-radius: 12px; }
+  .box i:nth-child(2) { top: -3px; right: -3px; border-left: 0; border-bottom: 0; border-top-right-radius: 12px; }
+  .box i:nth-child(3) { bottom: -3px; left: -3px; border-right: 0; border-top: 0; border-bottom-left-radius: 12px; }
+  .box i:nth-child(4) { bottom: -3px; right: -3px; border-left: 0; border-top: 0; border-bottom-right-radius: 12px; }
+  .box.healthy i { border-color: #7fd483; }
+  .box.disease i { border-color: #f5a95e; }
+  .hint {
+    position: absolute; left: 0; right: 0; bottom: 12px; margin: 0; padding: 0 16px;
+    text-align: center; color: #ffffff; font-size: 14px; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7);
+  }
+  .start {
+    position: absolute; inset: 0; display: grid; place-items: center; padding: 24px;
+    background: var(--stage); color: #e9f1e8; text-align: center;
+  }
+  .start p { max-width: 44ch; margin: 14px auto 0; color: #b9c7bb; font-size: 14px; }
+
+  button, select {
+    font: inherit; color: var(--ink); background: var(--panel);
+    border: 1px solid var(--line); border-radius: 9px; padding: 8px 14px; cursor: pointer;
+  }
+  button:hover, select:hover { border-color: var(--muted); }
+  button:focus-visible, select:focus-visible { outline: 3px solid var(--leaf); outline-offset: 2px; }
+  .primary { background: var(--leaf); border-color: transparent; color: #ffffff; font-weight: 600; padding: 12px 24px; font-size: 16px; }
+  .controls { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
+
+  .result { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 22px 22px 18px; }
+  .chip {
+    display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 12px; font-weight: 600;
+    letter-spacing: 0.06em; text-transform: uppercase; background: var(--unsure-soft); color: var(--unsure);
+  }
+  .chip.healthy { background: var(--leaf-soft); color: var(--leaf); }
+  .chip.disease { background: var(--warn-soft); color: var(--warn); }
+  .crop { margin: 16px 0 0; font-size: 13px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); min-height: 1.5em; }
+  .disease { margin: 2px 0 14px; font-size: clamp(28px, 3.1vw, 40px); line-height: 1.15; text-wrap: balance; }
+  .stale .crop, .stale .disease { opacity: 0.5; }
+  .meter { height: 8px; border-radius: 99px; background: var(--line); overflow: hidden; }
+  .fill { height: 100%; width: 0; background: var(--unsure); transition: width 0.3s ease; }
+  .fill.healthy { background: var(--leaf); }
+  .fill.disease { background: var(--warn); }
+  .conf { margin: 8px 0 20px; font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; min-height: 1.5em; }
+  .label { margin: 0 0 8px; font-size: 12px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+  .alts { list-style: none; margin: 0 0 20px; padding: 0; display: grid; gap: 10px; min-height: 40px; }
+  .alts li { display: grid; grid-template-columns: 1fr auto; gap: 4px 12px; font-size: 14px; }
+  .alts .pct { color: var(--muted); font-variant-numeric: tabular-nums; }
+  .alts .track { grid-column: 1 / -1; height: 4px; border-radius: 99px; background: var(--line); overflow: hidden; }
+  .alts .track span { display: block; height: 100%; background: var(--muted); }
+  .tips { margin: 0 0 14px; padding-left: 18px; font-size: 13px; color: var(--muted); }
+  .tips li + li { margin-top: 4px; }
+  .fine { margin: 0; padding-top: 12px; border-top: 1px solid var(--line); font-size: 12px; color: var(--muted); }
+  kbd { font: 12px/1 ui-monospace, Consolas, monospace; border: 1px solid var(--line); border-radius: 4px; padding: 1px 5px; }
+  @media (prefers-reduced-motion: reduce) { .fill, .box i { transition: none; } }
+</style>
+</head>
+<body>
+<header class="bar">
+  <div class="brand"><span class="mark" aria-hidden="true"></span>AgriSmart <span class="sub">Live leaf scan</span></div>
+  <div class="conn" id="conn"><span class="dot" aria-hidden="true"></span><span id="connText">Connecting to the model…</span></div>
+</header>
+
+<main class="wrap">
+  <section>
+    <div class="viewport" id="viewport">
+      <video id="video" playsinline muted></video>
+      <div class="box" id="box" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+      <p class="hint" id="hint">Hold the leaf, or a photo of it on your phone, inside the square</p>
+      <div class="start" id="start">
+        <div>
+          <button class="primary" id="startBtn" type="button">Start camera</button>
+          <p id="startMsg">Your browser will ask to use the camera. Nothing leaves this laptop: the model runs right here.</p>
+        </div>
+      </div>
+    </div>
+    <div class="controls">
+      <button id="pauseBtn" type="button">Pause scanning</button>
+      <button id="voiceBtn" type="button" aria-pressed="true">Voice on</button>
+      <select id="cameraSelect" aria-label="Camera" hidden></select>
+    </div>
+  </section>
+
+  <section class="result" id="result">
+    <span class="chip" id="chip">Waiting</span>
+    <p class="crop" id="crop"></p>
+    <h1 class="disease" id="disease" aria-live="polite">Point the camera at a leaf</h1>
+    <div class="meter"><div class="fill" id="fill"></div></div>
+    <p class="conf" id="conf"></p>
+    <h2 class="label">Latest scan · top 3</h2>
+    <ol class="alts" id="alts"></ol>
+    <ul class="tips">
+      <li>Turn your phone's brightness up and tilt it a little to avoid glare.</li>
+      <li>Fill the square with one leaf and hold still for a second.</li>
+      <li><kbd>Space</kbd> pauses scanning, <kbd>V</kbd> turns the voice on or off.</li>
+    </ul>
+    <p class="fine">A screening aid, not a diagnosis. Confirm with your local agriculture officer or Krishi Vigyan Kendra before spraying.</p>
+  </section>
+</main>
+
+<script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+  const video = $("video");
+  const viewport = $("viewport");
+  const box = $("box");
+  const grab = document.createElement("canvas");
+  grab.width = grab.height = 384;
+  const gctx = grab.getContext("2d");
+
+  const BOX = 0.7;          // the square covers 70% of the shorter side of the camera frame
+  const WINDOW = 5;         // look at the last 5 scans...
+  const AGREE = 3;          // ...and show a result once 3 of them agree
+  const SURE = 0.55;        // average confidence needed to show (and say) a result
+  const UNSURE = 0.35;      // below this the scan counts as "can't tell"
+  const HINT = "Hold the leaf, or a photo of it on your phone, inside the square";
+
+  let stream = null;
+  let running = false;
+  let paused = false;
+  let voiceOn = true;
+  let voice = null;
+  let recent = [];
+  let shown = null;
+  let spokenLabel = null;
+  let unsureStreak = 0;
+
+  // ---- voice -------------------------------------------------------------
+  function pickVoice() {
+    const voices = window.speechSynthesis ? speechSynthesis.getVoices() : [];
+    voice = voices.find((v) => v.lang === "en-IN") || voices.find((v) => v.lang && v.lang.startsWith("en")) || null;
+  }
+  if (window.speechSynthesis) {
+    pickVoice();
+    speechSynthesis.onvoiceschanged = pickVoice;
+  }
+  function say(text) {
+    if (!voiceOn || !window.speechSynthesis) return;
+    const u = new SpeechSynthesisUtterance(text);
+    u.rate = 0.95;
+    if (voice) u.voice = voice;
+    speechSynthesis.cancel();
+    speechSynthesis.speak(u);
+  }
+  function spoken(item) {
+    const crop = item.crop.replace(/\s*\(.*\)/, "");
+    return item.healthy ? `${crop} leaf. It looks healthy.` : `${crop}. ${item.disease}.`;
+  }
+
+  // ---- status ------------------------------------------------------------
+  function setConn(state, text) {
+    $("conn").className = "conn " + state;
+    $("connText").textContent = text;
+  }
+  fetch("/health")
+    .then((r) => r.json())
+    .then((d) => setConn("ok", `Model ready · ${d.classes} classes`))
+    .catch(() => setConn("bad", "Can't reach the model. Is live_camera.py running?"));
+
+  // ---- camera ------------------------------------------------------------
+  function cameraErrorText(err) {
+    switch (err && err.name) {
+      case "NotAllowedError":
+        return "Camera access is blocked. Click the camera icon in the address bar, allow access, then press Start camera again.";
+      case "NotFoundError":
+        return "No camera was found on this laptop.";
+      case "NotReadableError":
+        return "The camera is busy in another app (Zoom, Teams, Camera). Close that app, then press Start camera again.";
+      default:
+        return "The camera could not start: " + (err && err.message ? err.message : String(err));
+    }
+  }
+
+  async function listCameras() {
+    const select = $("cameraSelect");
+    const cams = (await navigator.mediaDevices.enumerateDevices()).filter((d) => d.kind === "videoinput");
+    const current = stream ? stream.getVideoTracks()[0].getSettings().deviceId : "";
+    select.innerHTML = "";
+    cams.forEach((d, i) => {
+      const option = document.createElement("option");
+      option.value = d.deviceId;
+      option.textContent = d.label || `Camera ${i + 1}`;
+      option.selected = d.deviceId === current;
+      select.appendChild(option);
+    });
+    select.hidden = cams.length < 2;
+  }
+
+  async function startCamera(deviceId) {
+    if (stream) stream.getTracks().forEach((t) => t.stop());
+    const constraints = { audio: false, video: { width: { ideal: 1280 }, height: { ideal: 720 } } };
+    if (deviceId) constraints.video.deviceId = { exact: deviceId };
+    try {
+      stream = await navigator.mediaDevices.getUserMedia(constraints);
+    } catch (err) {
+      stream = null;
+      $("startMsg").textContent = cameraErrorText(err);
+      $("start").hidden = false;
+      return;
+    }
+    video.srcObject = stream;
+    await video.play();
+    const settings = stream.getVideoTracks()[0].getSettings();
+    video.classList.toggle("mirror", settings.facingMode !== "environment");  // selfie view for laptop cameras
+    $("start").hidden = true;
+    await listCameras();
+    if (!running) {
+      running = true;
+      loop();
+    }
+  }
+
+  video.addEventListener("loadedmetadata", () => {
+    viewport.style.aspectRatio = `${video.videoWidth} / ${video.videoHeight}`;
+    viewport.classList.toggle("portrait", video.videoHeight > video.videoWidth);
+  });
+
+  // ---- scanning ----------------------------------------------------------
+  async function scanOnce() {
+    const vw = video.videoWidth;
+    const vh = video.videoHeight;
+    const side = Math.min(vw, vh) * BOX;
+    gctx.drawImage(video, (vw - side) / 2, (vh - side) / 2, side, side, 0, 0, grab.width, grab.height);
+    const blob = await new Promise((resolve) => grab.toBlob(resolve, "image/jpeg", 0.9));
+    const res = await fetch("/predict", { method: "POST", headers: { "Content-Type": "image/jpeg" }, body: blob });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || res.statusText);
+    return data;
+  }
+
+  async function loop() {
+    for (;;) {
+      if (!paused && stream && video.readyState >= 2 && video.videoWidth) {
+        try {
+          const data = await scanOnce();
+          setConn("ok", `Model ready · ${data.ms} ms per scan`);
+          consider(data);
+        } catch (err) {
+          setConn("bad", "Can't reach the model. Is live_camera.py still running?");
+        }
+      }
+      await new Promise((resolve) => setTimeout(resolve, 300));
+    }
+  }
+
+  function consider(data) {
+    const best = data.top[0];
+    recent.push(best);
+    if (recent.length > WINDOW) recent.shift();
+    renderAlts(data.top);
+
+    if (best.p < UNSURE) {
+      unsureStreak += 1;
+      if (unsureStreak >= 3) spokenLabel = null;  // the leaf went away: announce again next time
+      return unsureStreak >= 2 ? renderUnsure() : renderChecking();
+    }
+    unsureStreak = 0;
+
+    const votes = recent.filter((r) => r.label === best.label);
+    const meanP = votes.reduce((sum, r) => sum + r.p, 0) / votes.length;
+    if (votes.length >= AGREE && meanP >= SURE) {
+      renderSure(best, meanP, votes.length);
+      if (best.label !== spokenLabel) {
+        say(spoken(best));
+        spokenLabel = best.label;
+      }
+    } else {
+      renderChecking();
+    }
+  }
+
+  // ---- rendering ---------------------------------------------------------
+  function setChip(kind, text) {
+    $("chip").className = "chip" + (kind ? " " + kind : "");
+    $("chip").textContent = text;
+  }
+
+  function renderSure(best, meanP, agree) {
+    const kind = best.healthy ? "healthy" : "disease";
+    shown = best;
+    $("result").classList.remove("stale");
+    setChip(kind, best.healthy ? "Healthy" : "Disease detected");
+    $("crop").textContent = best.crop;
+    $("disease").textContent = best.healthy ? "Healthy leaf" : best.disease;
+    $("fill").className = "fill " + kind;
+    $("fill").style.width = Math.round(meanP * 100) + "%";
+    $("conf").textContent = `${Math.round(meanP * 100)}% sure · ${agree} of the last ${recent.length} scans agree`;
+    box.className = "box " + kind;
+  }
+
+  function renderChecking() {
+    setChip("", "Checking…");
+    box.className = "box";
+    if (shown) {
+      $("result").classList.add("stale");  // keep the last result visible, dimmed, while re-checking
+    } else {
+      $("crop").textContent = "";
+      $("disease").textContent = "Hold steady…";
+      $("conf").textContent = "";
+    }
+  }
+
+  function renderUnsure() {
+    shown = null;
+    $("result").classList.remove("stale");
+    setChip("", "Not sure");
+    $("crop").textContent = "";
+    $("disease").textContent = "Can't tell yet";
+    $("fill").className = "fill";
+    $("fill").style.width = "0%";
+    $("conf").textContent = "Move closer so one leaf fills the square, and avoid glare.";
+    box.className = "box";
+  }
+
+  function renderAlts(top) {
+    const list = $("alts");
+    list.innerHTML = "";
+    top.forEach((t) => {
+      const li = document.createElement("li");
+      const name = document.createElement("span");
+      name.textContent = `${t.crop} · ${t.healthy ? "Healthy" : t.disease}`;
+      const pct = document.createElement("span");
+      pct.className = "pct";
+      pct.textContent = Math.round(t.p * 100) + "%";
+      const track = document.createElement("div");
+      track.className = "track";
+      const fill = document.createElement("span");
+      fill.style.width = (t.p * 100).toFixed(1) + "%";
+      track.appendChild(fill);
+      li.append(name, pct, track);
+      list.appendChild(li);
+    });
+  }
+
+  // ---- controls ----------------------------------------------------------
+  function togglePause() {
+    paused = !paused;
+    $("pauseBtn").textContent = paused ? "Resume scanning" : "Pause scanning";
+    $("hint").textContent = paused ? "Paused" : HINT;
+  }
+  function toggleVoice() {
+    voiceOn = !voiceOn;
+    $("voiceBtn").textContent = voiceOn ? "Voice on" : "Voice off";
+    $("voiceBtn").setAttribute("aria-pressed", String(voiceOn));
+    if (!voiceOn && window.speechSynthesis) speechSynthesis.cancel();
+  }
+
+  $("startBtn").addEventListener("click", () => {
+    say("Scanner ready.");  // speaking inside a click lets the browser allow voice later
+    startCamera();
+  });
+  $("pauseBtn").addEventListener("click", togglePause);
+  $("voiceBtn").addEventListener("click", toggleVoice);
+  $("cameraSelect").addEventListener("change", (e) => startCamera(e.target.value));
+  document.addEventListener("keydown", (e) => {
+    if (e.target.closest("button, select, input")) return;
+    if (e.code === "Space") {
+      e.preventDefault();
+      togglePause();
+    } else if (e.key === "v" || e.key === "V") {
+      toggleVoice();
+    }
+  });
+})();
+</script>
+</body>
+</html>
