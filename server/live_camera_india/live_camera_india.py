@@ -5,9 +5,10 @@ machine. Choose the crop first for a sharper guess, or let the model guess it. S
 model is weighing, not just the top one, and speaks the result aloud in the chosen language.
 
 Run from the project folder:
-    .venv/Scripts/python app/live_camera_india.py
+    .venv/Scripts/python server/live_camera_india/live_camera_india.py
 then open the browser tab it starts and press "Start camera" (or use "Test a photo from your device").
-Everything runs on this laptop; photos are never sent anywhere else.
+Binds to every network interface by default, so a phone on the same Wi-Fi can reach it too, the same as
+server/live_camera/live_camera.py; pass --host 127.0.0.1 to keep it laptop-only.
 
 Model: looks for model/india/model.pt (trained by model/training/india/02_train). Until that exists,
 the page runs in a clearly-labelled MOCK mode against the same 37-crop, 179-class taxonomy, so the whole
@@ -17,6 +18,7 @@ import argparse
 import hashlib
 import io
 import json
+import socket
 import sys
 import time
 import webbrowser
@@ -26,7 +28,7 @@ from pathlib import Path
 
 from PIL import Image
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 APP = Path(__file__).resolve().parent
 MODEL_DIR = ROOT / "model" / "india"
 PAGE = (APP / "live_camera_india.html").read_bytes()
@@ -149,9 +151,21 @@ class Handler(BaseHTTPRequestHandler):
         pass
 
 
+def get_wifi_ip():
+    try:
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.connect(("8.8.8.8", 80))
+        ip = s.getsockname()[0]
+        s.close()
+        return ip
+    except Exception:
+        return "127.0.0.1"
+
+
 def main():
     global BACKEND, INFER
     ap = argparse.ArgumentParser(description="AgriSmart India live camera scanner")
+    ap.add_argument("--host", type=str, default="0.0.0.0", help="host interface to bind (default 0.0.0.0 for Wi-Fi)")
     ap.add_argument("--port", type=int, default=8766)
     ap.add_argument("--no-browser", action="store_true")
     ap.add_argument("--threads", type=int, default=4)
@@ -168,13 +182,20 @@ def main():
     print(f"Ready in {time.perf_counter() - t:.1f}s", flush=True)
 
     try:
-        server = ThreadingHTTPServer(("127.0.0.1", args.port), Handler)
+        server = ThreadingHTTPServer((args.host, args.port), Handler)
     except OSError:
-        sys.exit(f"Port {args.port} is already in use. Try: python app/live_camera_india.py --port {args.port + 1}")
-    url = f"http://127.0.0.1:{args.port}/"
-    print(f"AgriSmart India: {url}   (press Ctrl+C to stop)", flush=True)
+        sys.exit(f"Port {args.port} is already in use. Try: python live_camera_india.py --port {args.port + 1}")
+
+    wifi_ip = get_wifi_ip()
+    local_url = f"http://127.0.0.1:{args.port}/"
+    print("\n=======================================================", flush=True)
+    print(" AgriSmart India model server is LIVE" + (" on Wi-Fi!" if args.host != "127.0.0.1" else "!"), flush=True)
+    print(f" Web browser (laptop): {local_url}", flush=True)
+    if args.host != "127.0.0.1":
+        print(f" Mobile app (Wi-Fi URL): http://{wifi_ip}:{args.port}/", flush=True)
+    print("=======================================================\n", flush=True)
     if not args.no_browser:
-        webbrowser.open(url)
+        webbrowser.open(local_url)
     try:
         server.serve_forever()
     except KeyboardInterrupt:

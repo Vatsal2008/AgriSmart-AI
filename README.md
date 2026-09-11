@@ -10,6 +10,8 @@ models fall apart.
 |---|---|
 | **Core: crop-disease detection** | Trained and tested; `predict.py` interface ready |
 | **Add-on: live camera scan** | Point the laptop camera at a leaf, or at a phone photo of one; the page shows and says the disease |
+| **Extension: India multi-crop model** | 37 crops, 179 draft classes, being built and trained; see [`model/india/README.md`](model/india/README.md) |
+| **Android app** | Native Kotlin client scaffolded from [`docs/android_app_prompt.md`](docs/android_app_prompt.md); see `DECISIONS.md` |
 | Bonus C: weather intelligence | Planned |
 | Bonus D: sustainability score | Planned |
 | Bonus E: farmer assistant (Gujarati / Hindi) | Planned |
@@ -60,13 +62,25 @@ predict("samples/potato_early_blight_1.jpg")   # -> "Potato___Early_blight"
 ### Live camera scan
 
 ```bash
-python app/live_camera.py
+python server/live_camera/live_camera.py
 ```
 
 A browser tab opens. Press **Start camera**, allow camera access, and hold a leaf (or a photo of one on your phone)
 inside the square. About three scans a second run on the laptop's CPU; once most recent scans agree, the page shows
 the disease and says it out loud. When it isn't sure, it asks you to move closer instead of guessing. Everything stays
-on the laptop and works offline.
+on the laptop, works offline, and by default listens on Wi-Fi too (`--host 127.0.0.1` to keep it laptop-only), so the
+Android app (see [`docs/android_app_prompt.md`](docs/android_app_prompt.md)) can reach it from a phone on the same
+network by pointing `API_BASE_URL` at the laptop's Wi-Fi address.
+
+### AgriSmart India: 37 crops, 12 languages
+
+```bash
+python server/live_camera_india/live_camera_india.py
+```
+
+The same idea, generalised to every crop in [`model/india/README.md`](model/india/README.md): choose a crop (or let
+the model guess), see the full ranked list of classes it's weighing, and hear the result in 12 Indian languages plus
+English. Runs in a clearly labelled mock mode until `model/india/model.pt` exists.
 
 ## How it works
 

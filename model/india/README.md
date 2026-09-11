@@ -15,9 +15,10 @@ alongside the hackathon's core model but kept fully separate so it can never aff
 - **Crop-conditioned inference:** at prediction time, giving a crop name restricts the answer to that
   crop's own classes — no retraining needed for that; see `model/india/predict.py` (written by the
   training notebook) and its `crop_classes` mapping in `model.pt`.
-- **App:** [`app/live_camera_india.py`](../../app/live_camera_india.py) — a live camera / photo-upload
-  page with a crop picker, a full statistics panel of every class considered, and spoken results in 12
-  Indian languages plus English (see [`app/india_translations.json`](../../app/india_translations.json)).
+- **App:** [`server/live_camera_india/live_camera_india.py`](../../server/live_camera_india/live_camera_india.py) —
+  a live camera / photo-upload page with a crop picker, a full statistics panel of every class considered,
+  and spoken results in 12 Indian languages plus English (see
+  [`server/live_camera_india/india_translations.json`](../../server/live_camera_india/india_translations.json)).
   Until `model/india/model.pt` exists, it runs in a clearly labelled **mock mode** over the same taxonomy,
   so the whole app can be built and tested before training finishes.
 

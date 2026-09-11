@@ -2,9 +2,10 @@
 and the page shows the disease and says it out loud.
 
 Run from the project folder:
-    .venv/Scripts/python app/live_camera.py
+    .venv/Scripts/python server/live_camera/live_camera.py
 then press "Start camera" in the browser tab that opens and allow camera access.
-Everything runs on this laptop; camera frames are never sent anywhere else.
+Camera frames are never sent anywhere else. Binds to every network interface by default so a phone on
+the same Wi-Fi (the Android app) can reach it; pass --host 127.0.0.1 to keep it laptop-only.
 """
 import argparse
 import io
