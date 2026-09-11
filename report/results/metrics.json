@@ -1,0 +1,49 @@
+{
+  "run": "e3b_dinov2s_natural_aug",
+  "config": {
+    "run_name": "e3b_dinov2s_natural_aug",
+    "backbone": "vit_small_patch14_dinov2.lvd142m",
+    "img_size": 224,
+    "batch_size": 64,
+    "lp_epochs": 1,
+    "ft_epochs": 8,
+    "lr_head_lp": 0.001,
+    "lr_backbone": 2e-05,
+    "lr_head": 0.0002,
+    "weight_decay": 0.05,
+    "warmup_frac": 0.05,
+    "label_smoothing": 0.1,
+    "use_field_train": true,
+    "field_weight": 3.0,
+    "bg_replace_prob": 0.5,
+    "blur_prob": 0.2,
+    "tta": true,
+    "num_workers": 4,
+    "seed": 42
+  },
+  "best_checkpoint": {
+    "field_f1": 0.7199295619251567,
+    "stage": "fine-tune",
+    "epoch": 8
+  },
+  "data": {
+    "train": 35257,
+    "train_field": 4235,
+    "val_lab": 7520,
+    "val_field": 2806,
+    "classes": 28
+  },
+  "test": {
+    "lab": {
+      "macro_f1": 0.9945439804536539,
+      "accuracy": 0.9950797872340426,
+      "images": 7520
+    },
+    "field": {
+      "macro_f1": 0.7144891462011936,
+      "accuracy": 0.7430506058446187,
+      "images": 2806
+    }
+  },
+  "minutes": 43.6
+}
