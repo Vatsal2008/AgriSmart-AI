@@ -1,0 +1,24 @@
+{
+  "id": "vatsalkadiya/india-data-prep",
+  "title": "india-data-prep",
+  "code_file": "india_data_prep.ipynb",
+  "language": "python",
+  "kernel_type": "notebook",
+  "is_private": true,
+  "enable_gpu": true,
+  "enable_internet": true,
+  "machine_shape": "NvidiaTeslaT4",
+  "dataset_sources": [
+    "abdallahalidev/plantvillage-dataset",
+    "imbikramsaha/paddy-doctor",
+    "kushagra3204/wheat-plant-diseases",
+    "sabuktagin/dataset-for-cotton-leaf-disease-detection",
+    "nguynphancminh/cotton-leaf-diseases-dataset",
+    "nirmalsankalana/sugarcane-leaf-disease-dataset",
+    "aryashah2k/mango-leaf-disease-dataset",
+    "sujaykapadnis/banana-disease-recognition-dataset"
+  ],
+  "competition_sources": [],
+  "kernel_sources": [],
+  "model_sources": []
+}

@@ -1,0 +1,459 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AgriSmart India</title>
+<style>
+  :root {
+    --ground: #f3f5ef; --panel: #ffffff; --ink: #16211a; --muted: #5b685e; --line: #dce3d8;
+    --stage: #0e1511; --leaf: #2e7a38; --leaf-soft: #e2efe0; --warn: #a9530e; --warn-soft: #f8e6d4;
+    --unsure: #626870; --unsure-soft: #e9ebee; --bad: #b3261e; --mock: #7a5b0e; --mock-soft: #fbf0d6;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --ground: #0c120e; --panel: #141c16; --ink: #e5eee4; --muted: #97a89a; --line: #253028;
+      --stage: #040705; --leaf: #6bc16f; --leaf-soft: #17301a; --warn: #eea05a; --warn-soft: #3a2614;
+      --unsure: #a6adb4; --unsure-soft: #22272c; --bad: #f2887f; --mock: #e0b654; --mock-soft: #3a2f10;
+    }
+  }
+  * { box-sizing: border-box; } [hidden] { display: none !important; } html, body { margin: 0; }
+  body { background: var(--ground); color: var(--ink); font: 15px/1.5 "Segoe UI", system-ui, -apple-system, Roboto, sans-serif; min-height: 100vh; }
+
+  .bar { display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap;
+        padding: 12px 24px; background: var(--panel); border-bottom: 1px solid var(--line); }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 650; }
+  .brand .mark { width: 18px; height: 18px; background: var(--leaf); border-radius: 0 70% 0 70%; flex: none; }
+  .brand .sub { color: var(--muted); font-weight: 400; }
+  .barControls { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .conn { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .conn .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--unsure); }
+  .conn.ok .dot { background: var(--leaf); } .conn.bad { color: var(--bad); } .conn.bad .dot { background: var(--bad); }
+  .mockBanner { background: var(--mock-soft); color: var(--mock); text-align: center; font-size: 13px; padding: 6px 12px; }
+
+  .wrap { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(320px, 1fr); gap: 24px;
+         max-width: 1320px; margin: 0 auto; padding: 24px; align-items: start; }
+  @media (max-width: 920px) { .wrap { grid-template-columns: 1fr; padding: 16px; } }
+
+  .viewport { position: relative; aspect-ratio: 16 / 9; background: var(--stage); border-radius: 14px; overflow: hidden; }
+  video, img.stillPhoto { display: block; width: 100%; height: 100%; object-fit: contain; }
+  video.mirror { transform: scaleX(-1); }
+  .box { position: absolute; left: 50%; top: 50%; height: 70%; aspect-ratio: 1 / 1; transform: translate(-50%, -50%);
+        border-radius: 12px; pointer-events: none; box-shadow: 0 0 0 100vmax rgba(0, 0, 0, 0.38); }
+  .viewport.portrait .box { height: auto; width: 70%; }
+  .box i { position: absolute; width: 30px; height: 30px; border: 3px solid #ffffff; transition: border-color 0.2s; }
+  .box i:nth-child(1) { top: -3px; left: -3px; border-right: 0; border-bottom: 0; border-top-left-radius: 12px; }
+  .box i:nth-child(2) { top: -3px; right: -3px; border-left: 0; border-bottom: 0; border-top-right-radius: 12px; }
+  .box i:nth-child(3) { bottom: -3px; left: -3px; border-right: 0; border-top: 0; border-bottom-left-radius: 12px; }
+  .box i:nth-child(4) { bottom: -3px; right: -3px; border-left: 0; border-top: 0; border-bottom-right-radius: 12px; }
+  .box.healthy i { border-color: #7fd483; } .box.disease i { border-color: #f5a95e; }
+  .hint { position: absolute; left: 0; right: 0; bottom: 12px; margin: 0; padding: 0 16px; text-align: center;
+         color: #ffffff; font-size: 14px; text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7); }
+  .start { position: absolute; inset: 0; display: grid; place-items: center; padding: 24px; background: var(--stage);
+          color: #e9f1e8; text-align: center; }
+  .start p { max-width: 44ch; margin: 14px auto 0; color: #b9c7bb; font-size: 14px; }
+
+  button, select { font: inherit; color: var(--ink); background: var(--panel); border: 1px solid var(--line);
+                  border-radius: 9px; padding: 8px 14px; cursor: pointer; }
+  button:hover, select:hover { border-color: var(--muted); }
+  button:focus-visible, select:focus-visible { outline: 3px solid var(--leaf); outline-offset: 2px; }
+  .primary { background: var(--leaf); border-color: transparent; color: #ffffff; font-weight: 600; padding: 12px 24px; font-size: 16px; }
+  .controls { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; align-items: center; }
+  .langSelect, .cropSelect { min-width: 170px; }
+
+  .result { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 22px 22px 18px; }
+  .chip { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 12px; font-weight: 600;
+         letter-spacing: 0.06em; text-transform: uppercase; background: var(--unsure-soft); color: var(--unsure); }
+  .chip.healthy { background: var(--leaf-soft); color: var(--leaf); }
+  .chip.disease { background: var(--warn-soft); color: var(--warn); }
+  .crop { margin: 16px 0 0; font-size: 13px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); min-height: 1.5em; }
+  .disease { margin: 2px 0 14px; font-size: clamp(26px, 2.9vw, 36px); line-height: 1.2; text-wrap: balance; }
+  .stale .crop, .stale .disease { opacity: 0.5; }
+  .meter { height: 8px; border-radius: 99px; background: var(--line); overflow: hidden; }
+  .fill { height: 100%; width: 0; background: var(--unsure); transition: width 0.3s ease; }
+  .fill.healthy { background: var(--leaf); } .fill.disease { background: var(--warn); }
+  .conf { margin: 8px 0 20px; font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; min-height: 1.5em; }
+  .label { margin: 0 0 8px; font-size: 12px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+  .alts { list-style: none; margin: 0 0 20px; padding: 0; display: grid; gap: 10px; min-height: 40px; }
+  .alts li { display: grid; grid-template-columns: 1fr auto; gap: 2px 12px; font-size: 13px; }
+  .alts .name { display: flex; gap: 6px; align-items: baseline; }
+  .alts .cropTag { color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; }
+  .alts .pct { color: var(--muted); font-variant-numeric: tabular-nums; }
+  .alts .track { grid-column: 1 / -1; height: 4px; border-radius: 99px; background: var(--line); overflow: hidden; }
+  .alts .track span { display: block; height: 100%; background: var(--muted); }
+  .fine { margin: 0; padding-top: 12px; border-top: 1px solid var(--line); font-size: 12px; color: var(--muted); }
+  input[type="file"] { display: none; }
+  @media (prefers-reduced-motion: reduce) { .fill, .box i { transition: none; } }
+</style>
+</head>
+<body>
+<header class="bar">
+  <div class="brand"><span class="mark" aria-hidden="true"></span><span id="brandTitle">AgriSmart India</span></div>
+  <div class="barControls">
+    <select class="langSelect" id="langSelect" aria-label="Language"></select>
+    <select class="cropSelect" id="cropSelect" aria-label="Crop"></select>
+    <div class="conn" id="conn"><span class="dot" aria-hidden="true"></span><span id="connText">Connecting…</span></div>
+  </div>
+</header>
+<div class="mockBanner" id="mockBanner" hidden></div>
+
+<main class="wrap">
+  <section>
+    <div class="viewport" id="viewport">
+      <video id="video" playsinline muted></video>
+      <img id="stillPhoto" class="stillPhoto" alt="" hidden>
+      <div class="box" id="box" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+      <p class="hint" id="hint"></p>
+      <div class="start" id="start">
+        <div>
+          <button class="primary" id="startBtn" type="button"></button>
+          <p id="startMsg"></p>
+        </div>
+      </div>
+    </div>
+    <div class="controls">
+      <button id="pauseBtn" type="button" hidden></button>
+      <button id="photoBtn" type="button"></button>
+      <button id="voiceBtn" type="button" aria-pressed="true"></button>
+      <input type="file" id="fileInput" accept="image/*">
+    </div>
+  </section>
+
+  <section class="result" id="result">
+    <span class="chip" id="chip"></span>
+    <p class="crop" id="crop"></p>
+    <h1 class="disease" id="disease" aria-live="polite"></h1>
+    <div class="meter"><div class="fill" id="fill"></div></div>
+    <p class="conf" id="conf"></p>
+    <button id="listenBtn" type="button" style="margin-bottom:18px" hidden></button>
+    <h2 class="label" id="statsLabel"></h2>
+    <ol class="alts" id="alts"></ol>
+    <p class="fine" id="disclaimer"></p>
+  </section>
+</main>
+
+<script>
+(() => {
+  const $ = (id) => document.getElementById(id);
+  const video = $("video"), stillPhoto = $("stillPhoto"), viewport = $("viewport"), box = $("box");
+  const grab = document.createElement("canvas"); grab.width = grab.height = 384;
+  const gctx = grab.getContext("2d");
+
+  const BOX = 0.7, WINDOW = 5, AGREE = 3, SURE = 0.50, UNSURE = 0.28;
+
+  let T = null;              // translations.json
+  let CROPS = {};            // {crop_id: [english label, ...]}
+  let lang = localStorage.getItem("agrismart_lang") || (navigator.language || "en").split("-")[0];
+  let chosenCrop = localStorage.getItem("agrismart_crop") || "";
+  let stream = null, running = false, paused = false, voiceOn = true, voice = null;
+  let mode = "camera";       // "camera" | "photo"
+  let recent = [], shown = null, spokenKey = null, unsureStreak = 0, lastResult = null;
+
+  // ---- translation helpers -------------------------------------------------
+  function tr(dict, key, sub) {
+    const row = dict[key];
+    if (!row) return sub || key;
+    return row[lang] || row.en || sub || key;
+  }
+  const t = (key) => tr(T ? T.ui : {}, key);
+  const cropName = (id) => tr(T ? T.crops : {}, id, id);
+  const termName = (label) => tr(T ? T.terms : {}, label, label);
+
+  function applyStaticText() {
+    document.documentElement.lang = lang;
+    const rtl = T && T.languages.find((l) => l.code === lang)?.rtl;
+    document.documentElement.dir = rtl ? "rtl" : "ltr";
+    $("brandTitle").textContent = t("title") + " · " + t("subtitle");
+    $("hint").textContent = paused ? "" : t("subtitle");
+    $("startBtn").textContent = t("start_camera");
+    $("startMsg").textContent = "";
+    $("pauseBtn").textContent = paused ? t("resume") : t("pause");
+    $("photoBtn").textContent = t("load_from_device");
+    $("voiceBtn").textContent = voiceOn ? t("voice_on") : t("voice_off");
+    $("statsLabel").textContent = t("statistics");
+    $("disclaimer").textContent = t("disclaimer");
+    $("langSelect").setAttribute("aria-label", t("choose_language"));
+    $("cropSelect").setAttribute("aria-label", t("choose_crop"));
+    if (lastResult) render(lastResult); else renderIdle();
+  }
+
+  // ---- language & crop pickers --------------------------------------------
+  function buildLangSelect() {
+    const sel = $("langSelect");
+    sel.innerHTML = "";
+    T.languages.forEach((l) => {
+      const opt = document.createElement("option");
+      opt.value = l.code; opt.textContent = l.native; opt.selected = l.code === lang;
+      sel.appendChild(opt);
+    });
+    sel.addEventListener("change", () => {
+      lang = sel.value; localStorage.setItem("agrismart_lang", lang);
+      applyStaticText(); buildCropSelect();
+    });
+  }
+
+  function buildCropSelect() {
+    const sel = $("cropSelect");
+    const prev = sel.value || chosenCrop;
+    sel.innerHTML = "";
+    const guessOpt = document.createElement("option");
+    guessOpt.value = ""; guessOpt.textContent = t("let_model_guess");
+    sel.appendChild(guessOpt);
+    Object.keys(CROPS).map((id) => ({ id, name: cropName(id) }))
+      .sort((a, b) => a.name.localeCompare(b.name, lang))
+      .forEach(({ id, name }) => {
+        const opt = document.createElement("option");
+        opt.value = id; opt.textContent = name; opt.selected = id === prev;
+        sel.appendChild(opt);
+      });
+    sel.value = prev in CROPS ? prev : "";
+    chosenCrop = sel.value;
+    sel.onchange = () => { chosenCrop = sel.value; localStorage.setItem("agrismart_crop", chosenCrop); recent = []; spokenKey = null; };
+  }
+
+  // ---- voice ---------------------------------------------------------------
+  const VOICE_LANG = { en: "en", hi: "hi", bn: "bn", mr: "mr", te: "te", ta: "ta", gu: "gu",
+                       ur: "ur", kn: "kn", or: "or", ml: "ml", pa: "pa", as: "as" };
+  function pickVoice() {
+    const voices = window.speechSynthesis ? speechSynthesis.getVoices() : [];
+    const want = VOICE_LANG[lang] || "en";
+    voice = voices.find((v) => v.lang && v.lang.toLowerCase().startsWith(want)) ||
+           voices.find((v) => v.lang && v.lang.toLowerCase().startsWith("hi")) ||
+           voices.find((v) => v.lang && v.lang.toLowerCase().startsWith("en")) || null;
+  }
+  if (window.speechSynthesis) { pickVoice(); speechSynthesis.onvoiceschanged = pickVoice; }
+  function say(text) {
+    if (!voiceOn || !window.speechSynthesis || !text) return;
+    pickVoice();
+    const u = new SpeechSynthesisUtterance(text);
+    u.rate = 0.95; if (voice) u.voice = voice;
+    speechSynthesis.cancel(); speechSynthesis.speak(u);
+  }
+  function spokenText(item) {
+    if (!item) return "";
+    return item.healthy ? `${cropName(item.crop)}. ${t("healthy_result")}.` : `${cropName(item.crop)}. ${termName(item.label)}.`;
+  }
+
+  // ---- status / data load ---------------------------------------------------
+  function setConn(state, text) { $("conn").className = "conn " + state; $("connText").textContent = text; }
+
+  async function boot() {
+    const [tr_, crops, health] = await Promise.all([
+      fetch("/translations.json").then((r) => r.json()),
+      fetch("/crops").then((r) => r.json()),
+      fetch("/health").then((r) => r.json()).catch(() => null),
+    ]);
+    T = tr_; CROPS = crops;
+    if (!(lang in (T.languages.reduce((m, l) => (m[l.code] = 1, m), {})))) lang = "en";
+    buildLangSelect(); buildCropSelect(); applyStaticText();
+    if (health) {
+      setConn("ok", `${t("title")} · ${health.total_classes} classes`);
+      $("mockBanner").hidden = health.mode !== "mock";
+      if (health.mode === "mock") $("mockBanner").textContent = t("model_not_ready");
+    } else {
+      setConn("bad", "Can't reach the model. Is live_camera_india.py running?");
+    }
+  }
+
+  // ---- camera ---------------------------------------------------------------
+  function cameraErrorText(err) {
+    switch (err && err.name) {
+      case "NotAllowedError": return "Camera access is blocked. Allow it in the address bar, then press Start camera again.";
+      case "NotFoundError": return "No camera was found on this laptop.";
+      case "NotReadableError": return "The camera is busy in another app. Close it, then press Start camera again.";
+      default: return "The camera could not start: " + (err && err.message ? err.message : String(err));
+    }
+  }
+
+  async function startCamera() {
+    mode = "camera"; stillPhoto.hidden = true; video.hidden = false;
+    if (stream) stream.getTracks().forEach((tk) => tk.stop());
+    try {
+      stream = await navigator.mediaDevices.getUserMedia({ audio: false, video: { width: { ideal: 1280 }, height: { ideal: 720 } } });
+    } catch (err) {
+      stream = null; $("startMsg").textContent = cameraErrorText(err); $("start").hidden = false; return;
+    }
+    video.srcObject = stream; await video.play();
+    const settings = stream.getVideoTracks()[0].getSettings();
+    video.classList.toggle("mirror", settings.facingMode !== "environment");
+    $("start").hidden = true; $("pauseBtn").hidden = false;
+    if (!running) { running = true; loop(); }
+  }
+
+  video.addEventListener("loadedmetadata", () => {
+    viewport.style.aspectRatio = `${video.videoWidth} / ${video.videoHeight}`;
+    viewport.classList.toggle("portrait", video.videoHeight > video.videoWidth);
+  });
+
+  // ---- prediction ------------------------------------------------------------
+  async function callPredict(blob) {
+    const qs = chosenCrop ? `?crop=${encodeURIComponent(chosenCrop)}` : "";
+    const res = await fetch("/predict" + qs, { method: "POST", headers: { "Content-Type": "image/jpeg" }, body: blob });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || res.statusText);
+    return data;
+  }
+
+  async function scanOnce() {
+    const vw = video.videoWidth, vh = video.videoHeight, side = Math.min(vw, vh) * BOX;
+    gctx.drawImage(video, (vw - side) / 2, (vh - side) / 2, side, side, 0, 0, grab.width, grab.height);
+    const blob = await new Promise((resolve) => grab.toBlob(resolve, "image/jpeg", 0.9));
+    return callPredict(blob);
+  }
+
+  async function loop() {
+    for (;;) {
+      if (mode === "camera" && !paused && stream && video.readyState >= 2 && video.videoWidth) {
+        try {
+          const data = await scanOnce();
+          setConn("ok", `${t("title")} · ${data.ms} ms`);
+          consider(data);
+        } catch (err) { setConn("bad", "Can't reach the model."); }
+      }
+      await new Promise((resolve) => setTimeout(resolve, 320));
+    }
+  }
+
+  function gclass(item) { return item.crop + "::" + item.label; }
+
+  function consider(data) {
+    const best = data.top[0];
+    if (!best) return renderUnsure(data);
+    recent.push({ item: best, matches: data.crop_matches });
+    if (recent.length > WINDOW) recent.shift();
+    renderAlts(data);
+
+    if (best.p < UNSURE) {
+      unsureStreak += 1;
+      if (unsureStreak >= 3) spokenKey = null;
+      return unsureStreak >= 2 ? renderUnsure(data) : renderChecking();
+    }
+    unsureStreak = 0;
+    const key = gclass(best);
+    const votes = recent.filter((r) => gclass(r.item) === key);
+    const meanP = votes.reduce((sum, r) => sum + r.item.p, 0) / votes.length;
+    if (votes.length >= AGREE && meanP >= SURE) {
+      renderSure(best, meanP, votes.length, data);
+      lastResult = { kind: "sure", item: best, meanP, agree: votes.length, data };
+      if (key !== spokenKey) { say(data.crop_matches === false ? t("crop_mismatch") : spokenText(best)); spokenKey = key; }
+    } else {
+      renderChecking();
+    }
+  }
+
+  // ---- rendering ---------------------------------------------------------
+  function setChip(kind, text) { $("chip").className = "chip" + (kind ? " " + kind : ""); $("chip").textContent = text; }
+
+  function renderIdle() {
+    setChip("", ""); $("crop").textContent = ""; $("disease").textContent = t("subtitle");
+    $("fill").style.width = "0%"; $("conf").textContent = ""; $("alts").innerHTML = "";
+    $("listenBtn").hidden = true;
+  }
+
+  function renderSure(best, meanP, agree, data) {
+    shown = best; $("result").classList.remove("stale");
+    if (data.crop_matches === false) {
+      setChip("disease", t("crop_mismatch"));
+      $("crop").textContent = cropName(chosenCrop);
+      $("disease").textContent = `${cropName(best.crop)} · ${termName(best.label)}`;
+      box.className = "box disease";
+    } else {
+      const kind = best.healthy ? "healthy" : "disease";
+      setChip(kind, best.healthy ? t("healthy_result").split(" ")[0] : t("disease_found"));
+      $("crop").textContent = cropName(best.crop);
+      $("disease").textContent = best.healthy ? t("healthy_result") : termName(best.label);
+      $("fill").className = "fill " + kind; box.className = "box " + kind;
+    }
+    $("fill").style.width = Math.round(meanP * 100) + "%";
+    $("conf").textContent = `${t("how_sure")}: ${Math.round(meanP * 100)}% · ${agree}/${recent.length}`;
+    $("listenBtn").hidden = false;
+    $("listenBtn").textContent = t("listen");
+    $("listenBtn").onclick = () => say(data.crop_matches === false ? t("crop_mismatch") : spokenText(best));
+  }
+
+  function renderChecking() {
+    setChip("", t("checking")); box.className = "box";
+    if (shown) $("result").classList.add("stale");
+  }
+
+  function renderUnsure(data) {
+    shown = null; lastResult = { kind: "unsure", data }; $("result").classList.remove("stale");
+    setChip("", t("not_sure")); $("crop").textContent = ""; $("disease").textContent = t("not_sure");
+    $("fill").className = "fill"; $("fill").style.width = "0%"; $("conf").textContent = "";
+    $("listenBtn").hidden = true; box.className = "box";
+    if (data) renderAlts(data);
+  }
+
+  function renderAlts(data) {
+    const list = $("alts"); list.innerHTML = "";
+    (data.top || []).forEach((item) => {
+      const li = document.createElement("li");
+      const name = document.createElement("span"); name.className = "name";
+      const cropTag = document.createElement("span"); cropTag.className = "cropTag"; cropTag.textContent = cropName(item.crop);
+      const labelSpan = document.createElement("span");
+      labelSpan.textContent = item.healthy ? t("healthy_result").replace(/\..*/, "") : termName(item.label);
+      name.append(cropTag, labelSpan);
+      const pct = document.createElement("span"); pct.className = "pct"; pct.textContent = Math.round(item.p * 100) + "%";
+      const track = document.createElement("div"); track.className = "track";
+      const fillEl = document.createElement("span"); fillEl.style.width = (item.p * 100).toFixed(1) + "%";
+      track.appendChild(fillEl);
+      li.append(name, pct, track); list.appendChild(li);
+    });
+  }
+
+  function render(last) {
+    if (last.kind === "sure") renderSure(last.item, last.meanP, last.agree, last.data);
+    else if (last.kind === "unsure") renderUnsure(last.data);
+    else renderIdle();
+  }
+
+  // ---- photo-from-device mode ------------------------------------------------
+  async function handleFile(file) {
+    mode = "photo";
+    if (stream) { stream.getTracks().forEach((tk) => tk.stop()); stream = null; }
+    running = false; $("start").hidden = true; $("pauseBtn").hidden = true;
+    const url = URL.createObjectURL(file);
+    stillPhoto.src = url; stillPhoto.hidden = false; video.hidden = true;
+    viewport.style.aspectRatio = ""; viewport.classList.remove("portrait");
+    box.className = "box"; setChip("", t("checking")); $("disease").textContent = t("checking");
+    recent = []; spokenKey = null;
+    try {
+      const data = await callPredict(file);
+      setConn("ok", `${t("title")} · ${data.ms} ms`);
+      const best = data.top[0];
+      if (!best || best.p < UNSURE) { renderUnsure(data); return; }
+      renderSure(best, best.p, 1, data);
+      lastResult = { kind: "sure", item: best, meanP: best.p, agree: 1, data };
+      say(data.crop_matches === false ? t("crop_mismatch") : spokenText(best));
+    } catch (err) {
+      setConn("bad", "Can't reach the model.");
+    }
+  }
+
+  // ---- controls ----------------------------------------------------------
+  function togglePause() {
+    paused = !paused; $("pauseBtn").textContent = paused ? t("resume") : t("pause");
+    $("hint").textContent = paused ? "" : t("subtitle");
+  }
+  function toggleVoice() {
+    voiceOn = !voiceOn; $("voiceBtn").textContent = voiceOn ? t("voice_on") : t("voice_off");
+    $("voiceBtn").setAttribute("aria-pressed", String(voiceOn));
+    if (!voiceOn && window.speechSynthesis) speechSynthesis.cancel();
+  }
+
+  $("startBtn").addEventListener("click", () => { say(""); startCamera(); });
+  $("pauseBtn").addEventListener("click", togglePause);
+  $("voiceBtn").addEventListener("click", toggleVoice);
+  $("photoBtn").addEventListener("click", () => $("fileInput").click());
+  $("fileInput").addEventListener("change", (e) => { if (e.target.files[0]) handleFile(e.target.files[0]); });
+  document.addEventListener("keydown", (e) => {
+    if (e.target.closest("button, select, input")) return;
+    if (e.code === "Space") { e.preventDefault(); if (mode === "camera") togglePause(); }
+    else if (e.key === "v" || e.key === "V") toggleVoice();
+  });
+
+  boot();
+})();
+</script>
+</body>
+</html>

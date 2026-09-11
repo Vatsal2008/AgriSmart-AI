@@ -1,0 +1,366 @@
+{
+ "apple": {
+  "labels": [
+   "Apple scab",
+   "Black rot",
+   "Cedar apple rust",
+   "Healthy"
+  ],
+  "coverage_note": null
+ },
+ "blueberry": {
+  "labels": [
+   "Healthy"
+  ],
+  "coverage_note": null
+ },
+ "cherry": {
+  "labels": [
+   "Healthy",
+   "Powdery mildew"
+  ],
+  "coverage_note": null
+ },
+ "corn_maize": {
+  "labels": [
+   "Common rust",
+   "Gray leaf spot",
+   "Healthy",
+   "Northern leaf blight"
+  ],
+  "coverage_note": null
+ },
+ "grape": {
+  "labels": [
+   "Bacterial leaf spot",
+   "Black rot",
+   "Downy mildew",
+   "Healthy",
+   "Powdery mildew"
+  ],
+  "coverage_note": null
+ },
+ "peach": {
+  "labels": [
+   "Bacterial spot",
+   "Healthy"
+  ],
+  "coverage_note": null
+ },
+ "bell_pepper": {
+  "labels": [
+   "Bacterial spot",
+   "Healthy"
+  ],
+  "coverage_note": null
+ },
+ "potato": {
+  "labels": [
+   "Early blight",
+   "Healthy",
+   "Late blight"
+  ],
+  "coverage_note": null
+ },
+ "raspberry": {
+  "labels": [
+   "Healthy"
+  ],
+  "coverage_note": null
+ },
+ "squash": {
+  "labels": [
+   "Powdery mildew"
+  ],
+  "coverage_note": null
+ },
+ "strawberry": {
+  "labels": [
+   "Healthy",
+   "Leaf scorch"
+  ],
+  "coverage_note": null
+ },
+ "tomato": {
+  "labels": [
+   "Bacterial spot",
+   "Early blight",
+   "Healthy",
+   "Late blight",
+   "Leaf mold",
+   "Mosaic virus",
+   "Septoria leaf spot",
+   "Spider mites",
+   "Target spot",
+   "Yellow leaf curl virus"
+  ],
+  "coverage_note": null
+ },
+ "soybean": {
+  "labels": [
+   "Bacterial blight",
+   "Caterpillar pest",
+   "Dry leaf",
+   "Frogeye leaf spot",
+   "Healthy",
+   "Mosaic virus",
+   "Rust",
+   "Septoria brown spot",
+   "Vein necrosis"
+  ],
+  "coverage_note": null
+ },
+ "rice": {
+  "labels": [
+   "Bacterial leaf blight",
+   "Bacterial leaf streak",
+   "Bacterial panicle blight",
+   "Blast",
+   "Brown spot",
+   "Dead heart",
+   "Downy mildew",
+   "Healthy",
+   "Hispa (pest)",
+   "Tungro"
+  ],
+  "coverage_note": null
+ },
+ "wheat": {
+  "labels": [
+   "Aphid (pest)",
+   "Black rust",
+   "Blast",
+   "Brown rust",
+   "Common root rot",
+   "Fusarium head blight",
+   "Healthy",
+   "Leaf blight",
+   "Mite (pest)",
+   "Powdery mildew",
+   "Septoria",
+   "Smut",
+   "Stem fly (pest)",
+   "Tan spot",
+   "Yellow rust"
+  ],
+  "coverage_note": null
+ },
+ "cotton": {
+  "labels": [
+   "Alternaria leaf spot",
+   "Bacterial blight",
+   "Curl virus",
+   "Fusarium wilt",
+   "Healthy",
+   "Herbicide damage",
+   "Leaf reddening",
+   "Leaf variegation",
+   "Leafhopper (pest)",
+   "Verticillium wilt"
+  ],
+  "coverage_note": null
+ },
+ "groundnut": {
+  "labels": [
+   "Alternaria leaf spot",
+   "Healthy",
+   "Leaf spot",
+   "Rosette",
+   "Rust"
+  ],
+  "coverage_note": null
+ },
+ "sugarcane": {
+  "labels": [
+   "Healthy",
+   "Mosaic virus",
+   "Red rot",
+   "Rust",
+   "Yellow leaf disease"
+  ],
+  "coverage_note": null
+ },
+ "tea": {
+  "labels": [
+   "Algal leaf spot",
+   "Blister blight",
+   "Brown blight",
+   "Healthy",
+   "Red rust"
+  ],
+  "coverage_note": null
+ },
+ "coffee": {
+  "labels": [
+   "Cercospora leaf spot",
+   "Healthy",
+   "Leaf miner (pest)",
+   "Leaf rust",
+   "Phoma leaf spot"
+  ],
+  "coverage_note": null
+ },
+ "brinjal_eggplant": {
+  "labels": [
+   "Healthy",
+   "Insect pest",
+   "Leaf spot",
+   "Mosaic virus",
+   "White mold",
+   "Wilt"
+  ],
+  "coverage_note": null
+ },
+ "chilli": {
+  "labels": [
+   "Cercospora leaf spot",
+   "Healthy",
+   "Mites and thrips (pest)",
+   "Nutrient deficiency",
+   "Powdery mildew"
+  ],
+  "coverage_note": null
+ },
+ "onion": {
+  "labels": [
+   "Healthy",
+   "Iris yellow spot virus",
+   "Purple blotch",
+   "Stemphylium/Colletotrichum blight"
+  ],
+  "coverage_note": null
+ },
+ "black_gram": {
+  "labels": [
+   "Cercospora leaf spot",
+   "Healthy",
+   "Insect pest",
+   "Leaf crinkle virus",
+   "Yellow mosaic virus"
+  ],
+  "coverage_note": null
+ },
+ "jute": {
+  "labels": [
+   "Dieback",
+   "Healthy",
+   "Mosaic virus",
+   "Pest-holed leaf",
+   "Stem rot"
+  ],
+  "coverage_note": null
+ },
+ "betel": {
+  "labels": [
+   "Bacterial leaf disease",
+   "Dried leaf",
+   "Fungal brown spot",
+   "Healthy"
+  ],
+  "coverage_note": null
+ },
+ "turmeric": {
+  "labels": [
+   "Aphid (pest)",
+   "Healthy",
+   "Leaf blotch",
+   "Leaf spot"
+  ],
+  "coverage_note": null
+ },
+ "papaya": {
+  "labels": [
+   "Healthy",
+   "Leaf curl virus",
+   "Mealybug (pest)",
+   "Mite damage",
+   "Mosaic virus",
+   "Ring spot virus"
+  ],
+  "coverage_note": null
+ },
+ "pomegranate": {
+  "labels": [
+   "Anthracnose",
+   "Fruit borer (pest)",
+   "Healthy",
+   "Sunburn"
+  ],
+  "coverage_note": null
+ },
+ "mango": {
+  "labels": [
+   "Anthracnose",
+   "Bacterial canker",
+   "Cutting weevil (pest)",
+   "Die back",
+   "Gall midge (pest)",
+   "Healthy",
+   "Powdery mildew",
+   "Sooty mould"
+  ],
+  "coverage_note": null
+ },
+ "banana": {
+  "labels": [
+   "Black sigatoka",
+   "Bract mosaic virus",
+   "Healthy",
+   "Insect pest",
+   "Moko disease",
+   "Panama disease (wilt)",
+   "Yellow sigatoka"
+  ],
+  "coverage_note": "Coverage is thin for this crop (few dozen photos per class); treat results with extra caution."
+ },
+ "bean": {
+  "labels": [
+   "Bacterial wilt",
+   "Blight",
+   "Healthy",
+   "Mosaic virus",
+   "Rust",
+   "Septoria leaf spot"
+  ],
+  "coverage_note": null
+ },
+ "cowpea": {
+  "labels": [
+   "Bacterial wilt",
+   "Blight",
+   "Healthy",
+   "Mosaic virus",
+   "Rust",
+   "Septoria leaf spot"
+  ],
+  "coverage_note": null
+ },
+ "bitter_gourd": {
+  "labels": [
+   "Downy mildew",
+   "Healthy"
+  ],
+  "coverage_note": null
+ },
+ "bottle_gourd": {
+  "labels": [
+   "Downy mildew",
+   "Healthy"
+  ],
+  "coverage_note": null
+ },
+ "cauliflower": {
+  "labels": [
+   "Black rot",
+   "Healthy"
+  ],
+  "coverage_note": null
+ },
+ "cucumber": {
+  "labels": [
+   "Downy mildew",
+   "Healthy"
+  ],
+  "coverage_note": null
+ }
+}

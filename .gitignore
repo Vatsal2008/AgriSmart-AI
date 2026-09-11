@@ -4,9 +4,9 @@ __pycache__/
 .venv/
 venv/
 
-# Weights come from the GitHub release (see model/weights.json)
-model/*.pt
-model/*.part
+# Weights come from a GitHub release (see model/weights.json, model/india/weights.json)
+model/**/*.pt
+model/**/*.part
 
 # Secrets and local settings
 .env
