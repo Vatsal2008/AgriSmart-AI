@@ -405,6 +405,11 @@ def hf_image_to_jpeg(value):
     raise ValueError("Unrecognised HF image cell")
 
 
+HF_SOURCE_BUDGET_S = 360  # give up on one HF source after this long and keep whatever it collected;
+                          # the first run spent 100+ minutes stuck reading past the tea dataset's 80,329
+                          # rows one at a time even after every class it maps to was already full
+
+
 def add_hf_source(crop, spec):
     repo = spec["repo"]
     config = spec.get("config") or hf_raw_config(repo)
@@ -419,8 +424,11 @@ def add_hf_source(crop, spec):
     # Value(int64) or a string, which crashed the first run with AttributeError on this line.
     is_class_label = isinstance(label_feature, hfds.ClassLabel)
     filt_col, filt_val = spec.get("split_col"), spec.get("split_value")
+    target_labels = {canon for canon in spec["class_map"].values() if canon}
     buckets = {}  # canon label -> list of jpeg bytes, capped as we go
     n_seen = 0
+    t_start = time.time()
+    stop_reason = "exhausted the stream"
     for row in ds:
         n_seen += 1
         if filt_col and row.get(filt_col) != filt_val:
@@ -439,11 +447,18 @@ def add_hf_source(crop, spec):
             bucket.append(hf_image_to_jpeg(row["image"]))
         except Exception:
             continue
+        # every target class is full: stop instead of reading the rest of a possibly huge remaining stream
+        if all(len(buckets.get(t, [])) >= CAP_PER_CLASS for t in target_labels):
+            stop_reason = "every target class reached the cap"
+            break
+        if n_seen % 200 == 0 and time.time() - t_start > HF_SOURCE_BUDGET_S:
+            stop_reason = f"hit the {HF_SOURCE_BUDGET_S}s time budget for one source"
+            break
     for canon, jpegs in buckets.items():
         for jpeg in jpegs:
             rows.append({"crop": crop, "label": canon, "jpeg": jpeg, "phash": phash_hex(jpeg), "source": f"hf:{repo}"})
         per_source_count[f"{crop} <- hf:{repo}/{canon}"] += len(jpegs)
-    log(f"  {repo} ({config}): streamed {n_seen} rows -> " +
+    log(f"  {repo} ({config}): read {n_seen} rows in {time.time() - t_start:.0f}s, {stop_reason} -> " +
         ", ".join(f"{k}={len(v)}" for k, v in sorted(buckets.items())))
 
 
