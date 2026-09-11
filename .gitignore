@@ -1,0 +1,18 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Weights come from the GitHub release (see model/weights.json)
+model/*.pt
+model/*.part
+
+# Secrets and local settings
+.env
+.env.*
+!.env.example
+
+# Local Kaggle downloads and logs
+runs/
+*.log
