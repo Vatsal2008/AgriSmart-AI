@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">AgriSmart</string>
+    <string name="app_subtitle">Check your plant\'s health</string>
+    <string name="language_title">Choose your language</string>
+    <string name="language_suggested">Suggested</string>
+    <string name="action_continue">Continue</string>
+
+    <!-- Model Download -->
+    <string name="model_download_title">Downloading Plant Disease Model</string>
+    <string name="model_download_subtitle">AgriSmart needs to download the local AI model (86.6 MB) directly from GitHub for offline plant checks.</string>
+    <string name="model_download_progress">%1$s of %2$s MB (%3$d%%)</string>
+    <string name="model_download_status_downloading">Downloading model weights from GitHub…</string>
+    <string name="model_download_status_verifying">Verifying SHA-256 integrity…</string>
+    <string name="model_download_status_ready">Model download complete and verified!</string>
+    <string name="model_download_status_error">Download failed. Please check your internet connection.</string>
+
+    <!-- Tour -->
+    <string name="tour_title">How AgriSmart works</string>
+    <string name="tour_step_counter">%1$d of %2$d</string>
+    <string name="tour_check">Tap here to check a plant.</string>
+    <string name="tour_plant">Pick your plant. Not in the list? Choose Others.</string>
+    <string name="tour_photo">Take a photo of one leaf, or choose a photo from your phone.</string>
+    <string name="tour_result">Here is the result. Tap Listen to hear it.</string>
+    <string name="tour_recent">Your past checks are saved here.</string>
+    <string name="tour_menu">Open the menu for language, help and settings.</string>
+    <string name="tour_practice">Practice now</string>
+    <string name="tour_start">Start using AgriSmart</string>
+    <string name="action_next">Next</string>
+    <string name="action_back">Back</string>
+    <string name="action_skip">Skip</string>
+
+    <!-- Home & Navigation -->
+    <string name="home_check">Check a plant</string>
+    <string name="home_recent">Recent tests</string>
+    <string name="see_all">See all</string>
+    <string name="nav_check_plant">Check a plant</string>
+    <string name="nav_recent_tests">Recent tests</string>
+    <string name="nav_language">Language</string>
+    <string name="nav_how_to_use">How to use</string>
+    <string name="nav_settings">Settings</string>
+    <string name="nav_help_about">Help and about</string>
+
+    <!-- Scan flow -->
+    <string name="choose_plant_title">Choose your plant</string>
+    <string name="crop_other">Others</string>
+    <string name="crop_other_hint">Not in the list</string>
+    <string name="coverage_healthy_only">Can only confirm a healthy leaf</string>
+    <string name="coverage_diseases_only">Can\'t confirm a healthy leaf</string>
+    <string name="add_photo_title">Add a photo</string>
+    <string name="take_photo">Take photo</string>
+    <string name="choose_from_phone">Choose from phone</string>
+    <string name="photo_tip">One leaf, in daylight, filling the frame</string>
+    <string name="hint_too_dark">Too dark: move into daylight</string>
+    <string name="hint_glare">Too much glare</string>
+    <string name="hint_hold_still">Hold still</string>
+    <string name="use_photo">Use this photo</string>
+    <string name="retake">Retake</string>
+    <string name="photo_problem_title">This photo may be hard to read</string>
+    <string name="take_another">Take another</string>
+    <string name="use_anyway">Use anyway</string>
+    <string name="checking">Checking your plant…</string>
+    <string name="cancel">Cancel</string>
+
+    <!-- Results -->
+    <string name="status_disease">Disease found</string>
+    <string name="status_healthy">Healthy</string>
+    <string name="status_not_sure">Not sure</string>
+    <string name="result_healthy_title">Your %1$s leaf looks healthy</string>
+    <string name="result_not_sure_title">We are not sure</string>
+    <string name="result_not_sure_body">Take another photo: closer, in daylight, one leaf.</string>
+    <string name="result_unsupported_title">We can\'t check this plant yet</string>
+    <string name="result_mismatch_title">This looks like %1$s, not %2$s</string>
+    <string name="result_mismatch_yes">Yes, it\'s %1$s</string>
+    <string name="result_mismatch_no">No, keep %1$s</string>
+    <string name="how_sure_high">Very likely</string>
+    <string name="how_sure_medium">Likely</string>
+    <string name="listen">Listen</string>
+    <string name="what_to_do">What to do</string>
+    <string name="check_another">Check another plant</string>
+    <string name="best_match_note">Best match among supported plants</string>
+    <string name="disclaimer">This is a screening aid, not a diagnosis. Confirm with your local agriculture officer or Krishi Vigyan Kendra.</string>
+    <string name="call_kcc">Call Kisan Call Centre</string>
+
+    <!-- Offline & Storage -->
+    <string name="saved_offline">No internet. Your photo is saved. We will check it when you are online.</string>
+    <string name="status_waiting">Waiting for internet</string>
+    <string name="status_sending">Sending</string>
+    <string name="status_failed">Could not send</string>
+    <string name="try_again">Try again</string>
+    <string name="no_tests_yet">No tests yet</string>
+    <string name="delete_test_title">Delete this test?</string>
+    <string name="delete">Delete</string>
+    <string name="delete_all_title">Delete all tests?</string>
+
+    <!-- Errors & Privacy -->
+    <string name="error_server_busy">The server is busy. Please try again.</string>
+    <string name="error_timeout">This is taking too long. Please try again.</string>
+    <string name="error_not_configured">This service is not set up yet.</string>
+    <string name="camera_primer">AgriSmart needs the camera to photograph your plant.</string>
+    <string name="allow_camera">Allow camera</string>
+    <string name="privacy_notice">Your photo is sent to AgriSmart only to check your plant. We do not ask for your name or location.</string>
+    <string name="practice_label">Practice</string>
+    <string name="mock_banner">Sample results: no server set</string>
+</resources>

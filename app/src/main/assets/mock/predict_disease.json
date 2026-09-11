@@ -1,0 +1,26 @@
+{
+  "test_id": "srv_8f2c1e",
+  "client_test_id": "3b0d1f7e-6a0c-4a4f-9d7e-0c1b2a3d4e5f",
+  "model_version": "model-v2",
+  "status": "disease",
+  "crop": { "id": "tomato", "name": "Tomato" },
+  "crop_check": { "matches_selection": true, "detected_crop": { "id": "tomato", "name": "Tomato" } },
+  "disease": { "id": "tomato_late_blight", "name": "Late blight", "label": "Tomato___Late_blight" },
+  "confidence": 0.82,
+  "confidence_level": "high",
+  "alternatives": [
+    { "id": "tomato_early_blight", "name": "Early blight", "confidence": 0.07 }
+  ],
+  "coverage_note": null,
+  "advice": {
+    "summary": "A fungus-like disease that spreads fast in cool, wet weather.",
+    "steps": [
+      "Remove and destroy the affected leaves.",
+      "Water at the base of the plant, not on the leaves.",
+      "Ask your local agriculture officer which spray to use."
+    ],
+    "prevention": ["Leave space between plants so leaves dry quickly."],
+    "source": "Reviewed extension guidance"
+  },
+  "quality": { "warnings": [] }
+}

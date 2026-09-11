@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.AgriSmart" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <item name="colorPrimary">#1E6B3C</item>
+        <item name="colorPrimaryDark">#00391C</item>
+        <item name="colorAccent">#7FD49A</item>
+        <item name="android:windowBackground">@android:color/white</item>
+    </style>
+</resources>
