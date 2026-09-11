@@ -340,26 +340,33 @@ per_source_count = Counter()
 
 
 def add_kaggle_source(crop, spec):
+    # Each KAGGLE_ROOTS[x] is already "the folder whose direct children are the class folders" for a
+    # simple case (mango, sugarcane, banana), or one level above it for the others -- these mappings add
+    # only the extra segment each one actually needs, verified against a real file listing of each
+    # dataset. (An earlier version of this function double-appended segments already inside KAGGLE_ROOTS,
+    # which silently produced 0 images for paddy doctor's rice classes, wheat, cotton and banana.)
     kaggle_root_by_prefix = {
         "color": KAGGLE_ROOTS["plantvillage"] / "color",
-        "paddy-disease-classification/train_images": KAGGLE_ROOTS["paddy_doctor"] / "paddy-disease-classification" / "train_images",
-        "data/train": KAGGLE_ROOTS["wheat"] / "data" / "train",
+        "paddy-disease-classification/train_images": KAGGLE_ROOTS["paddy_doctor"] / "train_images",
+        "data/train": KAGGLE_ROOTS["wheat"] / "train",
     }
     root_key = spec["root"]
     if root_key in kaggle_root_by_prefix:
         base = kaggle_root_by_prefix[root_key]
     elif "SAR-CLD" in root_key:
-        base = KAGGLE_ROOTS["sar_cld"]
+        base = KAGGLE_ROOTS["sar_cld"] / "Original Dataset" / "Original Dataset"
     elif "Cotton_Original_Dataset" in root_key:
-        base = KAGGLE_ROOTS["ripon_cotton"]
+        base = KAGGLE_ROOTS["ripon_cotton"] / "Cotton_Original_Dataset" / "Cotton_Original_Dataset"
     elif root_key == "" and crop == "sugarcane":
         base = KAGGLE_ROOTS["sugarcane"]
     elif root_key == "" and crop == "mango":
         base = KAGGLE_ROOTS["mango"]
     elif "Banana Disease Recognition" in root_key:
-        base = KAGGLE_ROOTS["banana"] / "Original Images" / "Original Images"
+        base = KAGGLE_ROOTS["banana"]
     else:
         raise ValueError(f"Unrecognised Kaggle root for {crop}: {root_key!r}")
+    if not base.is_dir():
+        raise FileNotFoundError(f"{crop}: expected class folders under {base}, but it does not exist")
 
     for src_label, canon in spec["class_map"].items():
         if not canon:
@@ -408,6 +415,9 @@ def add_hf_source(crop, spec):
         skipped_labels[f"{crop}:{repo} (hf, load failed)"] += 1
         return
     label_feature = ds.features.get("label")
+    # Only a ClassLabel feature has int2str; some sources (e.g. the tea dataset) store "label" as a plain
+    # Value(int64) or a string, which crashed the first run with AttributeError on this line.
+    is_class_label = isinstance(label_feature, hfds.ClassLabel)
     filt_col, filt_val = spec.get("split_col"), spec.get("split_value")
     buckets = {}  # canon label -> list of jpeg bytes, capped as we go
     n_seen = 0
@@ -416,7 +426,7 @@ def add_hf_source(crop, spec):
         if filt_col and row.get(filt_col) != filt_val:
             continue
         raw_label = row["label"]
-        src_label = label_feature.int2str(raw_label) if label_feature is not None and isinstance(raw_label, int) else str(raw_label)
+        src_label = label_feature.int2str(raw_label) if is_class_label and isinstance(raw_label, int) else str(raw_label)
         canon = spec["class_map"].get(src_label)
         if not canon:
             if src_label not in spec["class_map"]:
