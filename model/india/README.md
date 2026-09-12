@@ -73,8 +73,18 @@ of 80k class-balanced draws each. The run took 4.8 h on a Kaggle T4. The full sc
 | Research-dataset photos, clean part | 20,144 | 0.926 | 0.940 |
 | Field photos (PlantWild) | 2,983 | 0.744 (0.857 with the crop chosen) | 0.747 |
 
-- **Target:** not met yet. The target is macro-F1 ≥ 0.95 on the clean test. A v2 run is training:
-  336 px, layer-wise learning-rate decay and weight EMA, continued from v1.
+- **Target:** not met. The target is macro-F1 ≥ 0.95 on the clean test.
+- **v2 attempt (13 Sep 2026), not adopted.** It used 336 px, layer-wise learning-rate decay 0.85 and
+  weight EMA, with 6 fine-tune epochs continued from v1 (4.4 h on a T4). It did not improve:
+
+  | | v1 | v2 |
+  |---|---:|---:|
+  | Clean macro-F1 | 0.906 | 0.902 |
+  | With the crop chosen | 0.926 | 0.923 |
+  | Field photos | 0.744 | 0.741 |
+
+  v1 stays the released model. The plateau points to the data (few field photos for some classes),
+  not to image resolution.
 - **Leakage audit:** 428 of the 28,328 test photos (1.5%) have a training photo at DINOv2 cosine
   ≥ 0.95. Those photos are left out of the clean number.
 - **Weakest crops by macro-F1:** ginger 0.61, ash gourd 0.69, okra 0.75, spinach 0.76,
