@@ -64,6 +64,10 @@ try:
 except ImportError:
     subprocess.run([sys.executable, "-m", "pip", "install", "-q", "timm"], check=True)
     import timm
+# `import timm` alone does not load these submodules (the first v2 smoke test died on `timm.optim`)
+import timm.layers
+import timm.optim
+import timm.utils
 
 import matplotlib.pyplot as plt
 import numpy as np
