@@ -1,6 +1,6 @@
 {
-  "id": "vatsalkadiya/india-train",
-  "title": "india-train",
+  "id": "vatsalkadiya/india-train-v2",
+  "title": "india-train-v2",
   "code_file": "india_train.ipynb",
   "language": "python",
   "kernel_type": "notebook",
@@ -11,7 +11,8 @@
   "dataset_sources": [],
   "competition_sources": [],
   "kernel_sources": [
-    "vatsalkadiya/india-data-prep"
+    "vatsalkadiya/india-data-prep",
+    "vatsalkadiya/india-train"
   ],
   "model_sources": []
 }

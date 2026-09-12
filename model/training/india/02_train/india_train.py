@@ -25,15 +25,17 @@
 
 # %%
 CFG = {
-    "run_name": "india_v1",
+    "run_name": "india_v2",
     "backbone": "vit_base_patch14_dinov2.lvd142m",  # more classes -> more capacity than the core model's ViT-S
-    "img_size": 224,
-    "batch_size": 48,
-    "lp_epochs": 2,
-    "ft_epochs": 14,
+    "img_size": 336,                  # v1 trained at 224; small lesions need the pixels (photos are stored at 384)
+    "batch_size": 32,
+    "lp_epochs": 2,                   # skipped automatically when resuming from a trained model
+    "ft_epochs": 6,
     "lr_head_lp": 1e-3,
-    "lr_backbone": 1.5e-5,
-    "lr_head": 1.5e-4,
+    "lr_backbone": 1.5e-5,            # only used when layer_decay is None
+    "lr_head": 5e-5,
+    "layer_decay": 0.85,              # layer-wise LR decay: each block further from the head learns 0.85x slower
+    "ema_decay": 0.9998,              # evaluate and keep an exponential moving average of the weights
     "weight_decay": 0.05,
     "warmup_frac": 0.05,
     "label_smoothing": 0.1,
@@ -43,7 +45,7 @@ CFG = {
     "tta": True,
     "num_workers": 4,
     "seed": 42,
-    "resume_from": "",                # path to a previous run's model.pt to continue fine-tuning; "" = fresh
+    "resume_from": "auto",            # "auto": continue from a trained india-train model.pt attached as input; "" = fresh
 }
 
 # %%
@@ -265,13 +267,36 @@ test_ds = ImgSet(test_df, eval_tf)
 train_dl = DataLoader(train_ds, batch_size=CFG["batch_size"], sampler=sampler, drop_last=True, **loader_args)
 test_dl = DataLoader(test_ds, batch_size=128, **loader_args)
 
-if CFG["resume_from"] and Path(CFG["resume_from"]).exists():
-    prev = torch.load(CFG["resume_from"], map_location="cpu", weights_only=True)
+def find_resume():
+    """The model.pt to continue from: an explicit path, or ("auto") a previous india-train output attached
+    as an input (recognised by model.pt sitting next to crops.json)."""
+    if CFG["resume_from"] != "auto":
+        return Path(CFG["resume_from"]) if CFG["resume_from"] and Path(CFG["resume_from"]).exists() else None
+    for root, dirs, files in os.walk("/kaggle/input"):
+        if "model.pt" in files and "crops.json" in files:
+            return Path(root) / "model.pt"
+        if root.count(os.sep) >= 8:
+            dirs[:] = []
+    return None
+
+
+RESUMED = False
+resume_path = find_resume()
+if resume_path:
+    prev = torch.load(resume_path, map_location="cpu", weights_only=True)
     if prev["labels"] == GCLASSES:
-        model.load_state_dict(prev["state_dict"])
-        log(f"resumed weights from {CFG['resume_from']}")
+        state = prev["state_dict"]
+        pe = state.get("pos_embed")
+        if pe is not None and pe.shape != model.pos_embed.shape:  # trained at another resolution
+            state["pos_embed"] = timm.layers.resample_abs_pos_embed(
+                pe, new_size=model.patch_embed.grid_size, num_prefix_tokens=getattr(model, "num_prefix_tokens", 1))
+            log(f"resized position embeddings {tuple(pe.shape)} -> {tuple(state['pos_embed'].shape)} "
+                f"for {CFG['img_size']} px")
+        model.load_state_dict(state)
+        RESUMED = True
+        log(f"resumed weights from {resume_path} (trained at {prev.get('img_size')} px, run {prev.get('run')})")
     else:
-        log("resume_from has a different class list; starting from the pretrained backbone instead")
+        log("the attached model.pt has a different class list; starting from the pretrained backbone instead")
 
 # %% [markdown]
 # ## 3 · Train: linear probe, then fine-tune. The checkpoint with the best test macro-F1 is kept.
@@ -298,15 +323,16 @@ def cosine_schedule(opt, total_steps, warmup_steps):
 
 
 @torch.no_grad()
-def predict_probs(loader, tta=False):
-    model.eval()
+def predict_probs(loader, tta=False, net=None):
+    net = net or model
+    net.eval()
     probs = []
     for x, _ in loader:
         x = x.to(DEVICE, non_blocking=True)
         with torch.autocast("cuda", dtype=torch.float16, enabled=USE_AMP):
-            p = model(x).float().softmax(1)
+            p = net(x).float().softmax(1)
             if tta:
-                p = (p + model(torch.flip(x, dims=[3])).float().softmax(1)) / 2
+                p = (p + net(torch.flip(x, dims=[3])).float().softmax(1)) / 2
         probs.append(p.cpu())
     return torch.cat(probs).numpy()
 
@@ -321,13 +347,15 @@ def score(probs, labels):
 history, best = [], {"test_f1": -1.0}
 
 
-def run_stage(stage, epochs, param_groups):
+def run_stage(stage, epochs, param_groups, use_ema=False):
     if epochs <= 0:
         return
     opt = torch.optim.AdamW(param_groups, weight_decay=CFG["weight_decay"])
     total = epochs * len(train_dl)
     sched = cosine_schedule(opt, total, max(1, int(CFG["warmup_frac"] * total)))
     trainable = [p for g in param_groups for p in g["params"]]
+    # an exponential moving average of the weights: evaluated each epoch and kept if it scores best
+    ema = timm.utils.ModelEmaV3(model, decay=CFG["ema_decay"], use_warmup=True) if use_ema and CFG.get("ema_decay") else None
     for epoch in range(1, epochs + 1):
         model.train()
         t, loss_sum, seen = time.time(), torch.zeros((), device=DEVICE), 0
@@ -342,16 +370,19 @@ def run_stage(stage, epochs, param_groups):
             scaler.step(opt)
             scaler.update()
             sched.step()
+            if ema is not None:
+                ema.update(model)
             loss_sum += loss.detach() * len(y)
             seen += len(y)
-        test = score(predict_probs(test_dl), test_ds.labels)
+        eval_net = ema.module if ema is not None else model
+        test = score(predict_probs(test_dl, net=eval_net), test_ds.labels)
         row = {"stage": stage, "epoch": epoch, "train_loss": float(loss_sum) / seen,
                "test_f1": test["macro_f1"], "test_acc": test["accuracy"], "minutes": (time.time() - t) / 60}
         history.append(row)
         marker = ""
         if test["macro_f1"] > best["test_f1"]:
             best.update(test_f1=test["macro_f1"], stage=stage, epoch=epoch)
-            torch.save(model.state_dict(), OUT / "best_state.pt")
+            torch.save(eval_net.state_dict(), OUT / "best_state.pt")
             marker = "  <- best so far"
         log(f"{stage} {epoch}/{epochs} | loss {row['train_loss']:.3f} | test F1 {row['test_f1']:.4f} "
             f"(acc {row['test_acc']:.4f}) | {row['minutes']:.1f} min{marker}")
@@ -365,12 +396,22 @@ def run_stage(stage, epochs, param_groups):
 # whole backbone at the head's 1e-3 learning rate -- enough to wreck DINOv2's pretrained features.
 for p in backbone_params:
     p.requires_grad = False
-if not CFG["resume_from"]:
+if not RESUMED:
     run_stage("linear-probe", CFG["lp_epochs"], [{"params": head_params, "lr": CFG["lr_head_lp"]}])
 for p in backbone_params:
     p.requires_grad = True
-run_stage("fine-tune", CFG["ft_epochs"], [{"params": backbone_params, "lr": CFG["lr_backbone"]},
-                                          {"params": head_params, "lr": CFG["lr_head"]}])
+if CFG.get("layer_decay"):
+    # layer-wise LR decay: the head learns at lr_head, each transformer block below it 0.85x slower
+    ft_groups = timm.optim.param_groups_layer_decay(model, weight_decay=CFG["weight_decay"],
+                                                     layer_decay=CFG["layer_decay"],
+                                                     no_weight_decay_list=list(model.no_weight_decay()))
+    for g in ft_groups:
+        g["lr"] = CFG["lr_head"] * g.pop("lr_scale", 1.0)
+    log(f"fine-tune: {len(ft_groups)} layer-decay groups, lr {min(g['lr'] for g in ft_groups):.2e} "
+        f".. {max(g['lr'] for g in ft_groups):.2e}")
+else:
+    ft_groups = [{"params": backbone_params, "lr": CFG["lr_backbone"]}, {"params": head_params, "lr": CFG["lr_head"]}]
+run_stage("fine-tune", CFG["ft_epochs"], ft_groups, use_ema=True)
 log(f"best test macro-F1 {best['test_f1']:.4f} at {best.get('stage')} epoch {best.get('epoch')}")
 
 hist = pd.DataFrame(history)

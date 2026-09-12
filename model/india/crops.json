@@ -1,0 +1,507 @@
+{
+ "apple": [
+  "Alternaria leaf blotch",
+  "Apple scab",
+  "Black rot",
+  "Cedar apple rust",
+  "Healthy",
+  "Mosaic virus"
+ ],
+ "ash_gourd": [
+  "Aphid (pest)",
+  "Downy mildew",
+  "Healthy",
+  "Leaf curl virus"
+ ],
+ "banana": [
+  "Anthracnose",
+  "Aphid (pest)",
+  "Bacterial soft rot",
+  "Bract mosaic virus",
+  "Bunchy top virus",
+  "Cigar end rot",
+  "Cordana leaf spot",
+  "Fruit scarring beetle (pest)",
+  "Healthy",
+  "Insect pest damage",
+  "Moko (bacterial wilt)",
+  "Panama disease (fusarium wilt)",
+  "Pestalotiopsis leaf spot",
+  "Potassium deficiency",
+  "Pseudostem weevil (pest)",
+  "Sigatoka leaf spot"
+ ],
+ "bean": [
+  "Anthracnose",
+  "Blight",
+  "Halo blight",
+  "Healthy",
+  "Mosaic virus",
+  "Rust"
+ ],
+ "bell_pepper": [
+  "Bacterial spot",
+  "Blossom end rot",
+  "Healthy"
+ ],
+ "betel": [
+  "Bacterial leaf disease",
+  "Dried leaf",
+  "Fungal brown spot",
+  "Healthy",
+  "Leaf rot",
+  "Leaf spot"
+ ],
+ "bitter_gourd": [
+  "Downy mildew",
+  "Fusarium wilt",
+  "Healthy",
+  "Mosaic virus"
+ ],
+ "black_gram": [
+  "Anthracnose",
+  "Cercospora leaf spot",
+  "Healthy",
+  "Insect pest damage",
+  "Leaf crinkle virus",
+  "Powdery mildew",
+  "Yellow mosaic virus"
+ ],
+ "blueberry": [
+  "Healthy"
+ ],
+ "bottle_gourd": [
+  "Alternaria leaf blight",
+  "Anthracnose",
+  "Downy mildew",
+  "Healthy",
+  "Mosaic virus"
+ ],
+ "brinjal_eggplant": [
+  "Begomovirus leaf curl",
+  "Cercospora leaf spot",
+  "Fruit cracking",
+  "Fruit rot",
+  "Healthy",
+  "Insect pest damage",
+  "Mosaic virus",
+  "Phomopsis blight",
+  "Shoot and fruit borer (pest)",
+  "White mold",
+  "Wilt"
+ ],
+ "cabbage": [
+  "Alternaria leaf spot",
+  "Black rot",
+  "Downy mildew",
+  "Healthy"
+ ],
+ "cashew": [
+  "Anthracnose",
+  "Gummosis",
+  "Healthy",
+  "Leaf miner (pest)",
+  "Red rust (algal)"
+ ],
+ "cauliflower": [
+  "Alternaria leaf spot",
+  "Bacterial soft rot",
+  "Black rot",
+  "Downy mildew",
+  "Healthy",
+  "Insect pest damage"
+ ],
+ "cherry": [
+  "Healthy",
+  "Leaf spot",
+  "Powdery mildew"
+ ],
+ "chilli": [
+  "Cercospora leaf spot",
+  "Healthy",
+  "Mites and thrips (pest)",
+  "Nutrient deficiency",
+  "Powdery mildew"
+ ],
+ "citrus_orange": [
+  "Black spot",
+  "Citrus canker",
+  "Citrus greening (HLB)",
+  "Dieback",
+  "Greasy spot",
+  "Healthy",
+  "Leaf miner (pest)",
+  "Mealybug (pest)",
+  "Mite damage",
+  "Nutrient deficiency",
+  "Powdery mildew",
+  "Scale insect (pest)",
+  "Shot hole",
+  "Spiny whitefly (pest)"
+ ],
+ "coconut": [
+  "Bud root dropping",
+  "Bud rot",
+  "Grey leaf spot",
+  "Leaf rot",
+  "Stem bleeding"
+ ],
+ "coffee": [
+  "Cercospora leaf spot",
+  "Healthy",
+  "Leaf miner (pest)",
+  "Leaf rust",
+  "Phoma leaf spot"
+ ],
+ "corn_maize": [
+  "Common rust",
+  "Common smut",
+  "Curvularia leaf spot",
+  "Fall armyworm (pest)",
+  "Grasshopper (pest)",
+  "Gray leaf spot",
+  "Healthy",
+  "Leaf beetle (pest)",
+  "Northern leaf blight"
+ ],
+ "cotton": [
+  "Alternaria leaf spot",
+  "Bacterial blight",
+  "Fusarium wilt",
+  "Healthy",
+  "Herbicide damage",
+  "Leaf curl virus",
+  "Leaf reddening",
+  "Leaf variegation",
+  "Leafhopper / jassid (pest)",
+  "Verticillium wilt"
+ ],
+ "cowpea": [
+  "Bacterial wilt",
+  "Healthy",
+  "Mosaic virus",
+  "Septoria leaf spot"
+ ],
+ "cucumber": [
+  "Angular leaf spot",
+  "Anthracnose",
+  "Bacterial wilt",
+  "Belly rot (fruit)",
+  "Downy mildew",
+  "Gummy stem blight",
+  "Healthy",
+  "Powdery mildew",
+  "Pythium fruit rot"
+ ],
+ "custard_apple": [
+  "Anthracnose",
+  "Black canker",
+  "Diplodia fruit rot",
+  "Fruit spot",
+  "Leaf spot",
+  "Mealybug (pest)"
+ ],
+ "finger_millet_ragi": [
+  "Downy mildew",
+  "Healthy",
+  "Mottle streak virus",
+  "Smut",
+  "Wilt"
+ ],
+ "garlic": [
+  "Healthy",
+  "Leaf blight",
+  "Rust"
+ ],
+ "ginger": [
+  "Healthy",
+  "Leaf spot",
+  "Sheath blight"
+ ],
+ "grape": [
+  "Bacterial leaf spot",
+  "Black rot",
+  "Downy mildew",
+  "Esca (black measles)",
+  "Healthy",
+  "Isariopsis leaf spot",
+  "Leafroll virus",
+  "Powdery mildew"
+ ],
+ "groundnut": [
+  "Alternaria leaf spot",
+  "Healthy",
+  "Nutrient deficiency",
+  "Rosette virus",
+  "Rust",
+  "Tikka leaf spot"
+ ],
+ "guava": [
+  "Anthracnose",
+  "Canker",
+  "Dot (algal spot)",
+  "Fruit mummification",
+  "Healthy",
+  "Phytophthora fruit rot",
+  "Red rust",
+  "Scab",
+  "Styler end rot"
+ ],
+ "jamun": [
+  "Bacterial spot",
+  "Brown blight",
+  "Dry leaf",
+  "Healthy",
+  "Powdery mildew",
+  "Sooty mould"
+ ],
+ "jute": [
+  "Dieback",
+  "Healthy",
+  "Mosaic virus",
+  "Pest-holed leaf",
+  "Stem rot"
+ ],
+ "lemon": [
+  "Anthracnose",
+  "Bacterial blight",
+  "Citrus canker",
+  "Dry leaf",
+  "Healthy",
+  "Leaf curl virus",
+  "Nutrient deficiency",
+  "Sooty mould",
+  "Spider mites (pest)"
+ ],
+ "lentil": [
+  "Ascochyta blight",
+  "Healthy",
+  "Powdery mildew",
+  "Rust"
+ ],
+ "malabar_spinach": [
+  "Anthracnose leaf spot",
+  "Healthy",
+  "Mite damage"
+ ],
+ "mango": [
+  "Anthracnose",
+  "Bacterial canker",
+  "Cutting weevil (pest)",
+  "Die back",
+  "Gall midge (pest)",
+  "Healthy",
+  "Powdery mildew",
+  "Sooty mould"
+ ],
+ "moringa": [
+  "Bacterial leaf spot",
+  "Cercospora leaf spot",
+  "Healthy",
+  "Yellowing leaf"
+ ],
+ "okra": [
+  "Alternaria leaf spot",
+  "Cercospora leaf spot",
+  "Downy mildew",
+  "Healthy",
+  "Leaf curl virus",
+  "Phyllosticta leaf spot",
+  "Yellow vein mosaic virus"
+ ],
+ "onion": [
+  "Botrytis leaf blight",
+  "Caterpillar (pest)",
+  "Downy mildew",
+  "Fusarium basal rot",
+  "Healthy",
+  "Iris yellow spot virus",
+  "Purple blotch",
+  "Rust",
+  "Stemphylium / Colletotrichum blight",
+  "Xanthomonas leaf blight"
+ ],
+ "papaya": [
+  "Anthracnose",
+  "Bacterial spot",
+  "Healthy",
+  "Leaf curl virus",
+  "Mealybug (pest)",
+  "Mite damage",
+  "Mosaic virus",
+  "Ring spot virus"
+ ],
+ "peach": [
+  "Bacterial spot",
+  "Brown rot",
+  "Healthy",
+  "Leaf curl",
+  "Scab"
+ ],
+ "pomegranate": [
+  "Alternaria fruit spot",
+  "Anthracnose",
+  "Bacterial blight (oily spot)",
+  "Cercospora fruit spot",
+  "Fruit borer (pest)",
+  "Healthy",
+  "Sunburn"
+ ],
+ "potato": [
+  "Early blight",
+  "Healthy",
+  "Insect pest damage",
+  "Late blight",
+  "Virus disease"
+ ],
+ "pumpkin": [
+  "Bacterial leaf spot",
+  "Downy mildew",
+  "Healthy",
+  "Mosaic virus",
+  "Powdery mildew"
+ ],
+ "radish": [
+  "Black leaf spot",
+  "Downy mildew",
+  "Flea beetle (pest)",
+  "Healthy",
+  "Mosaic virus"
+ ],
+ "raspberry": [
+  "Healthy"
+ ],
+ "rice": [
+  "Bacterial leaf blight",
+  "Bacterial leaf streak",
+  "Bacterial panicle blight",
+  "Blast",
+  "Brown spot",
+  "Dead heart (stem borer)",
+  "Downy mildew",
+  "Healthy",
+  "Hispa (pest)",
+  "Leaf folder (pest)",
+  "Leaf scald",
+  "Sheath blight",
+  "Tungro"
+ ],
+ "soybean": [
+  "Bacterial blight",
+  "Downy mildew",
+  "Dry leaf",
+  "Frogeye leaf spot",
+  "Healthy",
+  "Mosaic virus",
+  "Rust",
+  "Semilooper caterpillar (pest)",
+  "Septoria brown spot",
+  "Vein necrosis"
+ ],
+ "spinach": [
+  "Anthracnose",
+  "Bacterial spot",
+  "Downy mildew",
+  "Healthy",
+  "Insect pest damage"
+ ],
+ "squash": [
+  "Healthy",
+  "Powdery mildew"
+ ],
+ "strawberry": [
+  "Anthracnose",
+  "Healthy",
+  "Leaf scorch"
+ ],
+ "sugarcane": [
+  "Banded chlorosis",
+  "Brown spot",
+  "Dried leaf",
+  "Grassy shoot",
+  "Healthy",
+  "Mosaic virus",
+  "Pokkah boeng",
+  "Red rot",
+  "Rust",
+  "Sett rot",
+  "Smut",
+  "Yellow leaf disease"
+ ],
+ "sunflower": [
+  "Downy mildew",
+  "Gray mold",
+  "Healthy",
+  "Leaf scars"
+ ],
+ "tea": [
+  "Algal leaf spot",
+  "Blister blight",
+  "Brown blight",
+  "Gray blight",
+  "Green mirid bug (pest)",
+  "Healthy",
+  "Red leaf spot",
+  "Red rust (algal)",
+  "Red spider mite (pest)",
+  "Tea mosquito bug (helopeltis)"
+ ],
+ "tobacco": [
+  "Brown spot",
+  "Healthy",
+  "Mosaic virus"
+ ],
+ "tomato": [
+  "Bacterial spot",
+  "Blossom end rot",
+  "Early blight",
+  "Fruit borer (pest)",
+  "Healthy",
+  "Late blight",
+  "Leaf miner (pest)",
+  "Leaf mold",
+  "Magnesium deficiency",
+  "Mosaic virus",
+  "Nitrogen deficiency",
+  "Potassium deficiency",
+  "Septoria leaf spot",
+  "Spider mites (pest)",
+  "Spotted wilt virus",
+  "Sunscald",
+  "Target spot",
+  "Yellow leaf curl virus"
+ ],
+ "turmeric": [
+  "Aphid (pest)",
+  "Dry leaf",
+  "Healthy",
+  "Healthy rhizome",
+  "Leaf blotch",
+  "Leaf spot",
+  "Rhizome rot"
+ ],
+ "watermelon": [
+  "Anthracnose",
+  "Downy mildew",
+  "Healthy",
+  "Mosaic virus"
+ ],
+ "wheat": [
+  "Aphid (pest)",
+  "Bacterial leaf streak",
+  "Black (stem) rust",
+  "Blast",
+  "Brown (leaf) rust",
+  "Common root rot",
+  "Fusarium head blight",
+  "Healthy",
+  "Leaf blight",
+  "Mite (pest)",
+  "Powdery mildew",
+  "Septoria blotch",
+  "Smut",
+  "Stem fly (pest)",
+  "Tan spot",
+  "Yellow (stripe) rust"
+ ]
+}

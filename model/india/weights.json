@@ -1,0 +1,8 @@
+{
+  "release": "india-model-v1",
+  "url": "https://github.com/wpzvqrs8/SIH_2026/releases/download/india-model-v1/model.pt",
+  "sha256": "ffaffb1e3ca0a81831454e8268b11cf2d16b418838042b023ad188f79e61a08a",
+  "size_bytes": 344160243,
+  "size_mb": 344.2,
+  "trained_by": "model/training/india/02_train (Kaggle run india-train v1)"
+}
