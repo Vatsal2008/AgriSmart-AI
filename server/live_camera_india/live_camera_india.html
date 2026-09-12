@@ -65,6 +65,9 @@
   .cropBtns { display: flex; flex-wrap: wrap; gap: 10px; }
   .cropBtns button { font-size: 1.05rem; padding: 10px 16px; }
   .cropBtns button small { opacity: .7; margin-inline-start: 8px; }
+  .advice { margin: 0 0 18px; }
+  .advice ol { margin: 6px 0 8px; padding-inline-start: 22px; }
+  .advice li { margin: 7px 0; line-height: 1.45; }
 
   .result { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 22px 22px 18px; }
   .chip { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 12px; font-weight: 600;
@@ -135,6 +138,11 @@
       <div class="cropBtns" id="cropBtns"></div>
     </div>
     <button id="listenBtn" type="button" style="margin-bottom:18px" hidden></button>
+    <div class="advice" id="advice" hidden>
+      <h2 class="label" id="adviceTitle"></h2>
+      <ol id="adviceList"></ol>
+      <p class="fine" id="adviceNote"></p>
+    </div>
     <h2 class="label" id="statsLabel"></h2>
     <ol class="alts" id="alts"></ol>
     <p class="fine" id="disclaimer"></p>
@@ -151,6 +159,7 @@
   const BOX = 0.7, WINDOW = 5, AGREE = 3, SURE = 0.50, UNSURE = 0.28;
 
   let T = null;              // translations.json
+  let ADV = null;            // advice.json: what-to-do steps per disease
   let CROPS = {};            // {crop_id: [english label, ...]}
   let lang = localStorage.getItem("agrismart_lang") || (navigator.language || "en").split("-")[0];
   let chosenCrop = localStorage.getItem("agrismart_crop") || "";
@@ -244,16 +253,47 @@
     return item.healthy ? `${cropName(item.crop)}. ${t("healthy_result")}.` : `${cropName(item.crop)}. ${termName(item.label)}.`;
   }
 
+  // ---- what-to-do advice ----------------------------------------------------
+  function adviceSteps(item) {
+    if (!ADV || !item) return [];
+    const group = ADV.crop_terms[`${item.crop}::${item.label}`] || ADV.terms[item.label] ||
+                  (item.healthy ? "healthy" : ADV.default);
+    return (ADV.groups[group] || []).map(([key, params]) => {
+      const tpl = ADV.templates[key] || {};
+      const text = (tpl[lang] || tpl.en || "").replace(/\{(\w+)\}/g, (m, k) => (params && k in params ? params[k] : m));
+      return { key, text };
+    });
+  }
+
+  function renderAdvice(item) {
+    const steps = adviceSteps(item);
+    $("advice").hidden = steps.length === 0;
+    if (!steps.length) return;
+    $("adviceTitle").textContent = t("advice_title");
+    $("adviceNote").textContent = item.healthy ? "" : t("advice_note");
+    const list = $("adviceList"); list.innerHTML = "";
+    steps.forEach((s) => { const li = document.createElement("li"); li.textContent = s.text; list.appendChild(li); });
+  }
+
+  // speaks the result in the chosen language: automatically the first steps, "Listen" reads all of them
+  function speakResult(best, data, maxSteps) {
+    if (data && data.crop_matches === false) return say(t("crop_mismatch"));
+    let steps = adviceSteps(best);
+    if (maxSteps < 50) steps = steps.filter((s) => s.key !== "safety" && s.key !== "expert").slice(0, maxSteps);
+    say([spokenText(best), ...steps.map((s) => s.text)].join(" "));
+  }
+
   // ---- status / data load ---------------------------------------------------
   function setConn(state, text) { $("conn").className = "conn " + state; $("connText").textContent = text; }
 
   async function boot() {
-    const [tr_, crops, health] = await Promise.all([
+    const [tr_, crops, health, adv] = await Promise.all([
       fetch("/translations.json").then((r) => r.json()),
       fetch("/crops").then((r) => r.json()),
       fetch("/health").then((r) => r.json()).catch(() => null),
+      fetch("/advice.json").then((r) => r.json()).catch(() => null),
     ]);
-    T = tr_; CROPS = crops;
+    T = tr_; CROPS = crops; ADV = adv && adv.groups ? adv : null;
     if (!(lang in (T.languages.reduce((m, l) => (m[l.code] = 1, m), {})))) lang = "en";
     buildLangSelect(); buildCropSelect(); applyStaticText();
     if (health) {
@@ -353,7 +393,7 @@
     if (votes.length >= AGREE && meanP >= SURE) {
       renderSure(best, meanP, votes.length, data);
       lastResult = { kind: "sure", item: best, meanP, agree: votes.length, data };
-      if (key !== spokenKey) { say(data.crop_matches === false ? t("crop_mismatch") : spokenText(best)); spokenKey = key; }
+      if (key !== spokenKey) { speakResult(best, data, 2); spokenKey = key; }
     } else {
       renderChecking();
     }
@@ -363,7 +403,7 @@
   function setChip(kind, text) { $("chip").className = "chip" + (kind ? " " + kind : ""); $("chip").textContent = text; }
 
   function renderIdle() {
-    $("askCrop").hidden = true;
+    $("askCrop").hidden = true; $("advice").hidden = true;
     setChip("", ""); $("crop").textContent = ""; $("disease").textContent = t("subtitle");
     $("fill").style.width = "0%"; $("conf").textContent = ""; $("alts").innerHTML = "";
     $("listenBtn").hidden = true;
@@ -372,6 +412,7 @@
   function renderSure(best, meanP, agree, data) {
     shown = best; $("result").classList.remove("stale"); $("askCrop").hidden = true;
     if (data.crop_matches === false) {
+      $("advice").hidden = true;
       setChip("disease", t("crop_mismatch"));
       $("crop").textContent = cropName(chosenCrop);
       $("disease").textContent = `${cropName(best.crop)} · ${termName(best.label)}`;
@@ -382,12 +423,13 @@
       $("crop").textContent = cropName(best.crop);
       $("disease").textContent = best.healthy ? t("healthy_result") : termName(best.label);
       $("fill").className = "fill " + kind; box.className = "box " + kind;
+      renderAdvice(best);
     }
     $("fill").style.width = Math.round(meanP * 100) + "%";
     $("conf").textContent = `${t("how_sure")}: ${Math.round(meanP * 100)}% · ${agree}/${recent.length}`;
     $("listenBtn").hidden = false;
     $("listenBtn").textContent = t("listen");
-    $("listenBtn").onclick = () => say(data.crop_matches === false ? t("crop_mismatch") : spokenText(best));
+    $("listenBtn").onclick = () => speakResult(best, data, 99);
   }
 
   function renderChecking() {
@@ -397,6 +439,7 @@
 
   function renderUnsure(data) {
     shown = null; lastResult = { kind: "unsure", data }; $("result").classList.remove("stale"); $("askCrop").hidden = true;
+    $("advice").hidden = true;
     setChip("", t("not_sure")); $("crop").textContent = ""; $("disease").textContent = t("not_sure");
     $("fill").className = "fill"; $("fill").style.width = "0%"; $("conf").textContent = "";
     $("listenBtn").hidden = true; box.className = "box";
@@ -404,7 +447,7 @@
   }
 
   function renderAskCrop(data) {
-    shown = null; lastResult = { kind: "ask", data }; $("result").classList.remove("stale");
+    shown = null; lastResult = { kind: "ask", data }; $("result").classList.remove("stale"); $("advice").hidden = true;
     setChip("", t("which_crop")); $("crop").textContent = ""; $("disease").textContent = t("which_crop");
     $("fill").className = "fill"; $("fill").style.width = "0%"; $("conf").textContent = "";
     $("listenBtn").hidden = true; box.className = "box";
@@ -468,7 +511,7 @@
       if (!best || best.p < UNSURE) { renderUnsure(data); return; }
       renderSure(best, best.p, 1, data);
       lastResult = { kind: "sure", item: best, meanP: best.p, agree: 1, data };
-      say(data.crop_matches === false ? t("crop_mismatch") : spokenText(best));
+      speakResult(best, data, 2);
     } catch (err) {
       setConn("bad", "Can't reach the model.");
     }

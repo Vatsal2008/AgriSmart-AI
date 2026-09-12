@@ -33,6 +33,8 @@ APP = Path(__file__).resolve().parent
 MODEL_DIR = ROOT / "model" / "india"
 PAGE = (APP / "live_camera_india.html").read_bytes()
 TRANSLATIONS_BYTES = (APP / "india_translations.json").read_bytes()
+# what-to-do advice per disease, 13 languages (built by build_advice.py from the model's class list)
+ADVICE_BYTES = (APP / "india_advice.json").read_bytes() if (APP / "india_advice.json").exists() else b"{}"
 MAX_UPLOAD = 8 * 1024 * 1024
 TOP_N = 8  # how many classes the statistics panel shows
 
@@ -120,6 +122,8 @@ class Handler(BaseHTTPRequestHandler):
             self._send(200, PAGE, "text/html; charset=utf-8")
         elif self.path == "/translations.json":
             self._send(200, TRANSLATIONS_BYTES, "application/json; charset=utf-8")
+        elif self.path == "/advice.json":
+            self._send(200, ADVICE_BYTES, "application/json; charset=utf-8")
         elif self.path == "/health":
             self._json({"ok": True, "mode": BACKEND["mode"],
                        "crops": {c: len(v) for c, v in BACKEND["crops"].items()},
