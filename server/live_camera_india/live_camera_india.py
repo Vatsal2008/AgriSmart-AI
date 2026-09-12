@@ -87,6 +87,30 @@ def describe(gclass, p):
     return {"crop": crop, "label": label, "p": round(p, 4), "healthy": label == "Healthy"}
 
 
+# Look-alike plants (squash/cucumber, bean/soybean, tomato/potato, rice/wheat, cabbage/cauliflower...) are
+# where the model goes wrong most when no crop is chosen: on field photos it picks the right plant only
+# ~87% of the time. So the answer is judged per PLANT first (each crop's classes' probabilities added up),
+# and if the top plant is not clearly ahead, the page asks which crop it is instead of naming a disease.
+CROP_SURE = 0.50    # the top plant needs at least this share of the probability...
+CROP_MARGIN = 0.35  # ...and must lead the runner-up plant by at least this much (a 0.75 share rule asked
+                    # about clear photos too, e.g. grape 0.70 vs apple 0.04; the margin is what matters)
+MISMATCH = 0.15     # a chosen crop holding less than this share (and not on top) is flagged as a mismatch
+
+
+def crop_scores(probs):
+    agg = {}
+    for g, p in probs.items():
+        c = g.split("::", 1)[0]
+        agg[c] = agg.get(c, 0.0) + p
+    return sorted(agg.items(), key=lambda kv: -kv[1])
+
+
+def within(probs, crop):
+    """The distribution renormalised over one crop's classes (all other crops' classes dropped)."""
+    mass = sum(p for g, p in probs.items() if g.startswith(crop + "::"))
+    return {g: p / mass for g, p in probs.items() if g.startswith(crop + "::")} if mass > 0 else probs
+
+
 # ---------------------------------------------------------------------------
 # HTTP server
 # ---------------------------------------------------------------------------
@@ -123,16 +147,35 @@ class Handler(BaseHTTPRequestHandler):
         except Exception:
             return self._json({"error": "That file could not be read as an image."}, 400)
 
+        if crop not in BACKEND["crops"]:
+            crop = None
         t = time.perf_counter()
-        probs = INFER.submit(BACKEND["predict_proba"], image, crop).result()
+        # The real model always scores all crops' classes in one pass; a chosen crop narrows the answer
+        # afterwards. (Asking the model for the chosen crop only, as an earlier version did, made the
+        # detected crop always equal the chosen one, so a wrong crop choice could never be noticed.)
+        ask = None if BACKEND["mode"] == "real" else crop
+        raw = INFER.submit(BACKEND["predict_proba"], image, ask).result()
+        ranked = crop_scores(raw)
+        detected_crop = ranked[0][0] if ranked else None
+        share = dict(ranked)
+        ambiguous = False
+        if crop:
+            probs = within(raw, crop)
+            crop_matches = detected_crop == crop or share.get(crop, 0.0) >= MISMATCH
+        else:
+            crop_matches = True
+            ambiguous = len(ranked) > 1 and (ranked[0][1] < CROP_SURE or ranked[0][1] - ranked[1][1] < CROP_MARGIN)
+            # sure of the plant: rank diseases within it, so a stray class of a look-alike can't win
+            probs = raw if ambiguous else within(raw, detected_crop)
         top = sorted(probs.items(), key=lambda kv: -kv[1])[:TOP_N]
-        detected_crop = top[0][0].split("::", 1)[0] if top else None
         self._json({
             "mode": BACKEND["mode"],
             "top": [describe(g, p) for g, p in top],
             "detected_crop": detected_crop,
+            "crop_scores": [{"crop": c, "p": round(p, 4)} for c, p in ranked[:4]],
+            "crop_ambiguous": ambiguous,
             "crop_given": crop,
-            "crop_matches": (crop is None) or (crop == detected_crop),
+            "crop_matches": crop_matches,
             "ms": round((time.perf_counter() - t) * 1000),
         })
 

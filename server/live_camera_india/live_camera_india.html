@@ -60,6 +60,11 @@
   .primary { background: var(--leaf); border-color: transparent; color: #ffffff; font-weight: 600; padding: 12px 24px; font-size: 16px; }
   .controls { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; align-items: center; }
   .langSelect, .cropSelect { min-width: 170px; }
+  .askCrop { margin: 4px 0 18px; }
+  .askCrop p { margin: 0 0 10px; }
+  .cropBtns { display: flex; flex-wrap: wrap; gap: 10px; }
+  .cropBtns button { font-size: 1.05rem; padding: 10px 16px; }
+  .cropBtns button small { opacity: .7; margin-inline-start: 8px; }
 
   .result { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 22px 22px 18px; }
   .chip { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 12px; font-weight: 600;
@@ -125,6 +130,10 @@
     <h1 class="disease" id="disease" aria-live="polite"></h1>
     <div class="meter"><div class="fill" id="fill"></div></div>
     <p class="conf" id="conf"></p>
+    <div class="askCrop" id="askCrop" hidden>
+      <p id="askCropHint"></p>
+      <div class="cropBtns" id="cropBtns"></div>
+    </div>
     <button id="listenBtn" type="button" style="margin-bottom:18px" hidden></button>
     <h2 class="label" id="statsLabel"></h2>
     <ol class="alts" id="alts"></ol>
@@ -147,7 +156,7 @@
   let chosenCrop = localStorage.getItem("agrismart_crop") || "";
   let stream = null, running = false, paused = false, voiceOn = true, voice = null;
   let mode = "camera";       // "camera" | "photo"
-  let recent = [], shown = null, spokenKey = null, unsureStreak = 0, lastResult = null;
+  let recent = [], shown = null, spokenKey = null, unsureStreak = 0, lastResult = null, lastFile = null;
 
   // ---- translation helpers -------------------------------------------------
   function tr(dict, key, sub) {
@@ -320,6 +329,14 @@
   function consider(data) {
     const best = data.top[0];
     if (!best) return renderUnsure(data);
+    if (data.crop_ambiguous) {
+      // look-alike plants (squash/cucumber, bean/soybean, tomato/potato...): ask which crop it is rather
+      // than vote a disease of the wrong plant into place; ambiguous frames never count toward agreement
+      recent = []; unsureStreak = 0;
+      renderAskCrop(data);
+      if (spokenKey !== "ask") { say(t("which_crop")); spokenKey = "ask"; }
+      return;
+    }
     recent.push({ item: best, matches: data.crop_matches });
     if (recent.length > WINDOW) recent.shift();
     renderAlts(data);
@@ -346,13 +363,14 @@
   function setChip(kind, text) { $("chip").className = "chip" + (kind ? " " + kind : ""); $("chip").textContent = text; }
 
   function renderIdle() {
+    $("askCrop").hidden = true;
     setChip("", ""); $("crop").textContent = ""; $("disease").textContent = t("subtitle");
     $("fill").style.width = "0%"; $("conf").textContent = ""; $("alts").innerHTML = "";
     $("listenBtn").hidden = true;
   }
 
   function renderSure(best, meanP, agree, data) {
-    shown = best; $("result").classList.remove("stale");
+    shown = best; $("result").classList.remove("stale"); $("askCrop").hidden = true;
     if (data.crop_matches === false) {
       setChip("disease", t("crop_mismatch"));
       $("crop").textContent = cropName(chosenCrop);
@@ -378,11 +396,34 @@
   }
 
   function renderUnsure(data) {
-    shown = null; lastResult = { kind: "unsure", data }; $("result").classList.remove("stale");
+    shown = null; lastResult = { kind: "unsure", data }; $("result").classList.remove("stale"); $("askCrop").hidden = true;
     setChip("", t("not_sure")); $("crop").textContent = ""; $("disease").textContent = t("not_sure");
     $("fill").className = "fill"; $("fill").style.width = "0%"; $("conf").textContent = "";
     $("listenBtn").hidden = true; box.className = "box";
     if (data) renderAlts(data);
+  }
+
+  function renderAskCrop(data) {
+    shown = null; lastResult = { kind: "ask", data }; $("result").classList.remove("stale");
+    setChip("", t("which_crop")); $("crop").textContent = ""; $("disease").textContent = t("which_crop");
+    $("fill").className = "fill"; $("fill").style.width = "0%"; $("conf").textContent = "";
+    $("listenBtn").hidden = true; box.className = "box";
+    $("askCropHint").textContent = t("which_crop_hint");
+    const btns = $("cropBtns"); btns.innerHTML = "";
+    (data.crop_scores || []).filter((c, i) => i < 2 || (i < 3 && c.p >= 0.05)).forEach((c) => {
+      const b = document.createElement("button"); b.type = "button"; b.textContent = cropName(c.crop);
+      const pct = document.createElement("small"); pct.textContent = Math.round(c.p * 100) + "%";
+      b.appendChild(pct); b.onclick = () => chooseCrop(c.crop);
+      btns.appendChild(b);
+    });
+    $("askCrop").hidden = false;
+    renderAlts(data);
+  }
+
+  function chooseCrop(id) {
+    $("cropSelect").value = id; chosenCrop = id; localStorage.setItem("agrismart_crop", id);
+    recent = []; spokenKey = null; $("askCrop").hidden = true;
+    if (mode === "photo" && lastFile) handleFile(lastFile); else renderChecking();
   }
 
   function renderAlts(data) {
@@ -405,12 +446,13 @@
   function render(last) {
     if (last.kind === "sure") renderSure(last.item, last.meanP, last.agree, last.data);
     else if (last.kind === "unsure") renderUnsure(last.data);
+    else if (last.kind === "ask") renderAskCrop(last.data);
     else renderIdle();
   }
 
   // ---- photo-from-device mode ------------------------------------------------
   async function handleFile(file) {
-    mode = "photo";
+    mode = "photo"; lastFile = file;
     if (stream) { stream.getTracks().forEach((tk) => tk.stop()); stream = null; }
     running = false; $("start").hidden = true; $("pauseBtn").hidden = true;
     const url = URL.createObjectURL(file);
@@ -422,6 +464,7 @@
       const data = await callPredict(file);
       setConn("ok", `${t("title")} · ${data.ms} ms`);
       const best = data.top[0];
+      if (data.crop_ambiguous) { renderAskCrop(data); say(t("which_crop")); return; }
       if (!best || best.p < UNSURE) { renderUnsure(data); return; }
       renderSure(best, best.p, 1, data);
       lastResult = { kind: "sure", item: best, meanP: best.p, agree: 1, data };
