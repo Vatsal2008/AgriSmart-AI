@@ -30,7 +30,7 @@ CFG = {
     "img_size": 224,
     "batch_size": 48,
     "lp_epochs": 2,
-    "ft_epochs": 12,
+    "ft_epochs": 14,
     "lr_head_lp": 1e-3,
     "lr_backbone": 1.5e-5,
     "lr_head": 1.5e-4,
@@ -143,6 +143,72 @@ counts_table = mf.groupby(["crop", "split"]).size().unstack(fill_value=0)
 print(counts_table.to_string())
 
 # %% [markdown]
+# ## 1b · Leakage audit: how close is each test photo to its nearest training photo?
+#
+# The data-prep keeps near-copy clusters whole, but caps a cluster at 64 photos so look-alike lab
+# photos can't chain into one giant cluster. That means a test photo *can* still have a near-twin in
+# training. This step re-embeds every photo with the same flip-invariant DINOv2-S the data-prep uses,
+# and records each test photo's highest cosine similarity to any training photo of the same crop.
+# Final results are reported on the whole test set **and** on its "clean" part: test photos with no
+# training photo at cos ≥ 0.95. The clean number is the honest one.
+
+# %%
+import torchvision.transforms as T
+
+AUDIT_COS = 0.95
+auditor = timm.create_model("vit_small_patch14_dinov2.lvd142m", pretrained=True, num_classes=0,
+                            img_size=224).to(DEVICE).eval()
+audit_tf = T.Compose([T.Resize(224, interpolation=T.InterpolationMode.BICUBIC), T.CenterCrop(224), T.ToTensor(),
+                      T.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))])
+
+
+class PathSet(Dataset):
+    def __init__(self, paths):
+        self.paths = paths
+
+    def __len__(self):
+        return len(self.paths)
+
+    def __getitem__(self, i):
+        return audit_tf(Image.open(self.paths[i]).convert("RGB"))
+
+
+@torch.no_grad()
+def audit_embed(paths):
+    out = []
+    for x in DataLoader(PathSet(paths), batch_size=256, num_workers=CFG["num_workers"], pin_memory=USE_AMP):
+        x = x.to(DEVICE, non_blocking=True)
+        with torch.autocast("cuda", dtype=torch.float16, enabled=USE_AMP):
+            f = auditor(x).float() + auditor(torch.flip(x, dims=[3])).float()
+        out.append(nn.functional.normalize(f, dim=1).half())
+    return torch.cat(out)  # kept on the GPU: ~270k x 384 fp16 is ~200 MB
+
+
+t_audit = time.time()
+tr_feat = audit_embed(train_df["path"].tolist())
+te_feat = audit_embed(test_df["path"].tolist())
+near = np.zeros(len(test_df), dtype=np.float32)
+tr_crop, te_crop = train_df["crop"].to_numpy(), test_df["crop"].to_numpy()
+for crop in CROPS:
+    ti, si = np.flatnonzero(tr_crop == crop), np.flatnonzero(te_crop == crop)
+    if len(ti) == 0 or len(si) == 0:
+        continue
+    A = tr_feat[torch.as_tensor(ti, device=tr_feat.device)].float()
+    for s in range(0, len(si), 1024):
+        q = te_feat[torch.as_tensor(si[s:s + 1024], device=te_feat.device)].float()
+        near[si[s:s + 1024]] = (q @ A.T).max(1).values.cpu().numpy()
+test_df["near_train_cos"] = near
+clean_mask = near < AUDIT_COS
+auditor = auditor.cpu()  # off the GPU before training starts
+del tr_feat, te_feat
+torch.cuda.empty_cache()
+log(f"leakage audit ({(time.time() - t_audit) / 60:.1f} min): {int((~clean_mask).sum())} of {len(test_df)} test photos "
+    f"({(~clean_mask).mean():.1%}) have a training photo at cos >= {AUDIT_COS}; "
+    f"the other {int(clean_mask.sum())} form the clean test set")
+print(test_df.assign(near_copy=~clean_mask).groupby("crop")["near_copy"].mean().sort_values(ascending=False)
+      .head(15).round(3).to_string())
+
+# %% [markdown]
 # ## 2 · Model, augmentation, class-balanced sampling
 #
 # An epoch is a fixed `samples_per_epoch` draws. Every class aims for an equal share of them, but a small
@@ -155,8 +221,6 @@ model_kwargs = {"img_size": CFG["img_size"]} if "vit" in CFG["backbone"] else {}
 model = timm.create_model(CFG["backbone"], pretrained=True, num_classes=NUM_CLASSES, **model_kwargs)
 data_cfg = timm.data.resolve_model_data_config(model)
 MEAN, STD = tuple(data_cfg["mean"]), tuple(data_cfg["std"])
-
-import torchvision.transforms as T
 
 train_tf = T.Compose([
     T.RandomResizedCrop(CFG["img_size"], scale=(0.35, 1.0), interpolation=T.InterpolationMode.BICUBIC),
@@ -339,14 +403,28 @@ final_crop_given = score(probs_crop_given, test_ds.labels)
 log(f"crop given: macro-F1 {final_crop_given['macro_f1']:.4f} | accuracy {final_crop_given['accuracy']:.4f}")
 
 # by kind of photo: lab (PlantVillage), field (PlantWild web/field photos), mixed (research datasets)
+def subset_scores(ix):
+    return {"test_images": int(len(ix)), **score(probs[ix], y_true[ix]),
+            "crop_given": score(probs_crop_given[ix], y_true[ix])}
+
+
+# the honest headline: test photos with no near-twin in training (see the leakage audit in section 1b)
+clean_ix = np.flatnonzero(clean_mask)
+final_clean = subset_scores(clean_ix)
+log(f"CLEAN test ({len(clean_ix)} photos with no training photo at cos >= {AUDIT_COS}): "
+    f"macro-F1 {final_clean['macro_f1']:.4f} | accuracy {final_clean['accuracy']:.4f} | "
+    f"crop given macro-F1 {final_clean['crop_given']['macro_f1']:.4f}")
+
 by_domain = {}
 if "domain" in test_df.columns:
     for dom, sub in test_df.groupby("domain"):
         ix = sub.index.to_numpy()
-        by_domain[dom] = {"test_images": int(len(ix)), **score(probs[ix], y_true[ix]),
-                          "crop_given": score(probs_crop_given[ix], y_true[ix])}
+        by_domain[dom] = {**subset_scores(ix), "clean": subset_scores(np.intersect1d(ix, clean_ix))}
         log(f"  {dom:6s} photos ({len(ix):6d}): macro-F1 {by_domain[dom]['macro_f1']:.4f}, "
-            f"crop given {by_domain[dom]['crop_given']['macro_f1']:.4f}")
+            f"crop given {by_domain[dom]['crop_given']['macro_f1']:.4f} | clean part "
+            f"({by_domain[dom]['clean']['test_images']}): {by_domain[dom]['clean']['macro_f1']:.4f}")
+test_df[["crop", "label", "domain", "near_train_cos"]].assign(
+    predicted=[GCLASSES[i] for i in y_pred]).to_csv(OUT / "test_predictions_audit.csv", index=False)
 
 rep = classification_report(y_true, y_pred, labels=present, target_names=[GCLASSES[i] for i in present],
                             output_dict=True, zero_division=0)
@@ -498,8 +576,10 @@ metrics = {
     "run": CFG["run_name"], "config": CFG, "best_checkpoint": best,
     "data": {"crops": len(CROPS), "classes": NUM_CLASSES, "train": len(train_df), "test": len(test_df),
              "dropped_rare_classes": too_rare},
-    "test": final, "test_crop_given": final_crop_given, "test_by_domain": by_domain,
-    "target_met": bool(final["macro_f1"] >= 0.95),
+    "test": final, "test_crop_given": final_crop_given, "test_clean": final_clean, "test_by_domain": by_domain,
+    "leakage_audit": {"cos_threshold": AUDIT_COS, "test_images": int(len(test_df)),
+                      "with_near_twin_in_train": int((~clean_mask).sum())},
+    "target_met_on_clean_test": bool(final_clean["macro_f1"] >= 0.95),
     "minutes": round((time.time() - T0) / 60, 1),
 }
 with open(OUT / "metrics.json", "w", encoding="utf-8") as fh:
