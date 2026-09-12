@@ -38,7 +38,8 @@ CFG = {
     "warmup_frac": 0.05,
     "label_smoothing": 0.1,
     "min_images_per_class": 25,       # classes rarer than this are dropped (too few to learn or evaluate)
-    "max_class_weight_ratio": 6.0,    # cap how much a rare class is oversampled, so it doesn't overfit
+    "samples_per_epoch": 80000,       # fixed epoch length, independent of how big the dataset grows
+    "max_repeats": 4.0,               # a rare class's photo is shown at most ~this many times per epoch
     "tta": True,
     "num_workers": 4,
     "seed": 42,
@@ -144,8 +145,10 @@ print(counts_table.to_string())
 # %% [markdown]
 # ## 2 · Model, augmentation, class-balanced sampling
 #
-# Every class gets roughly the same share of an epoch, capped by `max_class_weight_ratio` so a class with
-# only `min_images_per_class` photos isn't oversampled into memorising them.
+# An epoch is a fixed `samples_per_epoch` draws. Every class aims for an equal share of them, but a small
+# class's share is capped at `max_repeats` times its photo count, so its few photos aren't repeated into
+# memorisation; the unused share flows to the big classes. (An earlier version weighted each photo by
+# 1/min(count, cap), which gave every class above the cap *more* total weight the bigger it was.)
 
 # %%
 model_kwargs = {"img_size": CFG["img_size"]} if "vit" in CFG["backbone"] else {}
@@ -184,9 +187,13 @@ class ImgSet(Dataset):
 
 
 counts = train_df["gclass"].value_counts()
-min_count = counts.min()
-weights = train_df["gclass"].map(lambda g: 1.0 / min(counts[g], min_count * CFG["max_class_weight_ratio"])).to_numpy()
-sampler = WeightedRandomSampler(torch.tensor(weights, dtype=torch.double), num_samples=len(train_df), replacement=True)
+equal_share = CFG["samples_per_epoch"] / len(counts)
+share = {g: min(equal_share, CFG["max_repeats"] * n) for g, n in counts.items()}  # draws per epoch for class g
+weights = train_df["gclass"].map(lambda g: share[g] / counts[g]).to_numpy()      # spread over its photos
+sampler = WeightedRandomSampler(torch.tensor(weights, dtype=torch.double), num_samples=CFG["samples_per_epoch"],
+                                replacement=True)
+log(f"sampler: {CFG['samples_per_epoch']} draws/epoch, equal share {equal_share:.0f}/class; "
+    f"{sum(share[g] < equal_share for g in share)} small classes capped at {CFG['max_repeats']}x their size")
 
 loader_args = {"num_workers": CFG["num_workers"], "pin_memory": USE_AMP, "persistent_workers": CFG["num_workers"] > 0}
 train_ds = ImgSet(train_df, train_tf, blur_prob=0.15)
@@ -289,8 +296,11 @@ def run_stage(stage, epochs, param_groups):
             break
 
 
+# Linear probe: backbone frozen, only the new head learns (skipped when resuming a trained model).
+# An earlier version set requires_grad = True here for a fresh run, so the "probe" silently fine-tuned the
+# whole backbone at the head's 1e-3 learning rate -- enough to wreck DINOv2's pretrained features.
 for p in backbone_params:
-    p.requires_grad = not CFG["resume_from"]  # resuming: skip the linear-probe warm-up, go straight to fine-tune
+    p.requires_grad = False
 if not CFG["resume_from"]:
     run_stage("linear-probe", CFG["lp_epochs"], [{"params": head_params, "lr": CFG["lr_head_lp"]}])
 for p in backbone_params:
@@ -317,6 +327,26 @@ y_true, y_pred = np.asarray(test_ds.labels), probs.argmax(1)
 present = sorted(np.unique(y_true))
 final = score(probs, test_ds.labels)
 log(f"FINAL test macro-F1 {final['macro_f1']:.4f} | accuracy {final['accuracy']:.4f} (TTA={CFG['tta']})")
+
+# "crop given": what the app scores when the farmer picks the crop -- only that crop's classes compete
+test_crops = test_df["crop"].to_numpy()
+probs_crop_given = probs.copy()
+for crop, idxs in CROP_CLASS_IDX.items():
+    other = np.ones(NUM_CLASSES, bool)
+    other[idxs] = False
+    probs_crop_given[np.ix_(test_crops == crop, other)] = 0.0
+final_crop_given = score(probs_crop_given, test_ds.labels)
+log(f"crop given: macro-F1 {final_crop_given['macro_f1']:.4f} | accuracy {final_crop_given['accuracy']:.4f}")
+
+# by kind of photo: lab (PlantVillage), field (PlantWild web/field photos), mixed (research datasets)
+by_domain = {}
+if "domain" in test_df.columns:
+    for dom, sub in test_df.groupby("domain"):
+        ix = sub.index.to_numpy()
+        by_domain[dom] = {"test_images": int(len(ix)), **score(probs[ix], y_true[ix]),
+                          "crop_given": score(probs_crop_given[ix], y_true[ix])}
+        log(f"  {dom:6s} photos ({len(ix):6d}): macro-F1 {by_domain[dom]['macro_f1']:.4f}, "
+            f"crop given {by_domain[dom]['crop_given']['macro_f1']:.4f}")
 
 rep = classification_report(y_true, y_pred, labels=present, target_names=[GCLASSES[i] for i in present],
                             output_dict=True, zero_division=0)
@@ -468,7 +498,8 @@ metrics = {
     "run": CFG["run_name"], "config": CFG, "best_checkpoint": best,
     "data": {"crops": len(CROPS), "classes": NUM_CLASSES, "train": len(train_df), "test": len(test_df),
              "dropped_rare_classes": too_rare},
-    "test": final, "target_met": bool(final["macro_f1"] >= 0.95),
+    "test": final, "test_crop_given": final_crop_given, "test_by_domain": by_domain,
+    "target_met": bool(final["macro_f1"] >= 0.95),
     "minutes": round((time.time() - T0) / 60, 1),
 }
 with open(OUT / "metrics.json", "w", encoding="utf-8") as fh:

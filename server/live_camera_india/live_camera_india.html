@@ -156,7 +156,8 @@
     return row[lang] || row.en || sub || key;
   }
   const t = (key) => tr(T ? T.ui : {}, key);
-  const cropName = (id) => tr(T ? T.crops : {}, id, id);
+  // a crop the translation file doesn't know yet shows as readable English ("Finger millet ragi"), not its id
+  const cropName = (id) => tr(T ? T.crops : {}, id, id.replace(/_/g, " ").replace(/^\w/, (c) => c.toUpperCase()));
   const termName = (label) => tr(T ? T.terms : {}, label, label);
 
   function applyStaticText() {
