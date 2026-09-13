@@ -19,7 +19,9 @@ try {
     $zip = Join-Path $tmp $Asset
     Invoke-WebRequest -Uri $url -OutFile $zip -UseBasicParsing
     Write-Host ("Downloaded {0:N0} MB, unpacking..." -f ((Get-Item $zip).Length / 1MB))
-    Expand-Archive -Path $zip -DestinationPath $tmp -Force
+    # .NET's unzip: Expand-Archive in Windows PowerShell 5.1 takes many minutes on the ~4,400 files
+    Add-Type -AssemblyName System.IO.Compression.FileSystem
+    [IO.Compression.ZipFile]::ExtractToDirectory($zip, $tmp)
     $src = Get-ChildItem $tmp -Recurse -Directory -Filter web | Where-Object { Test-Path (Join-Path $_.FullName "models\india_v1.onnx") } | Select-Object -First 1
     if (-not $src) { throw "The download does not contain web\models\india_v1.onnx" }
     New-Item -ItemType Directory -Force (Join-Path $web "models") | Out-Null
