@@ -451,7 +451,7 @@ UI = {
                 "এইটো {crop} নেকি?"],
     "yes": ["Yes", "हाँ", "হ্যাঁ", "होय", "అవును", "ஆம்", "હા", "ہاں", "ಹೌದು", "ହଁ", "അതെ", "ਹਾਂ", "হয়"],
     "no": ["No", "नहीं", "না", "नाही", "కాదు", "இல்லை", "ના", "نہیں", "ಇಲ್ಲ", "ନା", "അല്ല", "ਨਹੀਂ", "নহয়"],
-    # online check (internet): Pl@ntNet picture search + a vision AI
+    # internet extras (no keys): Wikipedia article, similar photos from Wikimedia Commons, Google Lens
     "online_mode": ["Online check (uses internet)", "ऑनलाइन जाँच (इंटरनेट से)", "অনলাইন পরীক্ষা (ইন্টারনেট লাগে)",
                     "ऑनलाइन तपासणी (इंटरनेट लागते)", "ఆన్‌లైన్ పరీక్ష (ఇంటర్నెట్ అవసరం)", "இணைய சோதனை (இணையம் தேவை)",
                     "ઑનલાઇન તપાસ (ઇન્ટરનેટ જોઈએ)", "آن لائن جانچ (انٹرنیٹ سے)", "ಆನ್‌ಲೈನ್ ಪರೀಕ್ಷೆ (ಇಂಟರ್ನೆಟ್ ಬೇಕು)",
@@ -471,94 +471,29 @@ UI = {
                       "آن لائن جانچ نہیں ہو سکی۔ آف لائن جواب دکھایا گیا ہے۔", "ಆನ್‌ಲೈನ್ ಪರೀಕ್ಷೆ ಆಗಲಿಲ್ಲ. ಆಫ್‌ಲೈನ್ ಉತ್ತರ ತೋರಿಸಲಾಗಿದೆ.",
                       "ଅନଲାଇନ ଯାଞ୍ଚ ହୋଇପାରିଲା ନାହିଁ। ଅଫଲାଇନ ଉତ୍ତର ଦେଖାଯାଇଛି।", "ഓൺലൈൻ പരിശോധന നടന്നില്ല. ഓഫ്‌ലൈൻ ഉത്തരം കാണിക്കുന്നു.",
                       "ਔਨਲਾਈਨ ਜਾਂਚ ਨਹੀਂ ਹੋ ਸਕੀ। ਔਫਲਾਈਨ ਜਵਾਬ ਦਿਖਾਇਆ ਗਿਆ ਹੈ।", "অনলাইন পৰীক্ষা নহ'ল। অফলাইন উত্তৰ দেখুওৱা হৈছে।"],
-    "online_agrees": ["Confirmed by the online check.", "ऑनलाइन जाँच से पुष्टि हुई।", "অনলাইন পরীক্ষায় নিশ্চিত হয়েছে।",
-                      "ऑनलाइन तपासणीत खात्री झाली.", "ఆన్‌లైన్ పరీక్ష ధృవీకరించింది.", "இணைய சோதனை உறுதிப்படுத்தியது.",
-                      "ઑનલાઇન તપાસથી ખાતરી થઈ.", "آن لائن جانچ سے تصدیق ہوئی۔", "ಆನ್‌ಲೈನ್ ಪರೀಕ್ಷೆ ದೃಢಪಡಿಸಿದೆ.",
-                      "ଅନଲାଇନ ଯାଞ୍ଚରେ ନିଶ୍ଚିତ ହେଲା।", "ഓൺലൈൻ പരിശോധന സ്ഥിരീകരിച്ചു.", "ਔਨਲਾਈਨ ਜਾਂਚ ਨੇ ਪੁਸ਼ਟੀ ਕੀਤੀ।",
-                      "অনলাইন পৰীক্ষাই নিশ্চিত কৰিলে।"],
-    "online_corrected": ["Corrected by the online check (the offline model said: {old}).",
-                         "ऑनलाइन जाँच से सुधारा गया (ऑफ़लाइन मॉडल ने कहा था: {old})।",
-                         "অনলাইন পরীক্ষায় সংশোধিত (অফলাইন মডেল বলেছিল: {old})।",
-                         "ऑनलाइन तपासणीने दुरुस्त केले (ऑफलाइन मॉडेलने सांगितले होते: {old}).",
-                         "ఆన్‌లైన్ పరీక్ష సరిచేసింది (ఆఫ్‌లైన్ మోడల్ చెప్పింది: {old}).",
-                         "இணைய சோதனை திருத்தியது (இணையமில்லா மாதிரி சொன்னது: {old}).",
-                         "ઑનલાઇન તપાસે સુધાર્યું (ઑફલાઇન મોડેલે કહ્યું હતું: {old}).",
-                         "آن لائن جانچ نے درست کیا (آف لائن ماڈل نے کہا تھا: {old})۔",
-                         "ಆನ್‌ಲೈನ್ ಪರೀಕ್ಷೆ ಸರಿಪಡಿಸಿದೆ (ಆಫ್‌ಲೈನ್ ಮಾದರಿ ಹೇಳಿತ್ತು: {old}).",
-                         "ଅନଲାଇନ ଯାଞ୍ଚ ସଂଶୋଧନ କଲା (ଅଫଲାଇନ ମଡେଲ କହିଥିଲା: {old})।",
-                         "ഓൺലൈൻ പരിശോധന തിരുത്തി (ഓഫ്‌ലൈൻ മോഡൽ പറഞ്ഞത്: {old}).",
-                         "ਔਨਲਾਈਨ ਜਾਂਚ ਨੇ ਠੀਕ ਕੀਤਾ (ਔਫਲਾਈਨ ਮਾਡਲ ਨੇ ਕਿਹਾ ਸੀ: {old})।",
-                         "অনলাইন পৰীক্ষাই শুধৰালে (অফলাইন মডেলে কৈছিল: {old})।"],
-    "online_new_plant": ["This plant is not in the offline model. Answer from the online check:",
-                         "यह पौधा ऑफ़लाइन मॉडल में नहीं है। ऑनलाइन जाँच का जवाब:", "এই গাছটি অফলাইন মডেলে নেই। অনলাইন পরীক্ষার উত্তর:",
-                         "हे झाड ऑफलाइन मॉडेलमध्ये नाही. ऑनलाइन तपासणीचे उत्तर:", "ఈ మొక్క ఆఫ్‌లైన్ మోడల్‌లో లేదు. ఆన్‌లైన్ పరీక్ష సమాధానం:",
-                         "இந்தச் செடி இணையமில்லா மாதிரியில் இல்லை. இணைய சோதனையின் பதில்:", "આ છોડ ઑફલાઇન મોડેલમાં નથી. ઑનલાઇન તપાસનો જવાબ:",
-                         "یہ پودا آف لائن ماڈل میں نہیں ہے۔ آن لائن جانچ کا جواب:", "ಈ ಗಿಡ ಆಫ್‌ಲೈನ್ ಮಾದರಿಯಲ್ಲಿ ಇಲ್ಲ. ಆನ್‌ಲೈನ್ ಪರೀಕ್ಷೆಯ ಉತ್ತರ:",
-                         "ଏହି ଗଛ ଅଫଲାଇନ ମଡେଲରେ ନାହିଁ। ଅନଲାଇନ ଯାଞ୍ଚର ଉତ୍ତର:", "ഈ ചെടി ഓഫ്‌ലൈൻ മോഡലിൽ ഇല്ല. ഓൺലൈൻ പരിശോധനയുടെ ഉത്തരം:",
-                         "ਇਹ ਪੌਦਾ ਔਫਲਾਈਨ ਮਾਡਲ ਵਿੱਚ ਨਹੀਂ ਹੈ। ਔਨਲਾਈਨ ਜਾਂਚ ਦਾ ਜਵਾਬ:", "এই গছজোপা অফলাইন মডেলত নাই। অনলাইন পৰীক্ষাৰ উত্তৰ:"],
     "similar_photos": ["Similar photos", "मिलती-जुलती तस्वीरें", "একই রকম ছবি", "सारखे फोटो", "ఇలాంటి ఫోటోలు", "ஒத்த படங்கள்",
                        "મળતા આવતા ફોટા", "ملتی جلتی تصاویر", "ಹೋಲುವ ಫೋಟೋಗಳು", "ସମାନ ଫଟୋ", "സമാനമായ ഫോട്ടോകൾ", "ਮਿਲਦੀਆਂ-ਜੁਲਦੀਆਂ ਤਸਵੀਰਾਂ",
                        "একেধৰণৰ ফটো"],
-    "settings": ["Settings", "सेटिंग्स", "সেটিংস", "सेटिंग्ज", "సెట్టింగ్‌లు", "அமைப்புகள்", "સેટિંગ્સ", "ترتیبات", "ಸೆಟ್ಟಿಂಗ್‌ಗಳು", "ସେଟିଂସ",
-                 "ക്രമീകരണങ്ങൾ", "ਸੈਟਿੰਗਾਂ", "ছেটিংছ"],
-    "save": ["Save", "सहेजें", "সংরক্ষণ করুন", "जतन करा", "సేవ్ చేయండి", "சேமி", "સાચવો", "محفوظ کریں", "ಉಳಿಸಿ", "ସଞ୍ଚୟ କରନ୍ତୁ",
-             "സേവ് ചെയ്യുക", "ਸੰਭਾਲੋ", "সাঁচি ৰাখক"],
-    "keys_hint": ["The online check needs a free API key (Pl@ntNet and/or Groq). Keys are saved only on this device.",
-                  "ऑनलाइन जाँच के लिए मुफ़्त API कुंजी चाहिए (Pl@ntNet और/या Groq)। कुंजियाँ केवल इसी डिवाइस पर रहती हैं।",
-                  "অনলাইন পরীক্ষার জন্য বিনামূল্যের API কী লাগবে (Pl@ntNet এবং/অথবা Groq)। কী শুধু এই ডিভাইসেই থাকে।",
-                  "ऑनलाइन तपासणीसाठी मोफत API की लागते (Pl@ntNet आणि/किंवा Groq). की फक्त याच डिव्हाइसवर राहते.",
-                  "ఆన్‌లైన్ పరీక్షకు ఉచిత API కీ కావాలి (Pl@ntNet మరియు/లేదా Groq). కీలు ఈ పరికరంలోనే ఉంటాయి.",
-                  "இணைய சோதனைக்கு இலவச API சாவி தேவை (Pl@ntNet மற்றும்/அல்லது Groq). சாவிகள் இந்தச் சாதனத்தில் மட்டுமே இருக்கும்.",
-                  "ઑનલાઇન તપાસ માટે મફત API કી જોઈએ (Pl@ntNet અને/અથવા Groq). કી ફક્ત આ ડિવાઇસ પર જ રહે છે.",
-                  "آن لائن جانچ کے لیے مفت API کلید چاہیے (Pl@ntNet اور/یا Groq)۔ کلیدیں صرف اسی آلے پر رہتی ہیں۔",
-                  "ಆನ್‌ಲೈನ್ ಪರೀಕ್ಷೆಗೆ ಉಚಿತ API ಕೀ ಬೇಕು (Pl@ntNet ಮತ್ತು/ಅಥವಾ Groq). ಕೀಗಳು ಈ ಸಾಧನದಲ್ಲೇ ಇರುತ್ತವೆ.",
-                  "ଅନଲାଇନ ଯାଞ୍ଚ ପାଇଁ ମାଗଣା API କି ଦରକାର (Pl@ntNet ଏବଂ/ବା Groq)। କି କେବଳ ଏହି ଡିଭାଇସରେ ରହେ।",
-                  "ഓൺലൈൻ പരിശോധനയ്ക്ക് സൗജന്യ API കീ വേണം (Pl@ntNet കൂടാതെ/അല്ലെങ്കിൽ Groq). കീകൾ ഈ ഉപകരണത്തിൽ മാത്രം സൂക്ഷിക്കും.",
-                  "ਔਨਲਾਈਨ ਜਾਂਚ ਲਈ ਮੁਫ਼ਤ API ਕੁੰਜੀ ਚਾਹੀਦੀ ਹੈ (Pl@ntNet ਅਤੇ/ਜਾਂ Groq)। ਕੁੰਜੀਆਂ ਸਿਰਫ਼ ਇਸੇ ਡਿਵਾਈਸ 'ਤੇ ਰਹਿੰਦੀਆਂ ਹਨ।",
-                  "অনলাইন পৰীক্ষাৰ বাবে বিনামূলীয়া API কী লাগে (Pl@ntNet আৰু/বা Groq)। কী কেৱল এই ডিভাইচতে থাকে।"],
-    "ai_note": ["Answer from an online AI. It can be wrong; confirm with your agriculture officer.",
-                "यह जवाब ऑनलाइन AI से है। यह गलत भी हो सकता है; अपने कृषि अधिकारी से पुष्टि करें।",
-                "এই উত্তর অনলাইন AI থেকে। এটি ভুলও হতে পারে; আপনার কৃষি আধিকারিকের সঙ্গে নিশ্চিত করুন।",
-                "हे उत्तर ऑनलाइन AI कडून आहे. ते चुकीचेही असू शकते; तुमच्या कृषी अधिकाऱ्याकडून खात्री करा.",
-                "ఈ సమాధానం ఆన్‌లైన్ AI నుండి. ఇది తప్పు కావచ్చు; మీ వ్యవసాయ అధికారితో నిర్ధారించుకోండి.",
-                "இந்தப் பதில் இணைய AI-யிடமிருந்து வந்தது. இது தவறாகவும் இருக்கலாம்; உங்கள் வேளாண் அலுவலரிடம் உறுதி செய்யவும்.",
-                "આ જવાબ ઑનલાઇન AI તરફથી છે. તે ખોટો પણ હોઈ શકે; તમારા કૃષિ અધિકારી પાસે ખાતરી કરો.",
-                "یہ جواب آن لائن AI کا ہے۔ یہ غلط بھی ہو سکتا ہے؛ اپنے زرعی افسر سے تصدیق کریں۔",
-                "ಈ ಉತ್ತರ ಆನ್‌ಲೈನ್ AI ಯಿಂದ ಬಂದಿದೆ. ಇದು ತಪ್ಪಾಗಿರಬಹುದು; ನಿಮ್ಮ ಕೃಷಿ ಅಧಿಕಾರಿಯೊಂದಿಗೆ ದೃಢಪಡಿಸಿಕೊಳ್ಳಿ.",
-                "ଏହି ଉତ୍ତର ଅନଲାଇନ AI ରୁ। ଏହା ଭୁଲ ହୋଇପାରେ; ଆପଣଙ୍କ କୃଷି ଅଧିକାରୀଙ୍କ ସହ ନିଶ୍ଚିତ କରନ୍ତୁ।",
-                "ഈ ഉത്തരം ഓൺലൈൻ AI-യിൽ നിന്നാണ്. ഇത് തെറ്റാകാം; നിങ്ങളുടെ കൃഷി ഓഫീസറുമായി ഉറപ്പാക്കുക.",
-                "ਇਹ ਜਵਾਬ ਔਨਲਾਈਨ AI ਤੋਂ ਹੈ। ਇਹ ਗਲਤ ਵੀ ਹੋ ਸਕਦਾ ਹੈ; ਆਪਣੇ ਖੇਤੀ ਅਧਿਕਾਰੀ ਨਾਲ ਪੁਸ਼ਟੀ ਕਰੋ।",
-                "এই উত্তৰ অনলাইন AI ৰ পৰা। ই ভুলো হ'ব পাৰে; আপোনাৰ কৃষি বিষয়াৰ সৈতে নিশ্চিত কৰক।"],
+    "lens_search": ["Search with Google Lens", "Google Lens से खोजें", "Google Lens দিয়ে খুঁজুন", "Google Lens ने शोधा",
+                    "Google Lens తో వెతకండి", "Google Lens மூலம் தேடு", "Google Lens થી શોધો", "Google Lens سے تلاش کریں",
+                    "Google Lens ಮೂಲಕ ಹುಡುಕಿ", "Google Lens ରେ ଖୋଜନ୍ତୁ", "Google Lens ഉപയോഗിച്ച് തിരയുക", "Google Lens ਨਾਲ ਖੋਜੋ",
+                    "Google Lens ৰে বিচাৰক"],
+    "learn_more": ["Learn more (Wikipedia)", "और जानें (विकिपीडिया)", "আরও জানুন (উইকিপিডিয়া)", "अधिक माहिती (विकिपीडिया)",
+                   "మరింత తెలుసుకోండి (వికీపీడియా)", "மேலும் அறிக (விக்கிப்பீடியா)", "વધુ જાણો (વિકિપીડિયા)", "مزید جانیں (ویکیپیڈیا)",
+                   "ಇನ್ನಷ್ಟು ತಿಳಿಯಿರಿ (ವಿಕಿಪೀಡಿಯ)", "ଅଧିକ ଜାଣନ୍ତୁ (ଉଇକିପିଡ଼ିଆ)", "കൂടുതൽ അറിയുക (വിക്കിപീഡിയ)", "ਹੋਰ ਜਾਣੋ (ਵਿਕੀਪੀਡੀਆ)",
+                   "অধিক জানক (ৱিকিপিডিয়া)"],
+    "photo_copied": ["Photo copied. In Google Lens, press Ctrl+V to paste it.", "फोटो कॉपी हो गई। Google Lens में Ctrl+V दबाकर चिपकाएँ।",
+                     "ছবি কপি হয়েছে। Google Lens-এ Ctrl+V চেপে পেস্ট করুন।", "फोटो कॉपी झाला. Google Lens मध्ये Ctrl+V दाबून पेस्ट करा.",
+                     "ఫోటో కాపీ అయింది. Google Lens లో Ctrl+V నొక్కి పేస్ట్ చేయండి.", "படம் நகலெடுக்கப்பட்டது. Google Lens-இல் Ctrl+V அழுத்தி ஒட்டவும்.",
+                     "ફોટો કૉપી થયો. Google Lens માં Ctrl+V દબાવી પેસ્ટ કરો.", "تصویر کاپی ہو گئی۔ Google Lens میں Ctrl+V دبا کر پیسٹ کریں۔",
+                     "ಫೋಟೋ ನಕಲಾಗಿದೆ. Google Lens ನಲ್ಲಿ Ctrl+V ಒತ್ತಿ ಅಂಟಿಸಿ.", "ଫଟୋ କପି ହେଲା। Google Lens ରେ Ctrl+V ଦବାଇ ପେଷ୍ଟ କରନ୍ତୁ।",
+                     "ഫോട്ടോ പകർത്തി. Google Lens-ൽ Ctrl+V അമർത്തി ഒട്ടിക്കുക.", "ਫੋਟੋ ਕਾਪੀ ਹੋ ਗਈ। Google Lens ਵਿੱਚ Ctrl+V ਦਬਾ ਕੇ ਪੇਸਟ ਕਰੋ।",
+                     "ফটো কপি হ'ল। Google Lens ত Ctrl+V টিপি পেষ্ট কৰক।"],
 }
-
-# Scientific names -> crop ids, so the online plant identification (Pl@ntNet) links back to the offline crops.
-# A name maps to several crops where one species covers them (Capsicum annuum: bell pepper and chilli).
-SPECIES = {
-    "apple": ["Malus domestica", "Malus pumila", "genus:Malus"], "ash_gourd": ["Benincasa hispida"],
-    "banana": ["Musa acuminata", "Musa paradisiaca", "Musa balbisiana", "genus:Musa"], "bean": ["Phaseolus vulgaris", "Phaseolus coccineus"],
-    "bell_pepper": ["Capsicum annuum"], "betel": ["Piper betle"], "bitter_gourd": ["Momordica charantia"],
-    "black_gram": ["Vigna mungo"], "blueberry": ["Vaccinium corymbosum", "genus:Vaccinium"], "bottle_gourd": ["Lagenaria siceraria"],
-    "brinjal_eggplant": ["Solanum melongena"], "cabbage": ["Brassica oleracea"], "cashew": ["Anacardium occidentale"],
-    "cauliflower": ["Brassica oleracea"], "cherry": ["Prunus avium", "Prunus cerasus"],
-    "chilli": ["Capsicum annuum", "Capsicum frutescens", "Capsicum chinense"],
-    "citrus_orange": ["Citrus sinensis", "Citrus reticulata", "Citrus aurantium"], "coconut": ["Cocos nucifera"],
-    "coffee": ["Coffea arabica", "Coffea canephora", "genus:Coffea"], "corn_maize": ["Zea mays"],
-    "cotton": ["Gossypium hirsutum", "Gossypium arboreum", "Gossypium herbaceum", "genus:Gossypium"], "cowpea": ["Vigna unguiculata"],
-    "cucumber": ["Cucumis sativus"], "custard_apple": ["Annona squamosa", "Annona reticulata"],
-    "finger_millet_ragi": ["Eleusine coracana"], "garlic": ["Allium sativum"], "ginger": ["Zingiber officinale"],
-    "grape": ["Vitis vinifera", "genus:Vitis"], "groundnut": ["Arachis hypogaea"], "guava": ["Psidium guajava"],
-    "jamun": ["Syzygium cumini"], "jute": ["Corchorus olitorius", "Corchorus capsularis", "genus:Corchorus"],
-    "lemon": ["Citrus limon", "Citrus aurantiifolia"], "lentil": ["Lens culinaris"], "malabar_spinach": ["Basella alba"],
-    "mango": ["Mangifera indica", "genus:Mangifera"], "moringa": ["Moringa oleifera"], "okra": ["Abelmoschus esculentus"],
-    "onion": ["Allium cepa"], "papaya": ["Carica papaya"], "peach": ["Prunus persica"], "pomegranate": ["Punica granatum"],
-    "potato": ["Solanum tuberosum"], "pumpkin": ["Cucurbita maxima", "Cucurbita moschata", "Cucurbita pepo"],
-    "radish": ["Raphanus sativus"], "raspberry": ["Rubus idaeus"], "rice": ["Oryza sativa", "genus:Oryza"],
-    "soybean": ["Glycine max"], "spinach": ["Spinacia oleracea"], "squash": ["Cucurbita pepo"],
-    "strawberry": ["Fragaria ananassa", "genus:Fragaria"], "sugarcane": ["Saccharum officinarum", "genus:Saccharum"],
-    "sunflower": ["Helianthus annuus"], "tea": ["Camellia sinensis"], "tobacco": ["Nicotiana tabacum"],
-    "tomato": ["Solanum lycopersicum"], "turmeric": ["Curcuma longa"], "watermelon": ["Citrullus lanatus"],
-    "wheat": ["Triticum aestivum", "Triticum durum", "genus:Triticum"],
-}
+# labels of removed features (the key-based online check, the list of classes the model weighed): dropped from the
+# shared translations file too
+OBSOLETE_UI = ["online_agrees", "online_corrected", "online_new_plant", "settings", "save", "keys_hint", "ai_note",
+               "statistics"]
 # spoken status phrases that already exist as screen labels in the translations file
 SPOKEN_UI = ["which_crop", "which_crop_hint", "crop_mismatch", "not_sure", "healthy_result", "cause_title",
              "advice_title", "too_dark", "too_blurry", "confirm_crop"]
@@ -590,19 +525,13 @@ def main():
         assert g in GROUP_CAUSE or g == "healthy", f"group {g} has no cause"
     for key, vals in UI.items():
         tr["ui"][key] = dict(zip(LANGS, vals))
+    for key in OBSOLETE_UI:
+        tr["ui"].pop(key, None)
     # the live-scan server page shares these labels (yes/no crop question...): keep its file in step
     server_tr = SRV / "india_translations.json"
     text = json.dumps(tr, ensure_ascii=False, indent=1)
     if server_tr.read_text(encoding="utf-8").rstrip("\n") != text:
         server_tr.write_text(text, encoding="utf-8")
-
-    species, genus = {}, {}
-    for crop, names in SPECIES.items():
-        for n in names:
-            if n.startswith("genus:"):
-                genus.setdefault(n[6:].lower(), []).append(crop)
-            else:
-                species.setdefault(n.lower(), []).append(crop)
 
     products_used = {p["chem"] for steps in adv["groups"].values() for _, p in steps if p.get("chem")}
     missing = products_used - set(PRODUCTS)
@@ -613,7 +542,6 @@ def main():
         "advice": {k: adv[k] for k in ("templates", "groups", "terms", "crop_terms", "default")},
         "causes": {"templates": {k: dict(zip(LANGS, v)) for k, v in CAUSES.items()},
                    "groups": GROUP_CAUSE, "terms": TERM_CAUSE},
-        "species": species, "genus": genus,
         "note": adv.get("note", ""),
     }
     (OUT / "app.json").write_text(json.dumps(app, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")

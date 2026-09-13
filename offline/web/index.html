@@ -14,7 +14,6 @@
   <div class="barControls">
     <select id="langSelect" aria-label="Language"></select>
     <button id="historyBtn" type="button"></button>
-    <button id="settingsBtn" type="button"></button>
   </div>
 </header>
 
@@ -47,6 +46,7 @@
     <div class="controls">
       <button class="shutter" id="captureBtn" type="button" hidden><span class="dot" aria-hidden="true"></span><span id="captureText"></span></button>
       <button class="primary" id="againBtn" type="button" hidden></button>
+      <button class="lens" id="lensBtn" type="button" hidden></button>
       <button id="uploadBtn" type="button"></button>
       <button id="voiceBtn" type="button" aria-pressed="true"></button>
     </div>
@@ -89,6 +89,18 @@
       <p class="fine" id="adviceNote"></p>
     </div>
 
+    <div class="wiki" id="wiki" hidden>
+      <h2 class="label" id="wikiTitle"></h2>
+      <div class="wikiBody">
+        <img id="wikiThumb" alt="" hidden>
+        <div>
+          <p class="wikiName" id="wikiName"></p>
+          <p class="wikiText" id="wikiText"></p>
+          <a id="wikiLink" target="_blank" rel="noopener"></a>
+        </div>
+      </div>
+    </div>
+
     <div class="similar" id="similar" hidden>
       <h2 class="label" id="similarTitle"></h2>
       <div class="strip" id="strip"></div>
@@ -100,18 +112,6 @@
 <dialog id="historyDlg">
   <div class="dlgHead"><h2 id="historyTitle"></h2><button id="closeHistory" type="button"></button></div>
   <ul class="historyList" id="historyList"></ul>
-</dialog>
-<dialog id="settingsDlg">
-  <div class="dlgHead"><h2 id="settingsTitle"></h2><button id="closeSettings" type="button"></button></div>
-  <form class="settingsForm" id="settingsForm" method="dialog">
-    <p class="fine" id="keysHint"></p>
-    <label class="field"><span>Pl@ntNet API key</span><input id="plantnetKey" type="password" autocomplete="off" spellcheck="false"></label>
-    <p class="fine">Free key: <a href="https://my.plantnet.org/" target="_blank" rel="noopener">my.plantnet.org</a> (plant and disease picture search)</p>
-    <label class="field"><span>Groq API key</span><input id="groqKey" type="password" autocomplete="off" spellcheck="false"></label>
-    <label class="field"><span>Groq vision model</span><input id="groqModel" type="text" autocomplete="off" spellcheck="false"></label>
-    <p class="fine">Free key: <a href="https://console.groq.com/keys" target="_blank" rel="noopener">console.groq.com/keys</a> (AI that looks at the photo and writes the answer)</p>
-    <button class="primary" id="saveSettings" type="submit"></button>
-  </form>
 </dialog>
 <div class="toast" id="toast" role="status" hidden></div>
 

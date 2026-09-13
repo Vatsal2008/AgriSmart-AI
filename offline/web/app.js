@@ -3,9 +3,10 @@
 // steady), then the model checks that still; the answer, its cause and what to do are shown and read aloud
 // in the chosen language. The voice keeps going when the phone is moved, because the camera is no longer
 // being checked once a still is captured.
-// Optional online check (user's own keys): Pl@ntNet's picture search names the plant and disease and shows
-// similar photos, and a vision AI (Groq) looks at the photo with the offline model's guesses; together they
-// confirm or correct the offline answer and also answer for plants the offline model does not know.
+// With internet (no keys, nothing to set up): a Wikipedia article about the answer in the chosen language,
+// similar photos from Wikimedia Commons, and a "Search with Google Lens" button that hands the photo to Google
+// Lens (the Lens app on Android; Lens in the browser on Windows) - which also names plants the offline model
+// does not know, such as neem or tulsi.
 (() => {
   "use strict";
   const $ = (id) => document.getElementById(id);
@@ -17,14 +18,13 @@
   const CROP_SURE = 0.50, CROP_MARGIN = 0.35, MISMATCH = 0.15;  // same rules as the live-camera server
   const STEADY_FRAMES = 5;    // auto capture after this many calm checks in a row (every 200 ms)
   const HISTORY_MAX = 20;
-  const ONLINE_TIMEOUT = 30000;
-  const GROQ_MODEL = "qwen/qwen3.6-27b";
+  const WEB_TIMEOUT = 12000;
 
   const store = {
     get(key, fallback) { try { const v = localStorage.getItem("agri_" + key); return v === null ? fallback : JSON.parse(v); } catch { return fallback; } },
     set(key, value) { try { localStorage.setItem("agri_" + key, JSON.stringify(value)); } catch { /* storage blocked or full */ } },
   };
-  const android = window.AgriSmartAndroid || null;   // the APK's bridge (share sheet, phone voice)
+  const android = window.AgriSmartAndroid || null;   // the APK's bridge (share sheet, phone voice, Google Lens)
 
   let APP = null, MODELS = [];
   const AUDIO = {};           // language -> promise of {phrase key: clip url}
@@ -32,12 +32,11 @@
   let modelId = store.get("model", "india_v1");
   let chosenCrop = store.get("crop", "");
   let voiceOn = store.get("voice", true), careful = store.get("careful", false), autoCap = store.get("autocap", true);
-  let online = store.get("online", false);
-  let keys = Object.assign({ plantnet: "", groq: "", model: GROQ_MODEL }, store.get("keys", {}));
+  let online = store.get("online", true);   // internet extras: only crop/disease names are sent (to Wikipedia)
   let trustedCrop = "";       // the farmer answered "yes, this is my crop" for the chosen crop
   let session = null, sessionId = null, loading = null;
   let stream = null, mode = "idle";   // idle | live | frozen | photo
-  let last = null;                    // the result on screen: {spec, probs, res, still, online}
+  let last = null;                    // the result on screen: {spec, probs, res, still, web}
   let watchTimer = null, steady = 0, prevSig = null, liveSince = 0;
 
   // ---- text ----------------------------------------------------------------------------------------------
@@ -51,7 +50,7 @@
 
   function showStatus(text, bad) { const s = $("status"); s.textContent = text; s.className = "status" + (bad ? " bad" : ""); s.hidden = !text; }
   let toastTimer = null;
-  function toast(text) { const el = $("toast"); el.textContent = text; el.hidden = false; clearTimeout(toastTimer); toastTimer = setTimeout(() => { el.hidden = true; }, 2200); }
+  function toast(text, ms) { const el = $("toast"); el.textContent = text; el.hidden = false; clearTimeout(toastTimer); toastTimer = setTimeout(() => { el.hidden = true; }, ms || 2200); }
   function button(text, cls, onclick) { const b = document.createElement("button"); b.type = "button"; b.textContent = text; if (cls) b.className = cls; b.onclick = onclick; return b; }
 
   function applyText() {
@@ -60,13 +59,13 @@
     $("brandTitle").textContent = t("title");
     $("langSelect").setAttribute("aria-label", t("choose_language"));
     $("historyBtn").textContent = t("history");
-    $("settingsBtn").textContent = t("settings");
     $("modelLabel").textContent = t("model_label");
     $("cropLabel").textContent = t("choose_crop");
     $("startBtn").textContent = t("start_camera");
     $("uploadBtn").textContent = $("uploadBtn2").textContent = t("load_from_device");
     $("captureText").textContent = t("capture");
     $("againBtn").textContent = t("scan_again");
+    $("lensBtn").textContent = t("lens_search");
     $("voiceBtn").textContent = voiceOn ? t("voice_on") : t("voice_off");
     $("voiceBtn").setAttribute("aria-pressed", String(voiceOn));
     $("autoCapText").textContent = t("auto_capture");
@@ -78,16 +77,14 @@
     $("shareBtn").textContent = t("share");
     $("causeTitle").textContent = t("cause_title");
     $("adviceTitle").textContent = t("advice_title");
+    $("wikiTitle").textContent = t("learn_more");
     $("similarTitle").textContent = t("similar_photos");
     $("historyTitle").textContent = t("history");
-    $("closeHistory").textContent = $("closeSettings").textContent = t("close");
-    $("settingsTitle").textContent = t("settings");
-    $("keysHint").textContent = t("keys_hint");
-    $("saveSettings").textContent = t("save");
+    $("closeHistory").textContent = t("close");
     $("disclaimer").textContent = t("disclaimer");
     $("hint").textContent = mode === "live" ? t("tips") : "";
     buildCropSelect();
-    if (last) render(); else renderIdle();
+    if (last) { if (last.res && last.web && !last.web.loading) loadWebExtras(last); render(); } else renderIdle();
   }
 
   // ---- pickers -------------------------------------------------------------------------------------------
@@ -130,10 +127,16 @@
   function setCrop(id) {
     chosenCrop = id; trustedCrop = ""; store.set("crop", id); $("cropSelect").value = id;
     if (last && last.probs && last.spec.id === modelId) {   // no need to run the model again
-      const res = analyse(last.spec, last.probs, chosenCrop);
-      last.res = last.online ? mergeOnline(res, last.online) : res;
-      render(); speakResult();
+      last.res = analyse(last.spec, last.probs, chosenCrop);
+      answerChanged();
     }
+  }
+
+  // the answer on screen changed (crop chosen, "yes" pressed): show it, say it, fetch its internet extras
+  function answerChanged() {
+    last.web = null;
+    render(); speakResult();
+    if (kindOf(last.res) === "sure") { saveHistory(last.res, last.still); loadWebExtras(last); }
   }
 
   // ---- model ---------------------------------------------------------------------------------------------
@@ -240,7 +243,6 @@
 
   function kindOf(res) {
     if (res.dark) return "dark";
-    if (res.ai) return "online";           // the online check answered where the offline model cannot
     if (res.ambiguous) return "ask";
     if (!res.matches) return "mismatch";
     if (!res.best || res.best.p < UNSURE) return "unsure";
@@ -267,150 +269,97 @@
     return cat ? { key: `cause:${cat}`, text: tr(C.templates, cat) } : null;
   }
 
-  // ---- online check: Pl@ntNet picture search + vision AI ----------------------------------------------------
-  const onlineReady = () => online && Boolean(keys.plantnet || keys.groq);
-  const withTimeout = (p, ms) => Promise.race([p, new Promise((_, rej) => setTimeout(() => rej(new Error("timeout")), ms))]);
+  // ---- internet extras (no keys): Wikipedia in the chosen language + similar photos from Wikimedia Commons ----
+  async function fetchJson(url) {
+    const ctl = new AbortController(), timer = setTimeout(() => ctl.abort(), WEB_TIMEOUT);
+    try {
+      const r = await fetch(url, { signal: ctl.signal });
+      return r.ok ? await r.json() : null;
+    } finally { clearTimeout(timer); }
+  }
+  const englishName = (text) => String(text || "").replace(/\s*\(.*?\)/g, "").trim();
 
-  async function stillJpeg(still, max = 768) {
-    const s = Math.min(1, max / Math.max(still.width, still.height));
-    const c = document.createElement("canvas"); c.width = Math.round(still.width * s); c.height = Math.round(still.height * s);
-    c.getContext("2d").drawImage(still, 0, 0, c.width, c.height);
-    const blob = await new Promise((r) => c.toBlob(r, "image/jpeg", 0.88));
-    return { blob, dataUrl: c.toDataURL("image/jpeg", 0.88) };
+  // the words that say which disease (or crop) a page is about; "leaf", "spot", "plant" are in every title
+  const GENERIC = new Set(["leaf", "leaves", "plant", "plants", "disease", "diseases", "fruit", "spot", "spots", "pest", "and", "the", "healthy"]);
+  const keyWords = (text) => englishName(text).toLowerCase().split(/[^a-z]+/).filter((w) => w.length >= 3 && !GENERIC.has(w));
+  const namesAny = (title, words) => { const t = title.toLowerCase().split(/[^a-z]+/); return words.some((w) => t.includes(w)); };
+
+  // an English article whose title names the disease (or the crop), then its version in the chosen language when one
+  // exists; no article at all rather than a wrong one (a plain search for "Alternaria leaf blotch apple" ranks an
+  // apple variety first)
+  async function wikiArticle(query, mustName) {
+    const words = keyWords(mustName);
+    if (!words.length) return null;
+    const q = new URLSearchParams({ action: "query", list: "search", srsearch: query, srlimit: "8", srprop: "", format: "json", origin: "*" });
+    const s = await fetchJson(`https://en.wikipedia.org/w/api.php?${q}`);
+    const hit = ((s && s.query && s.query.search) || []).find((h) => namesAny(h.title, words));
+    if (!hit) return null;
+    let code = "en", title = hit.title;
+    if (lang !== "en") {
+      const l = await fetchJson(`https://en.wikipedia.org/w/api.php?${new URLSearchParams({ action: "query", titles: hit.title, prop: "langlinks", lllang: lang, format: "json", origin: "*" })}`);
+      const page = l && l.query && l.query.pages && Object.values(l.query.pages)[0];
+      const local = page && page.langlinks && page.langlinks[0] && page.langlinks[0]["*"];
+      if (local) { code = lang; title = local; }
+    }
+    const sum = await fetchJson(`https://${code}.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(title.replace(/ /g, "_"))}`);
+    if (!sum || !sum.extract) return null;
+    return { title: sum.title, extract: sum.extract, lang: code,
+             url: (sum.content_urls && sum.content_urls.mobile && sum.content_urls.mobile.page) || `https://${code}.wikipedia.org/wiki/${encodeURIComponent(title)}`,
+             thumb: sum.thumbnail && sum.thumbnail.source };
   }
 
-  async function plantnet(blob, route, field) {
-    const form = new FormData();
-    form.append(field, blob, "photo.jpg");
-    form.append("organs", "auto");
-    const q = new URLSearchParams({ "api-key": keys.plantnet, "include-related-images": "true", "nb-results": "3", lang: "en" });
-    const r = await fetch(`https://my-api.plantnet.org/v2/${route}?${q}`, { method: "POST", body: form });
-    if (r.status === 404) return { results: [] };      // Pl@ntNet found no plant in the photo
-    if (r.status === 400 && field === "image") return plantnet(blob, route, "images");
-    if (!r.ok) throw new Error(`Pl@ntNet ${route} ${r.status}`);
-    return r.json();
+  // file names that show a sick plant: kept out of the photos for a healthy leaf ("Tomato septoria leaf spot" is not
+  // what a healthy tomato looks like)
+  const SICK = /spot|blight|rot\b|mildew|rust|virus|mosaic|wilt|scab|mou?ld|curl|canker|septoria|disease|infect|pest|lesion|necro|chloro|yellow|miner|deficien|damage|insect|larva|beetle|aphid|mite|borer|caterpill|scorch|burn|symptom|sick/i;
+
+  // photos from Wikimedia Commons whose file names mention the disease (or crop); the first query that finds some wins
+  async function commonsPhotos(queries, mustName, healthy) {
+    const words = keyWords(mustName);
+    for (const query of queries) {
+      const q = new URLSearchParams({ action: "query", generator: "search", gsrnamespace: "6", gsrsearch: `${query} filetype:bitmap`,
+                                      gsrlimit: "12", prop: "imageinfo", iiprop: "url", iiurlwidth: "240", format: "json", origin: "*" });
+      const j = await fetchJson(`https://commons.wikimedia.org/w/api.php?${q}`);
+      const pages = j && j.query && j.query.pages ? Object.values(j.query.pages).sort((a, b) => a.index - b.index) : [];
+      const found = pages.filter((p) => p.imageinfo && p.imageinfo[0] && p.imageinfo[0].thumburl && words.some((w) => p.title.toLowerCase().includes(w))
+                                      && !(healthy && SICK.test(p.title)))
+        .map((p) => ({ src: p.imageinfo[0].thumburl, href: p.imageinfo[0].descriptionurl,
+                       label: p.title.replace(/^File:/, "").replace(/\.\w+$/, "").slice(0, 60) }))
+        .filter((p, i, all) => all.findIndex((o) => o.label === p.label) === i)   // the same photo uploaded twice
+        .slice(0, 8);
+      if (found.length) return found;
+    }
+    return [];
   }
 
-  // the offline model's best guesses over all crops (and within the chosen crop), for the AI to check
-  function candidates(m, probs, crop) {
-    const key = (i) => `${m.labels[i].crop}::${m.labels[i].label}`;
-    const out = m.labels.map((_, i) => ({ key: key(i), p: probs[i] })).sort((a, b) => b.p - a.p).slice(0, 8);
-    if (crop && m.crop_classes[crop]) {
-      m.crop_classes[crop].map((i) => ({ key: key(i), p: probs[i] })).sort((a, b) => b.p - a.p).slice(0, 5)
-        .forEach((c) => { if (!out.some((o) => o.key === c.key)) out.push(c); });
-    }
-    return out;
+  async function loadWebExtras(entry) {
+    if (!online || !navigator.onLine || !entry.res || kindOf(entry.res) !== "sure") return;
+    const b = entry.res.best, crop = englishName((APP.crops[b.crop] || {}).en) || b.crop.replace(/_/g, " ");
+    const cropWords = `${crop} ${b.crop.replace(/_/g, " ")}`;   // "Corn (maize)" + "corn_maize": either name counts
+    const disease = englishName(b.label);
+    entry.web = { loading: true };
+    if (last === entry) render();
+    const [wiki, photos] = await Promise.all([
+      (b.healthy ? wikiArticle(`${crop} plant`, cropWords) : wikiArticle(`${disease} ${crop}`, disease))
+        .catch((e) => { console.warn("wikipedia:", e && e.message); return null; }),
+      (b.healthy ? commonsPhotos([`${crop} leaf`, `${crop} plant`], cropWords, true) : commonsPhotos([`${disease} ${crop}`, disease], disease, false))
+        .catch((e) => { console.warn("commons:", e && e.message); return []; }),
+    ]);
+    if (!entry.web || !entry.web.loading || last !== entry) return;   // the user moved on
+    entry.web = { wiki, photos };
+    render();
   }
 
-  async function groqCheck(dataUrl, res, m, probs, on) {
-    const L = APP.languages.find((l) => l.code === lang) || { name: "English" };
-    const top = (x) => (x && x.results ? x.results.slice(0, 3) : []);
-    const pnText = top(on.pn).map((r) => `${r.species.scientificNameWithoutAuthor} (${(r.species.commonNames || []).slice(0, 2).join(", ")}) ${r.score.toFixed(2)}`).join("; ");
-    const pndText = top(on.pnd).map((r) => `${r.description || r.name} ${r.score.toFixed(2)}`).join("; ");
-    const text = [
-      "Photo from an Indian farmer, usually one leaf, fruit or stem of a crop.",
-      `Offline model guesses (crop::disease probability): ${candidates(m, probs, res.cropGiven).map((c) => `${c.key} ${c.p.toFixed(2)}`).join("; ")}.`,
-      `Plant identification by Pl@ntNet: ${pnText || "not available"}.`,
-      `Disease identification by Pl@ntNet: ${pndText || "not available"}.`,
-      `Crop chosen by the farmer: ${res.cropGiven || "not chosen"}.`,
-      `Crop ids the offline app knows: ${Object.keys(APP.crops).join(", ")}.`,
-      "Judge from the photo itself; the hints above help but can be wrong.",
-      "Reply with one JSON object with exactly these keys:",
-      '"is_plant" (true/false), "plant_name_en", "plant_scientific", "crop_id" (one of the crop ids above, or null if the plant is not one of them),',
-      '"healthy" (true/false), "disease_name_en" ("" if healthy), "candidate" (the one offline guess that is correct, copied exactly as crop::disease, or null if none is),',
-      '"confidence" (0 to 1: how sure you are of both plant and disease),',
-      `"plant_name", "disease_name", "cause" (1-2 sentences: what causes it and how it spreads), "steps" (3 to 6 short, safe, standard steps an Indian farmer can follow now, with product and dose per litre of water where needed; for a healthy plant 2 care tips), "note" (one short caution) - write these five in ${L.name}, in its own script.`,
-    ].join("\n");
-    const body = {
-      model: keys.model || GROQ_MODEL, temperature: 0.2, max_completion_tokens: 1500,
-      response_format: { type: "json_object" },
-      messages: [
-        { role: "system", content: "You are a careful plant-health expert who advises Indian farmers. Answer only with JSON." },
-        { role: "user", content: [{ type: "text", text }, { type: "image_url", image_url: { url: dataUrl } }] },
-      ],
-    };
-    if (/^qwen\//.test(body.model)) body.reasoning_effort = "none";   // straight answer, no long thinking
-    const r = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-      method: "POST", headers: { Authorization: `Bearer ${keys.groq}`, "Content-Type": "application/json" }, body: JSON.stringify(body),
-    });
-    if (!r.ok) throw new Error(`Groq ${r.status}`);
-    const j = await r.json();
-    const content = (j.choices && j.choices[0] && j.choices[0].message && j.choices[0].message.content) || "";
-    const ai = JSON.parse(content.slice(content.indexOf("{"), content.lastIndexOf("}") + 1));
-    ai.steps = Array.isArray(ai.steps) ? ai.steps.map(String).filter(Boolean).slice(0, 8) : [];
-    return ai;
-  }
-
-  async function onlineCheck(still, res, m, probs) {
-    if (!navigator.onLine) throw new Error("no internet");
-    const { blob, dataUrl } = await stillJpeg(still);
-    const on = { pn: null, pnd: null, ai: null, errors: [] };
-    if (keys.plantnet) {
-      const [a, b] = await Promise.allSettled([plantnet(blob, "identify/all", "images"), plantnet(blob, "diseases/identify", "image")]);
-      if (a.status === "fulfilled") on.pn = a.value; else on.errors.push(a.reason.message);
-      if (b.status === "fulfilled") on.pnd = b.value; else on.errors.push(b.reason.message);
-    }
-    if (keys.groq) {
-      try { on.ai = await groqCheck(dataUrl, res, m, probs, on); } catch (e) { on.errors.push(e.message); }
-    }
-    return on;
-  }
-
-  function cropsForSpecies(sp) {
-    if (!sp) return [];
-    const name = (sp.scientificNameWithoutAuthor || "").toLowerCase().replace(/×/g, " ").replace(/\s+/g, " ").trim();
-    const genus = ((sp.genus && sp.genus.scientificNameWithoutAuthor) || name.split(" ")[0] || "").toLowerCase();
-    return APP.species[name.split(" ").slice(0, 2).join(" ")] || APP.genus[genus] || [];
-  }
-  const commonName = (r) => (r.species.commonNames && r.species.commonNames[0]) || r.species.scientificNameWithoutAuthor;
-
-  // combine: the offline answer, Pl@ntNet and the AI -> one answer
-  function mergeOnline(base, on) {
-    const res = Object.assign({}, base, { online: on, onlineStatus: "", ai: null, oldBest: null });
-    if (!on || (!on.ai && !(on.pn && on.pn.results))) { res.onlineStatus = "failed"; return res; }
-    const m = last.spec, probs = last.probs, known = (c) => Boolean(c && m.crop_classes[c]);
-    const ai = on.ai;
-    const pnTop = on.pn && on.pn.results && on.pn.results[0];
-    const pnCrops = pnTop && pnTop.score >= 0.2 ? cropsForSpecies(pnTop.species) : [];
-    const offlineSure = kindOf(base) === "sure";
-
-    if (ai) {
-      if (ai.is_plant === false) { res.ai = ai; return res; }
-      const idx = ai.candidate ? m.labels.findIndex((l) => `${l.crop}::${l.label}` === ai.candidate) : -1;
-      if (idx >= 0) {                                   // the AI picked one of the offline model's own classes
-        const l = m.labels[idx], within = m.crop_classes[l.crop];
-        const localP = probs[idx] / (within.reduce((s, i) => s + probs[i], 0) || 1);
-        const item = { crop: l.crop, label: l.label, healthy: l.label === "Healthy",
-                       p: Math.max(localP, Math.min(0.99, Number(ai.confidence) || 0.6)) };
-        const same = offlineSure && base.best.crop === item.crop && base.best.label === item.label;
-        return Object.assign(res, { best: item, top: [item], ambiguous: false, matches: true,
-                                    onlineStatus: same ? "agrees" : "corrected", oldBest: offlineSure && !same ? base.best : null });
-      }
-      res.ai = ai;                                      // plant or disease the offline model does not know
-      res.aiCrop = known(ai.crop_id) ? ai.crop_id : "";
-      return res;
-    }
-
-    // Pl@ntNet only (no AI key): it names the plant; the offline model then answers for that plant
-    const c = pnCrops.find(known);
-    if (c) {
-      const needsPlant = base.ambiguous || !base.matches || (!base.cropGiven && offlineSure && base.best.crop !== c && pnTop.score >= 0.5);
-      if (needsPlant) {
-        const r2 = analyse(m, probs, c);
-        r2.matches = true;
-        return Object.assign(r2, { online: on, onlineStatus: offlineSure ? "corrected" : "agrees", oldBest: offlineSure ? base.best : null });
-      }
-      res.onlineStatus = offlineSure && base.best.crop === c ? "agrees" : "";
-      return res;
-    }
-    if (pnTop && pnTop.score >= 0.3) {                  // a plant the offline model does not know (neem, basil...)
-      const d = on.pnd && on.pnd.results && on.pnd.results[0];
-      res.ai = { is_plant: true, plant_name: commonName(pnTop), plant_name_en: commonName(pnTop),
-                 plant_scientific: pnTop.species.scientificNameWithoutAuthor, confidence: pnTop.score,
-                 healthy: null, disease_name: d && d.score >= 0.3 ? (d.description || d.name) : "", cause: "", steps: [], plantnetOnly: true };
-      res.aiCrop = "";
-    }
-    return res;
+  // Google Lens: the Lens app on Android; on Windows the photo is copied and Google Lens opens in the browser
+  async function openLens() {
+    const still = last && last.still;
+    if (!still) return;
+    if (android && android.openLens) { android.openLens(still.toDataURL("image/jpeg", 0.9).split(",")[1]); return; }
+    try {
+      const blob = await new Promise((r) => still.toBlob(r, "image/png"));
+      await navigator.clipboard.write([new ClipboardItem({ "image/png": blob })]);
+      toast(t("photo_copied"), 7000);
+    } catch (err) { console.warn("could not copy the photo:", err && err.message); }
+    window.open("https://lens.google.com/", "_blank", "noopener");
   }
 
   // ---- voice: recorded clips in each language (works offline), the device's own voice as a fallback --------
@@ -480,15 +429,6 @@
     if (kind === "ask") return [ui("which_crop"), ui("which_crop_hint")];
     if (kind === "mismatch") return [{ key: "crop:" + res.cropGiven, text: cropName(res.cropGiven) }, ui("confirm_crop")];
     if (kind === "unsure") return [ui("not_sure")];
-    if (kind === "online") {
-      const ai = res.ai;
-      if (ai.is_plant === false) return [ui("not_sure")];
-      const parts = [res.aiCrop ? { key: "crop:" + res.aiCrop, text: cropName(res.aiCrop) } : { text: ai.plant_name || ai.plant_name_en }];
-      parts.push(ai.healthy ? ui("healthy_result") : { text: ai.disease_name || ai.disease_name_en });
-      if (ai.cause) parts.push({ text: ai.cause });
-      if (ai.steps.length) parts.push(ui("advice_title"), ...ai.steps.map((s) => ({ text: s })));
-      return parts;
-    }
     const b = res.best, parts = [{ key: "crop:" + b.crop, text: cropName(b.crop) }];
     if (b.healthy) parts.push(ui("healthy_result"));
     else {
@@ -540,7 +480,7 @@
     if (video.paused) video.play().catch(() => {});
     mode = "live"; liveSince = performance.now(); steady = 0; prevSig = null;
     video.hidden = false; frozen.hidden = true; photo.hidden = true; box.hidden = false; box.className = "box";
-    $("start").hidden = true; $("captureBtn").hidden = false; $("againBtn").hidden = true;
+    $("start").hidden = true; $("captureBtn").hidden = false; $("againBtn").hidden = true; $("lensBtn").hidden = true;
     $("hint").textContent = t("tips");
     if (video.videoWidth) fitViewport(video.videoWidth, video.videoHeight);
     clearInterval(watchTimer); watchTimer = setInterval(watch, 200);
@@ -661,33 +601,16 @@
     $("thinking").hidden = true;
     const res = analyse(r.spec, r.probs, chosenCrop);
     res.blurry = q.blurry; res.ms = r.ms;
-    last = { spec: r.spec, probs: r.probs, res, still, online: null };
-    if (!onlineReady()) { render(); return finish(); }
-
-    // online check: show the offline answer at once, speak the combined answer when it is in
-    res.onlineStatus = "checking";
+    last = { spec: r.spec, probs: r.probs, res, still, web: null };
     render();
-    let on;
-    try { on = await withTimeout(onlineCheck(still, res, r.spec, r.probs), ONLINE_TIMEOUT); }
-    catch (err) { on = { errors: [err.message] }; }
-    if (my !== thinkingNow || !last || last.still !== still) return;   // the user moved on
-    if (on.errors && on.errors.length) console.warn("online check:", on.errors.join(" | "));
-    last.online = on;
-    last.res = mergeOnline(res, on);
-    render();
-    finish();
-
-    function finish() {
-      speakResult();
-      const k = kindOf(last.res);
-      if (k === "sure" || (k === "online" && last.res.ai.is_plant !== false)) saveHistory(last.res, still);
-    }
+    speakResult();
+    if (kindOf(res) === "sure") { saveHistory(res, still); loadWebExtras(last); }
   }
 
   // ---- rendering ---------------------------------------------------------------------------------------------
   function setChip(kind, text) { $("chip").className = "chip" + (kind ? " " + kind : ""); $("chip").textContent = text; }
   function clearCard() {
-    ["askCrop", "voiceRow", "cause", "advice", "warnNote", "onlineNote", "similar"].forEach((id) => { $(id).hidden = true; });
+    ["askCrop", "voiceRow", "cause", "advice", "warnNote", "onlineNote", "wiki", "similar"].forEach((id) => { $(id).hidden = true; });
     $("fill").className = "fill"; $("fill").style.width = "0%"; $("conf").textContent = ""; $("crop").textContent = "";
     $("meter").hidden = false;
   }
@@ -706,12 +629,12 @@
     const res = last.res, kind = kindOf(res);
     clearCard();
     box.className = "box";
-    renderOnlineExtras(res);
+    // Google Lens can name any plant (also ones the offline model does not know): offered whenever there is a photo
+    $("lensBtn").hidden = !(last.still && kind !== "dark" && navigator.onLine && mode !== "live");
     if (kind === "dark") {
       setChip("bad", t("not_sure")); $("disease").textContent = t("too_dark"); $("meter").hidden = true;
       return;
     }
-    if (kind === "online") return renderOnline(res);
     if (kind === "ask") return renderAskCrop(res);
     const b = res.best;
     if (kind === "mismatch") {
@@ -725,8 +648,7 @@
         button(t("yes"), "primary", () => {
           trustedCrop = res.cropGiven;
           last.res = Object.assign({}, res, { matches: true });
-          render(); speakResult();
-          if (kindOf(last.res) === "sure") saveHistory(last.res, last.still);
+          answerChanged();
         }),
         button(t("no"), "", () => setCrop("")),
       );
@@ -751,58 +673,34 @@
     showList(steps(b).map((x) => x.text));
     $("adviceNote").textContent = b.healthy ? "" : t("advice_note");
     $("voiceRow").hidden = false;
+    renderWeb(last);
   }
 
-  // an answer only the online check could give (a plant or disease the offline model does not know)
-  function renderOnline(res) {
-    const ai = res.ai;
-    if (ai.is_plant === false) {
-      setChip("", t("not_sure")); $("disease").textContent = t("not_sure"); $("meter").hidden = true;
-      if (ai.note) { $("warnNote").textContent = ai.note; $("warnNote").hidden = false; }
+  // Wikipedia article and Commons photos, when they have arrived
+  function renderWeb(entry) {
+    const w = entry.web;
+    if (!w) return;
+    if (w.loading) {
+      const note = $("onlineNote"); note.textContent = t("online_checking"); note.className = "onlineNote busy"; note.hidden = false;
       return;
     }
-    const k = ai.healthy ? "healthy" : ai.healthy === false ? "disease" : "";
-    setChip(k, t("online_title"));
-    const plant = res.aiCrop ? cropName(res.aiCrop) : (ai.plant_name || ai.plant_name_en || "");
-    $("crop").textContent = ai.plant_scientific ? `${plant} (${ai.plant_scientific})` : plant;
-    $("disease").textContent = ai.healthy ? t("healthy_result") : (ai.disease_name || ai.disease_name_en || plant);
-    const conf = Number(ai.confidence);
-    if (conf > 0) {
-      $("fill").className = "fill " + k; $("fill").style.width = pct(Math.min(1, conf));
-      $("conf").textContent = `${t("how_sure")}: ${pct(Math.min(1, conf))}`;
-    } else $("meter").hidden = true;
-    if (!res.aiCrop) { $("onlineNote").textContent = t("online_new_plant"); $("onlineNote").className = "onlineNote"; $("onlineNote").hidden = false; }
-    if (ai.cause) { $("causeText").textContent = ai.cause; $("cause").hidden = false; }
-    showList(ai.steps || []);
-    $("adviceNote").textContent = [t("ai_note"), ai.note || ""].filter(Boolean).join(" ");
-    if (!$("advice").hidden || ai.cause) $("voiceRow").hidden = false;
-    if ($("advice").hidden && ai.note) { $("warnNote").textContent = ai.note; $("warnNote").hidden = false; }
-    $("voiceRow").hidden = false;
-  }
-
-  // the online check's status line and Pl@ntNet's similar photos
-  function renderOnlineExtras(res) {
-    const note = $("onlineNote");
-    const set = (text, cls) => { note.textContent = text; note.className = "onlineNote" + (cls ? " " + cls : ""); note.hidden = !text; };
-    if (res.onlineStatus === "checking") set(t("online_checking"), "busy");
-    else if (res.onlineStatus === "failed") set(t("online_failed"));
-    else if (res.onlineStatus === "agrees") set("✓ " + t("online_agrees"), "good");
-    else if (res.onlineStatus === "corrected") set(fill(t("online_corrected"), { old: res.oldBest ? itemName(res.oldBest) : "?" }), "good");
-    const on = res.online, strip = $("strip");
-    strip.innerHTML = "";
-    const pics = [];
-    const add = (r, label) => (r.images || []).slice(0, 2).forEach((im) => {
-      if (im.url && (im.url.s || im.url.m)) pics.push({ src: im.url.m || im.url.s, href: im.url.o || im.url.m, label: `${label} · ${pct(r.score)}` });
-    });
-    if (on && on.pn && on.pn.results) on.pn.results.slice(0, 3).forEach((r) => add(r, commonName(r)));
-    if (on && on.pnd && on.pnd.results) on.pnd.results.slice(0, 2).filter((r) => r.score >= 0.1).forEach((r) => add(r, r.description || r.name));
-    pics.slice(0, 8).forEach((p) => {
+    if (w.wiki) {
+      $("wikiName").textContent = w.wiki.title;
+      $("wikiText").textContent = w.wiki.extract;
+      $("wikiLink").href = w.wiki.url;
+      $("wikiLink").textContent = `${w.wiki.lang}.wikipedia.org`;
+      $("wikiThumb").hidden = !w.wiki.thumb;
+      if (w.wiki.thumb) $("wikiThumb").src = w.wiki.thumb;
+      $("wiki").hidden = false;
+    }
+    const strip = $("strip"); strip.innerHTML = "";
+    (w.photos || []).forEach((p) => {
       const a = document.createElement("a"); a.href = p.href; a.target = "_blank"; a.rel = "noopener";
       const img = document.createElement("img"); img.src = p.src; img.alt = ""; img.loading = "lazy";
       const cap = document.createElement("span"); cap.textContent = p.label;
       a.append(img, cap); strip.appendChild(a);
     });
-    $("similar").hidden = pics.length === 0;
+    $("similar").hidden = !(w.photos && w.photos.length);
   }
 
   function renderAskCrop(res) {
@@ -824,38 +722,32 @@
 
   // ---- history & share ---------------------------------------------------------------------------------------
   function saveHistory(res, still) {
+    if (!still) return;
     const c = document.createElement("canvas"); c.width = c.height = 96;
     const side = Math.min(still.width, still.height);
     c.getContext("2d").drawImage(still, (still.width - side) / 2, (still.height - side) / 2, side, side, 0, 0, 96, 96);
-    const items = store.get("history", []);
-    const entry = { ts: Date.now(), model: modelId, thumb: c.toDataURL("image/jpeg", 0.7) };
-    if (res.ai) Object.assign(entry, { ai: res.ai, aiCrop: res.aiCrop || "" }); else entry.best = res.best;
-    items.unshift(entry);
+    const items = store.get("history", []).filter((it) => it.best);
+    items.unshift({ ts: Date.now(), model: modelId, thumb: c.toDataURL("image/jpeg", 0.7), best: res.best });
     store.set("history", items.slice(0, HISTORY_MAX));
   }
 
   function openHistory() {
     const list = $("historyList"); list.innerHTML = "";
-    const items = store.get("history", []);
+    const items = store.get("history", []).filter((it) => it.best);
     if (!items.length) { const li = document.createElement("li"); li.className = "empty"; li.textContent = t("no_history"); list.appendChild(li); }
     items.forEach((it) => {
       const li = document.createElement("li"), b = document.createElement("button"); b.type = "button";
       const img = document.createElement("img"); img.src = it.thumb; img.alt = "";
       const txt = document.createElement("span");
       const h1 = document.createElement("span"); h1.className = "h1";
+      h1.textContent = it.best.healthy ? `${cropName(it.best.crop)} · ${t("healthy_result")}` : itemName(it.best);
       const h2 = document.createElement("span"); h2.className = "h2";
-      if (it.ai) {
-        h1.textContent = [it.aiCrop ? cropName(it.aiCrop) : it.ai.plant_name, it.ai.healthy ? t("healthy_result") : it.ai.disease_name].filter(Boolean).join(" · ");
-        h2.textContent = `${new Date(it.ts).toLocaleString(lang)} · ${t("online_title")}`;
-      } else {
-        h1.textContent = it.best.healthy ? `${cropName(it.best.crop)} · ${t("healthy_result")}` : itemName(it.best);
-        h2.textContent = `${new Date(it.ts).toLocaleString(lang)} · ${pct(it.best.p)}`;
-      }
+      h2.textContent = `${new Date(it.ts).toLocaleString(lang)} · ${pct(it.best.p)}`;
       txt.append(h1, h2); b.append(img, txt);
       b.onclick = () => {
         $("historyDlg").close();
-        last = { res: it.ai ? { ai: it.ai, aiCrop: it.aiCrop } : { best: it.best, top: [it.best], matches: true, ambiguous: false, cropScores: [] } };
-        render(); speakResult();
+        last = { res: { best: it.best, top: [it.best], matches: true, ambiguous: false, cropScores: [] }, web: null };
+        render(); speakResult(); loadWebExtras(last);
       };
       li.appendChild(b); list.appendChild(li);
     });
@@ -864,23 +756,13 @@
 
   function shareText() {
     const res = last && last.res;
-    if (!res) return "";
-    const kind = kindOf(res), lines = [];
-    if (kind === "online" && res.ai.is_plant !== false) {
-      const ai = res.ai;
-      lines.push(`AgriSmart: ${res.aiCrop ? cropName(res.aiCrop) : ai.plant_name}${ai.plant_scientific ? ` (${ai.plant_scientific})` : ""} - ${ai.healthy ? t("healthy_result") : ai.disease_name || ""}`);
-      if (ai.cause) lines.push("", `${t("cause_title")}: ${ai.cause}`);
-      if (ai.steps.length) { lines.push("", t("advice_title") + ":"); ai.steps.forEach((s, i) => lines.push(`${i + 1}. ${s}`)); }
-      lines.push("", t("ai_note"));
-      return lines.join("\n");
-    }
-    if (kind !== "sure") return "";
-    const b = res.best;
-    lines.push(`AgriSmart: ${cropName(b.crop)} - ${b.healthy ? t("healthy_result") : termName(b.label)} (${pct(b.p)})`);
+    if (!res || kindOf(res) !== "sure") return "";
+    const b = res.best, lines = [`AgriSmart: ${cropName(b.crop)} - ${b.healthy ? t("healthy_result") : termName(b.label)} (${pct(b.p)})`];
     const c = causeOf(b); if (c) lines.push("", `${t("cause_title")}: ${c.text}`);
     const s = steps(b);
     if (s.length) { lines.push("", t("advice_title") + ":"); s.forEach((x, i) => lines.push(`${i + 1}. ${x.text}`)); }
     if (!b.healthy) lines.push("", t("advice_note"));
+    if (last.web && last.web.wiki) lines.push("", `${t("learn_more")}: ${last.web.wiki.url}`);
     return lines.join("\n");
   }
   async function share() {
@@ -890,21 +772,11 @@
     try { await navigator.clipboard.writeText(text); toast("✓ " + t("share")); } catch { toast(text.slice(0, 80) + "…"); }
   }
 
-  // ---- settings (online check keys stay in this browser / app only) -------------------------------------------
-  function openSettings() {
-    $("plantnetKey").value = keys.plantnet; $("groqKey").value = keys.groq; $("groqModel").value = keys.model || GROQ_MODEL;
-    $("settingsDlg").showModal();
-  }
-  $("settingsForm").onsubmit = () => {
-    keys = { plantnet: $("plantnetKey").value.trim(), groq: $("groqKey").value.trim(), model: $("groqModel").value.trim() || GROQ_MODEL };
-    store.set("keys", keys);
-    if (keys.plantnet || keys.groq) { online = true; store.set("online", true); $("onlineMode").checked = true; }
-  };
-
   // ---- controls ------------------------------------------------------------------------------------------------
   $("startBtn").onclick = startCamera;
   $("captureBtn").onclick = capture;
   $("againBtn").onclick = scanAgain;      // does not stop the voice: it finishes what it was saying
+  $("lensBtn").onclick = openLens;
   $("uploadBtn").onclick = $("uploadBtn2").onclick = () => $("fileInput").click();
   $("fileInput").onchange = (e) => { const f = e.target.files[0]; e.target.value = ""; if (f) handleFile(f); };
   $("voiceBtn").onclick = () => {
@@ -915,15 +787,15 @@
   $("stopBtn").onclick = stopVoice;
   $("shareBtn").onclick = share;
   $("historyBtn").onclick = openHistory;
-  $("settingsBtn").onclick = openSettings;
   $("closeHistory").onclick = () => $("historyDlg").close();
-  $("closeSettings").onclick = () => $("settingsDlg").close();
   $("autoCap").onchange = (e) => { autoCap = e.target.checked; store.set("autocap", autoCap); steady = 0; showSteady(0); };
   $("careful").onchange = (e) => { careful = e.target.checked; store.set("careful", careful); };
   $("onlineMode").onchange = (e) => {
     online = e.target.checked; store.set("online", online);
-    if (online && !keys.plantnet && !keys.groq) openSettings();
+    if (last && last.res) { last.web = null; if (online) loadWebExtras(last); else render(); }
   };
+  window.addEventListener("online", () => { if (last && last.res) { render(); if (!last.web) loadWebExtras(last); } });
+  window.addEventListener("offline", () => { if (last && last.res) render(); });
   document.addEventListener("keydown", (e) => {
     if (e.target.closest("button, select, input, dialog")) return;
     if (e.code === "Space") { e.preventDefault(); if (mode === "live") capture(); else if (mode !== "idle") scanAgain(); }
@@ -946,6 +818,7 @@
     }
     if (!APP.languages.some((l) => l.code === lang)) lang = "en";
     if (!MODELS.some((m) => m.id === modelId)) modelId = MODELS[0].id;
+    try { localStorage.removeItem("agri_keys"); } catch { /* the old online check's keys are no longer used */ }
     $("autoCap").checked = autoCap; $("careful").checked = careful; $("onlineMode").checked = online;
     buildLangSelect(); buildModelSelect(); applyText();
     ensureModel().catch(modelError);   // load while the user gets the camera ready

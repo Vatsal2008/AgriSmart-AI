@@ -2,17 +2,19 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!-- The app itself (models, voice, page) is inside the APK and works with no network. Internet is used only
-         by the optional online check (Pl@ntNet picture search and an online AI), when the user turns it on. -->
+         for the extras (Wikipedia article, similar photos, Google Lens), with no keys or sign-in. -->
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-feature android:name="android.hardware.camera" android:required="false" />
 
-    <!-- lets the app find the phone's text-to-speech engine (reads online answers aloud) -->
+    <!-- lets the app find the phone's text-to-speech engine and Google Lens (picture search) -->
     <queries>
         <intent>
             <action android:name="android.intent.action.TTS_SERVICE" />
         </intent>
+        <package android:name="com.google.ar.lens" />
+        <package android:name="com.google.android.googlequicksearchbox" />
     </queries>
 
     <application
@@ -33,5 +35,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <provider
+            android:name=".PhotoProvider"
+            android:authorities="com.agrismart.offline.photos"
+            android:exported="false"
+            android:grantUriPermissions="true" />
     </application>
 </manifest>

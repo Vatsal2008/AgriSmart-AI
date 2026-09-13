@@ -93,8 +93,8 @@ The same checker with no server and no internet. The model runs inside the app. 
   The voice keeps going when you move the phone away.
 - You can switch between the India v1, India v2 and core models.
 - If the photo doesn't look like the crop you picked, it asks "Is this sugarcane? Yes / No" rather than guessing.
-- There is an optional **online check** (your own free keys). Pl@ntNet's picture search and a vision AI confirm or
-  correct the offline answer, and they also name plants the offline model doesn't know, such as neem or tulsi.
+- With internet it adds, with no keys or sign-up: a Wikipedia article in the chosen language, similar photos from
+  Wikimedia Commons, and a Google Lens button that can also name plants the offline model doesn't know (neem, tulsi).
 
 Downloads and details: [`offline/README.md`](offline/README.md).
 

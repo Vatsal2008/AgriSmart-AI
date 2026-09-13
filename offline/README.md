@@ -8,8 +8,8 @@ laptop itself. It comes in two forms with the same features:
 | **Android** | `AgriSmart-offline.apk` | Install it (allow "install unknown apps" once), open **AgriSmart** |
 | **Windows** | `AgriSmart-offline-windows.zip` | Unzip, double-click **`run.bat`**. The app opens in the browser at `http://localhost:8777`. Close the black window to stop it |
 
-Everything works with no internet: the models, the voice clips and the page are all inside the app. Internet is
-used only by the optional **online check**, and only when you turn it on.
+Everything works with no internet: the models, the voice clips and the page are all inside the app. With internet,
+the app adds a few extras by itself, with no sign-up and no keys (see **Online extras** below).
 
 ## What it does
 
@@ -35,19 +35,16 @@ used only by the optional **online check**, and only when you turn it on.
   - If the photo doesn't look like the crop you picked, the app asks **"Is this sugarcane? Yes / No"**. Yes gives the
     answer for sugarcane, because the farmer knows their own field. No lets the model guess the plant.
   - If the model can't tell two similar plants apart, it asks which crop it is.
-- **Online check** (optional, needs internet and a free key; turn it on in the options and add the keys under
-  **Settings**):
-  - **Picture search with Pl@ntNet.** It names the plant and the disease from millions of reference photos, and the
-    app shows **similar photos**.
-  - **A vision AI (Groq).** It looks at the photo together with the offline model's guesses and Pl@ntNet's answer.
-  - **Confirm or correct.** The offline answer appears at once. When the online answers arrive, the app says it is
-    **confirmed**, or **corrects** it and shows what the offline model had said.
-  - **Plants the offline model doesn't know.** For a plant such as neem or tulsi, the app doesn't give up: it names
-    the plant (for example *Neem, Azadirachta indica*) and gives the AI's cause and steps, marked as an online-AI
-    answer.
-  - **Voice.** On Android the online answers are read out by the phone's own voice.
-  - **Keys and photos.** The keys are saved only on the device. The photo is sent to Pl@ntNet and Groq only while the
-    online check is on.
+- **Online extras** (when there is internet; on by default, no sign-up and no keys; switch off with **Online check**):
+  - **Learn more (Wikipedia):** a short article about the disease or plant, in the chosen language when Wikipedia
+    has one (otherwise in English), with a link to the full article.
+  - **Similar photos** of the same disease from Wikimedia Commons.
+  - **Search with Google Lens:** hands the photo to Google Lens (the Lens app on Android; on Windows the photo is
+    copied and Google Lens opens in the browser, press Ctrl+V). Lens can name any plant, including ones the offline
+    model doesn't know, such as neem or tulsi.
+  - Only the crop and disease names go to Wikipedia. The photo leaves the device only when you tap the Lens button.
+  - There is no AI answer inside the app: every AI service that reads photos now needs an API key (the free no-key
+    ones, such as Pollinations, have closed), and a key would have to live on a server run by the team.
 - **Extras:**
   - A warning for dark or blurry photos.
   - **Careful mode**, which also checks the mirror image. It is slower and a little steadier.

@@ -123,11 +123,15 @@ dialog::backdrop { background: rgba(0, 0, 0, .45); }
 .strip { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 6px; }
 .strip a { flex: none; width: 104px; color: var(--muted); font-size: 11px; line-height: 1.3; text-decoration: none; }
 .strip img { display: block; width: 104px; height: 104px; object-fit: cover; border-radius: 10px; background: var(--line); margin-bottom: 4px; }
-.settingsForm { display: grid; gap: 10px; padding: 14px 16px 18px; }
-.settingsForm .fine { border-top: 0; padding-top: 0; }
-.settingsForm a { color: var(--leaf); }
-.field input { font: inherit; font-size: 15px; font-weight: 400; letter-spacing: 0; text-transform: none; color: var(--ink); background: var(--panel);
-               border: 1px solid var(--line); border-radius: 10px; padding: 9px 12px; min-height: 44px; width: 100%; }
+.lens { font-weight: 600; }
+.lens::before { content: ""; display: inline-block; width: 14px; height: 14px; margin-inline-end: 8px; vertical-align: -2px;
+                border-radius: 50%; border: 3px solid var(--leaf); box-sizing: border-box; }
+.wiki { margin: 0 0 16px; }
+.wikiBody { display: flex; gap: 12px; align-items: flex-start; }
+.wikiBody img { width: 88px; height: 88px; object-fit: cover; border-radius: 10px; background: var(--line); flex: none; }
+.wikiName { margin: 0 0 2px; font-weight: 650; }
+.wikiText { margin: 0 0 6px; font-size: 14px; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 6; -webkit-box-orient: vertical; overflow: hidden; }
+.wiki a { color: var(--leaf); font-size: 13px; }
 .toast { position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%); background: var(--ink); color: var(--panel);
          padding: 10px 18px; border-radius: 999px; font-size: 14px; box-shadow: 0 4px 16px rgba(0, 0, 0, .25); z-index: 10; }
 @media (prefers-reduced-motion: reduce) { .fill, .box i, .steady span { transition: none; } .spinner { animation-duration: 2.5s; } }

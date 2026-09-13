@@ -2,6 +2,7 @@ package com.agrismart.offline;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.ClipData;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.AssetFileDescriptor;
@@ -11,6 +12,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
+import android.util.Base64;
 import android.util.Log;
 import android.webkit.ConsoleMessage;
 import android.webkit.JavascriptInterface;
@@ -26,6 +28,8 @@ import android.webkit.WebViewClient;
 import org.json.JSONObject;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -285,6 +289,41 @@ public class MainActivity extends Activity {
             tts.setLanguage(voice);
             tts.setSpeechRate(0.95f);
             return tts.speak(text, TextToSpeech.QUEUE_FLUSH, null, id) == TextToSpeech.SUCCESS;
+        }
+
+        /** Hands the leaf photo (base64 JPEG) to Google Lens for a picture search; the share menu if Lens is missing. */
+        @JavascriptInterface
+        public void openLens(String base64Jpeg) {
+            try {
+                File dir = PhotoProvider.shareDir(MainActivity.this);
+                if (!dir.isDirectory() && !dir.mkdirs()) throw new IOException("no cache folder");
+                File f = new File(dir, "leaf.jpg");
+                try (FileOutputStream out = new FileOutputStream(f)) {
+                    out.write(Base64.decode(base64Jpeg, Base64.DEFAULT));
+                }
+                Uri uri = Uri.parse("content://" + PhotoProvider.AUTHORITY + "/leaf.jpg");
+                Intent send = new Intent(Intent.ACTION_SEND);
+                send.setType("image/jpeg");
+                send.putExtra(Intent.EXTRA_STREAM, uri);
+                send.setClipData(ClipData.newRawUri("leaf", uri));
+                send.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                runOnUiThread(() -> {
+                    for (String pkg : new String[]{"com.google.ar.lens", "com.google.android.googlequicksearchbox"}) {
+                        Intent lens = new Intent(send).setPackage(pkg);
+                        if (lens.resolveActivity(getPackageManager()) != null) {
+                            try {
+                                startActivity(lens);
+                                return;
+                            } catch (Exception ignored) {
+                                // try the next one
+                            }
+                        }
+                    }
+                    startActivity(Intent.createChooser(send, null));
+                });
+            } catch (Exception e) {
+                Log.w(TAG, "Google Lens: " + e);
+            }
         }
 
         @JavascriptInterface
