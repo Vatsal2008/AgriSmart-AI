@@ -21,7 +21,22 @@ Copy-Item (Join-Path $root "README.md") (Join-Path $stage "README.md") -ErrorAct
 
 $zip = Join-Path $out "AgriSmart-offline-windows.zip"
 if (Test-Path $zip) { Remove-Item $zip -Force }
-Compress-Archive -Path $stage -DestinationPath $zip -CompressionLevel Optimal
+# .NET's zip writer, one entry per file: Compress-Archive in Windows PowerShell 5.1 takes very long on thousands of
+# files, and ZipFile.CreateFromDirectory there stores "\" in the paths, which other unzip tools read as file names.
+# "Fastest" because the models, WebAssembly and OGG clips are already compressed.
+Add-Type -AssemblyName System.IO.Compression
+Add-Type -AssemblyName System.IO.Compression.FileSystem
+$fs = [IO.File]::Open($zip, [IO.FileMode]::Create)
+$archive = New-Object IO.Compression.ZipArchive($fs, [IO.Compression.ZipArchiveMode]::Create)
+try {
+    $base = (Get-Item $stage).FullName.TrimEnd("\")
+    Get-ChildItem $stage -Recurse -File | ForEach-Object {
+        $rel = "AgriSmart-offline/" + $_.FullName.Substring($base.Length + 1).Replace("\", "/")
+        [void][IO.Compression.ZipFileExtensions]::CreateEntryFromFile($archive, $_.FullName, $rel, [IO.Compression.CompressionLevel]::Fastest)
+    }
+} finally {
+    $archive.Dispose(); $fs.Dispose()
+}
 $apk = Join-Path $root "android\app\build\outputs\apk\release\app-release.apk"
 if (Test-Path $apk) { Copy-Item $apk (Join-Path $out "AgriSmart-offline.apk") -Force } else { Write-Warning "No APK built yet" }
 

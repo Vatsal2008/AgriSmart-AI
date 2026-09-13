@@ -11,6 +11,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
+import android.util.Log;
+import android.webkit.ConsoleMessage;
 import android.webkit.JavascriptInterface;
 import android.webkit.PermissionRequest;
 import android.webkit.ValueCallback;
@@ -38,6 +40,7 @@ import java.util.Map;
  */
 public class MainActivity extends Activity {
     private static final String HOST = "appassets.androidplatform.net";
+    private static final String TAG = "AgriSmartWeb";
     private static final int REQ_CAMERA = 1;
     private static final int REQ_FILE = 2;
 
@@ -95,6 +98,13 @@ public class MainActivity extends Activity {
         });
 
         web.setWebChromeClient(new WebChromeClient() {
+            @Override
+            public boolean onConsoleMessage(ConsoleMessage m) {
+                // the page's messages in logcat (tag AgriSmartWeb), for field debugging with "adb logcat -s AgriSmartWeb"
+                Log.i(TAG, m.messageLevel() + " " + m.message() + " (" + m.sourceId() + ":" + m.lineNumber() + ")");
+                return true;
+            }
+
             @Override
             public void onPermissionRequest(PermissionRequest request) {
                 runOnUiThread(() -> {
@@ -221,7 +231,17 @@ public class MainActivity extends Activity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQ_FILE && fileCallback != null) {
-            fileCallback.onReceiveValue(WebChromeClient.FileChooserParams.parseResult(resultCode, data));
+            Uri[] uris = WebChromeClient.FileChooserParams.parseResult(resultCode, data);
+            if (uris == null && resultCode == RESULT_OK && data != null) {
+                // some pickers (e.g. the Android photo picker behind a chooser) return the photo only in ClipData
+                if (data.getData() != null) {
+                    uris = new Uri[]{data.getData()};
+                } else if (data.getClipData() != null && data.getClipData().getItemCount() > 0) {
+                    uris = new Uri[]{data.getClipData().getItemAt(0).getUri()};
+                }
+            }
+            Log.i(TAG, "photo picker result=" + resultCode + " photo=" + (uris == null ? "none" : uris[0]));
+            fileCallback.onReceiveValue(uris);
             fileCallback = null;
         }
     }

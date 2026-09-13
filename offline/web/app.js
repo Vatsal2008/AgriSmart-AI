@@ -588,10 +588,24 @@
     await think(still);
   }
 
+  // a photo from the gallery or files: createImageBitmap first, an <img> as the fallback some WebViews need
+  async function decodePhoto(file) {
+    try { return await createImageBitmap(file); }
+    catch (err) { console.warn("createImageBitmap failed:", err && err.message); }
+    const url = URL.createObjectURL(file);
+    try {
+      const img = new Image(); img.src = url; await img.decode();
+      const c = document.createElement("canvas"); c.width = img.naturalWidth; c.height = img.naturalHeight;
+      c.getContext("2d").drawImage(img, 0, 0);
+      return c;
+    } finally { URL.revokeObjectURL(url); }
+  }
+
   async function handleFile(file) {
+    console.log(`photo chosen: ${file.type || "unknown type"}, ${file.size} bytes`);
     let bmp;
-    try { bmp = await createImageBitmap(file); }
-    catch { toast("That file could not be read as a photo."); return; }
+    try { bmp = await decodePhoto(file); }
+    catch (err) { console.warn("photo could not be read:", err && err.message); toast("That file could not be read as a photo."); return; }
     clearInterval(watchTimer);
     if (stream) stream.getVideoTracks().forEach((tk) => { tk.enabled = false; });
     const scale = Math.min(1, 1280 / Math.max(bmp.width, bmp.height));
