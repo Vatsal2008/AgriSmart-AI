@@ -22,7 +22,7 @@ This document records key architectural and design choices made during the devel
 - **Rationale:** Ensures every screen, state, and flow can be executed end-to-end without an active server connection during development and review.
 
 ## 5. Local On-Device Model Download & Offline Inference
-- **Decision:** On first launch after language selection, the app shows a dedicated `ModelDownloadScreen` that downloads the 86.6 MB plant disease classification model (`model.pt`) directly from `https://github.com/wpzvqrs8/SIH_2026/releases/download/model-v2/model.pt` to the device local private storage (`context.filesDir/model/model.pt`).
+- **Decision:** On first launch after language selection, the app shows a dedicated `ModelDownloadScreen` that downloads the 86.6 MB plant disease classification model (`model.pt`) directly from `https://github.com/Vatsal2008/AgriSmart-AI/releases/download/model-v2/model.pt` to the device local private storage (`context.filesDir/model/model.pt`).
 - **Verification & Status:** The download displays a real-time progress bar (0–100%), bytes/MB downloaded, and verifies SHA-256 checksum `361daa8f299733046ec8c241107cfa3e9433737dc3abf7ed353c7cb97abf35cc`.
 - **Inference Mode:** The app uses local model inference on device using the downloaded model file, providing full offline capability without requiring a remote backend server.
 

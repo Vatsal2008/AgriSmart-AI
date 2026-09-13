@@ -1,7 +1,7 @@
 # Model report
 
 **Run:** Kaggle `agrismart-train` version 2 (`e3b_dinov2s_natural_aug`), 10–11 September 2026 ·
-**Weights:** release [`model-v2`](https://github.com/wpzvqrs8/SIH_2026/releases/tag/model-v2)
+**Weights:** release [`model-v2`](https://github.com/Vatsal2008/AgriSmart-AI/releases/tag/model-v2)
 
 | Field | What we did |
 |---|---|

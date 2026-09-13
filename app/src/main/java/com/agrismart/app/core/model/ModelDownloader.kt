@@ -28,7 +28,7 @@ class ModelDownloader @Inject constructor(
     private val okHttpClient: OkHttpClient
 ) {
     companion object {
-        const val MODEL_URL = "https://github.com/wpzvqrs8/SIH_2026/releases/download/model-v2/model.pt"
+        const val MODEL_URL = "https://github.com/Vatsal2008/AgriSmart-AI/releases/download/model-v2/model.pt"
         const val EXPECTED_SHA256 = "361daa8f299733046ec8c241107cfa3e9433737dc3abf7ed353c7cb97abf35cc"
         const val EXPECTED_SIZE_BYTES = 86610141L
         const val MODEL_FILE_NAME = "model.pt"

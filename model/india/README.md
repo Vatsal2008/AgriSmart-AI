@@ -97,7 +97,7 @@ of 80k class-balanced draws each. The run took 4.8 h on a Kaggle T4. The full sc
 the real model, download them into this folder:
 
 ```bash
-gh release download india-model-v1 -R wpzvqrs8/SIH_2026 -p model.pt -D model/india
+gh release download india-model-v1 -R Vatsal2008/AgriSmart-AI -p model.pt -D model/india
 ```
 
 ## Translations

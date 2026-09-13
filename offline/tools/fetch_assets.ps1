@@ -2,7 +2,7 @@
 # Called by run.bat when web\models\india_v1.onnx is missing. Needs internet only this one time.
 param(
     [string]$Release = "offline-app-v1",
-    [string]$Repo = "wpzvqrs8/SIH_2026",
+    [string]$Repo = "Vatsal2008/AgriSmart-AI",
     [string]$Asset = "AgriSmart-offline-windows.zip"
 )
 $ErrorActionPreference = "Stop"

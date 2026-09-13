@@ -2,6 +2,9 @@
 
 **SIH 2026 internal hackathon · L. J. Institute of Engineering and Technology · Problem Statement 1: AgriSmart AI**
 
+Vatsal Kadiya's copy of the team repository [wpzvqrs8/SIH_2026](https://github.com/wpzvqrs8/SIH_2026), with its full
+history and releases.
+
 A crop-disease detector for farmers: show it a leaf and it names the disease, or says the leaf looks healthy.
 It learns from clean lab photos (PlantVillage) but is built to work on real field photos, where plain lab-trained
 models fall apart.
@@ -16,6 +19,15 @@ models fall apart.
 | Bonus C: weather intelligence | Planned |
 | Bonus D: sustainability score | Planned |
 | Bonus E: farmer assistant (Gujarati / Hindi) | Planned |
+
+## Downloads
+
+| What | File |
+|---|---|
+| **Android app** (works offline; 3 models, 13 languages) | [AgriSmart-offline.apk](https://github.com/Vatsal2008/AgriSmart-AI/releases/download/offline-app-v1/AgriSmart-offline.apk) (214 MB) |
+| **Windows app** (unzip, double-click `run.bat`) | [AgriSmart-offline-windows.zip](https://github.com/Vatsal2008/AgriSmart-AI/releases/download/offline-app-v1/AgriSmart-offline-windows.zip) (194 MB) |
+| Core model weights (13 crops, 28 classes) | [`model-v2` release](https://github.com/Vatsal2008/AgriSmart-AI/releases/tag/model-v2) (83 MB; `predict.py` downloads it by itself) |
+| India model weights (59 crops, 387 classes) | [`india-model-v1` release](https://github.com/Vatsal2008/AgriSmart-AI/releases/tag/india-model-v1) (328 MB) |
 
 ## Results (model v2)
 
@@ -44,7 +56,7 @@ python model/predict.py --image samples/tomato_late_blight_1.jpg
 ```
 
 It prints `Tomato___Late_blight`. The first run downloads the weights (87 MB) from the
-[`model-v2` release](https://github.com/wpzvqrs8/SIH_2026/releases/tag/model-v2) and checks their SHA-256.
+[`model-v2` release](https://github.com/Vatsal2008/AgriSmart-AI/releases/tag/model-v2) and checks their SHA-256.
 Add `--top 3` to see the three likeliest classes with probabilities.
 
 On Linux or macOS, activate with `source .venv/bin/activate`. On Linux, install the CPU build of PyTorch first to skip
