@@ -10,7 +10,8 @@ models fall apart.
 |---|---|
 | **Core: crop-disease detection** | Trained and tested; `predict.py` interface ready |
 | **Add-on: live camera scan** | Point the laptop camera at a leaf, or at a phone photo of one; the page shows and says the disease |
-| **Extension: India multi-crop model** | 37 crops, 179 draft classes, being built and trained; see [`model/india/README.md`](model/india/README.md) |
+| **Extension: India multi-crop model** | 59 crops, 387 classes, trained and released; see [`model/india/README.md`](model/india/README.md) |
+| **Offline app: Android APK + Windows `run.bat`** | No internet or server: photo in, disease, cause and what to do out, spoken in 13 languages; three models to pick from. See [`offline/README.md`](offline/README.md) |
 | **Android app** | Native Kotlin client scaffolded from [`docs/android_app_prompt.md`](docs/android_app_prompt.md); see `DECISIONS.md` |
 | Bonus C: weather intelligence | Planned |
 | Bonus D: sustainability score | Planned |
@@ -72,15 +73,30 @@ on the laptop, works offline, and by default listens on Wi-Fi too (`--host 127.0
 Android app (see [`docs/android_app_prompt.md`](docs/android_app_prompt.md)) can reach it from a phone on the same
 network by pointing `API_BASE_URL` at the laptop's Wi-Fi address.
 
-### AgriSmart India: 37 crops, 12 languages
+### AgriSmart India: 59 crops, 13 languages
 
 ```bash
 python server/live_camera_india/live_camera_india.py
 ```
 
-The same idea, generalised to every crop in [`model/india/README.md`](model/india/README.md): choose a crop (or let
-the model guess), see the full ranked list of classes it's weighing, and hear the result in 12 Indian languages plus
-English. Runs in a clearly labelled mock mode until `model/india/model.pt` exists.
+The same idea, generalised to every crop in [`model/india/README.md`](model/india/README.md). You can choose a crop or
+let the model guess. The page asks which crop it is when two look-alike plants are close. It shows what to do for the
+disease, and says the result in 12 Indian languages plus English.
+
+### Offline app (Android APK and Windows `run.bat`)
+
+The same checker with no server and no internet. The model runs inside the app. How it works:
+
+- Take one photo (auto capture when the picture is steady) or upload one.
+- The photo freezes, then gets checked, so the phone doesn't have to stay pointed at the leaf.
+- The app shows the disease, **why it happens** and **what to do**, and reads all of it out in 13 languages.
+  The voice keeps going when you move the phone away.
+- You can switch between the India v1, India v2 and core models.
+- If the photo doesn't look like the crop you picked, it asks "Is this sugarcane? Yes / No" rather than guessing.
+- There is an optional **online check** (your own free keys). Pl@ntNet's picture search and a vision AI confirm or
+  correct the offline answer, and they also name plants the offline model doesn't know, such as neem or tulsi.
+
+Downloads and details: [`offline/README.md`](offline/README.md).
 
 ## How it works
 
@@ -100,7 +116,9 @@ Training runs on Kaggle's free T4 GPUs; see [model/README.md](model/README.md) t
 ## Repository layout
 
 ```
-app/        live camera scan: local web page + server
+app/        Android client (Kotlin)
+server/     live camera scan: local web page + server (core and India models)
+offline/    offline app: web page with the models inside, Windows run.bat, Android APK project, build tools
 model/      predict.py interface, labels, weight download info, Kaggle training notebooks
 report/     one-page model report, experiment log, results, figures, dataset card
 samples/    4 PlantDoc field photos for a quick test (CC BY 4.0)

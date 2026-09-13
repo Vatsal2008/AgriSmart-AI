@@ -17,6 +17,16 @@ model/**/*.part
 runs/
 *.log
 
+# Offline app: models, voice clips and build output are published as a GitHub release, not stored in git
+offline/web/models/*.onnx
+offline/web/audio/
+offline/web/_test/
+offline/build/
+offline/android/.gradle/
+offline/android/app/build/
+offline/android/build/
+offline/android/app/src/main/assets/web/
+
 # Android & Gradle
 .gradle/
 app/.gradle/

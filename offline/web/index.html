@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#2e7a38">
+<title>AgriSmart offline</title>
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="bar">
+  <div class="brand"><span class="mark" aria-hidden="true"></span><span id="brandTitle">AgriSmart</span></div>
+  <div class="barControls">
+    <select id="langSelect" aria-label="Language"></select>
+    <button id="historyBtn" type="button"></button>
+    <button id="settingsBtn" type="button"></button>
+  </div>
+</header>
+
+<div class="settings">
+  <label class="field"><span id="modelLabel"></span><select id="modelSelect"></select></label>
+  <label class="field"><span id="cropLabel"></span><select id="cropSelect"></select></label>
+  <p class="modelInfo" id="modelInfo"></p>
+</div>
+<div class="status" id="status" role="status" hidden></div>
+
+<main class="wrap">
+  <section>
+    <div class="viewport" id="viewport">
+      <video id="video" playsinline muted></video>
+      <canvas id="frozen" hidden></canvas>
+      <img id="photo" alt="" hidden>
+      <div class="box" id="box" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+      <div class="steady" id="steady" aria-hidden="true"><span id="steadyFill"></span></div>
+      <p class="hint" id="hint"></p>
+      <div class="thinking" id="thinking" hidden><span class="spinner" aria-hidden="true"></span><span id="thinkingText"></span></div>
+      <div class="start" id="start">
+        <div>
+          <button class="primary" id="startBtn" type="button"></button>
+          <button class="ghost" id="uploadBtn2" type="button"></button>
+          <p id="startMsg"></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="controls">
+      <button class="shutter" id="captureBtn" type="button" hidden><span class="dot" aria-hidden="true"></span><span id="captureText"></span></button>
+      <button class="primary" id="againBtn" type="button" hidden></button>
+      <button id="uploadBtn" type="button"></button>
+      <button id="voiceBtn" type="button" aria-pressed="true"></button>
+    </div>
+    <div class="toggles">
+      <label class="toggle"><input type="checkbox" id="autoCap"><span id="autoCapText"></span></label>
+      <label class="toggle"><input type="checkbox" id="careful"><span id="carefulText"></span></label>
+      <label class="toggle"><input type="checkbox" id="onlineMode"><span id="onlineText"></span></label>
+    </div>
+    <input type="file" id="fileInput" accept="image/*">
+  </section>
+
+  <section class="result" id="result">
+    <span class="chip" id="chip"></span>
+    <p class="crop" id="crop"></p>
+    <h1 class="disease" id="disease" aria-live="polite"></h1>
+    <div class="meter" id="meter"><div class="fill" id="fill"></div></div>
+    <p class="conf" id="conf"></p>
+    <p class="onlineNote" id="onlineNote" hidden></p>
+    <p class="warnNote" id="warnNote" hidden></p>
+
+    <div class="askCrop" id="askCrop" hidden>
+      <p id="askCropHint"></p>
+      <div class="cropBtns" id="cropBtns"></div>
+    </div>
+
+    <div class="voiceRow" id="voiceRow" hidden>
+      <button id="listenBtn" type="button"></button>
+      <button id="stopBtn" type="button"></button>
+      <button id="shareBtn" type="button"></button>
+    </div>
+
+    <div class="cause" id="cause" hidden>
+      <h2 class="label" id="causeTitle"></h2>
+      <p id="causeText"></p>
+    </div>
+
+    <div class="advice" id="advice" hidden>
+      <h2 class="label" id="adviceTitle"></h2>
+      <ol id="adviceList"></ol>
+      <p class="fine" id="adviceNote"></p>
+    </div>
+
+    <div class="similar" id="similar" hidden>
+      <h2 class="label" id="similarTitle"></h2>
+      <div class="strip" id="strip"></div>
+    </div>
+    <p class="fine" id="disclaimer"></p>
+  </section>
+</main>
+
+<dialog id="historyDlg">
+  <div class="dlgHead"><h2 id="historyTitle"></h2><button id="closeHistory" type="button"></button></div>
+  <ul class="historyList" id="historyList"></ul>
+</dialog>
+<dialog id="settingsDlg">
+  <div class="dlgHead"><h2 id="settingsTitle"></h2><button id="closeSettings" type="button"></button></div>
+  <form class="settingsForm" id="settingsForm" method="dialog">
+    <p class="fine" id="keysHint"></p>
+    <label class="field"><span>Pl@ntNet API key</span><input id="plantnetKey" type="password" autocomplete="off" spellcheck="false"></label>
+    <p class="fine">Free key: <a href="https://my.plantnet.org/" target="_blank" rel="noopener">my.plantnet.org</a> (plant and disease picture search)</p>
+    <label class="field"><span>Groq API key</span><input id="groqKey" type="password" autocomplete="off" spellcheck="false"></label>
+    <label class="field"><span>Groq vision model</span><input id="groqModel" type="text" autocomplete="off" spellcheck="false"></label>
+    <p class="fine">Free key: <a href="https://console.groq.com/keys" target="_blank" rel="noopener">console.groq.com/keys</a> (AI that looks at the photo and writes the answer)</p>
+    <button class="primary" id="saveSettings" type="submit"></button>
+  </form>
+</dialog>
+<div class="toast" id="toast" role="status" hidden></div>
+
+<script src="ort/ort.wasm.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

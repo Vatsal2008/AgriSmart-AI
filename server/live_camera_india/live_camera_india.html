@@ -82,13 +82,6 @@
   .fill.healthy { background: var(--leaf); } .fill.disease { background: var(--warn); }
   .conf { margin: 8px 0 20px; font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; min-height: 1.5em; }
   .label { margin: 0 0 8px; font-size: 12px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
-  .alts { list-style: none; margin: 0 0 20px; padding: 0; display: grid; gap: 10px; min-height: 40px; }
-  .alts li { display: grid; grid-template-columns: 1fr auto; gap: 2px 12px; font-size: 13px; }
-  .alts .name { display: flex; gap: 6px; align-items: baseline; }
-  .alts .cropTag { color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; }
-  .alts .pct { color: var(--muted); font-variant-numeric: tabular-nums; }
-  .alts .track { grid-column: 1 / -1; height: 4px; border-radius: 99px; background: var(--line); overflow: hidden; }
-  .alts .track span { display: block; height: 100%; background: var(--muted); }
   .fine { margin: 0; padding-top: 12px; border-top: 1px solid var(--line); font-size: 12px; color: var(--muted); }
   input[type="file"] { display: none; }
   @media (prefers-reduced-motion: reduce) { .fill, .box i { transition: none; } }
@@ -143,8 +136,6 @@
       <ol id="adviceList"></ol>
       <p class="fine" id="adviceNote"></p>
     </div>
-    <h2 class="label" id="statsLabel"></h2>
-    <ol class="alts" id="alts"></ol>
     <p class="fine" id="disclaimer"></p>
   </section>
 </main>
@@ -166,6 +157,9 @@
   let stream = null, running = false, paused = false, voiceOn = true, voice = null;
   let mode = "camera";       // "camera" | "photo"
   let recent = [], shown = null, spokenKey = null, unsureStreak = 0, lastResult = null, lastFile = null;
+  let trustedCrop = "";      // the farmer answered "yes, this is my crop" for the chosen crop
+  // after that "yes", photos of this crop are answered for it even when the plant looks like another one
+  const applyTrust = (data) => { if (trustedCrop && data.crop_given === trustedCrop) data.crop_matches = true; return data; };
 
   // ---- translation helpers -------------------------------------------------
   function tr(dict, key, sub) {
@@ -189,7 +183,6 @@
     $("pauseBtn").textContent = paused ? t("resume") : t("pause");
     $("photoBtn").textContent = t("load_from_device");
     $("voiceBtn").textContent = voiceOn ? t("voice_on") : t("voice_off");
-    $("statsLabel").textContent = t("statistics");
     $("disclaimer").textContent = t("disclaimer");
     $("langSelect").setAttribute("aria-label", t("choose_language"));
     $("cropSelect").setAttribute("aria-label", t("choose_crop"));
@@ -227,7 +220,7 @@
       });
     sel.value = prev in CROPS ? prev : "";
     chosenCrop = sel.value;
-    sel.onchange = () => { chosenCrop = sel.value; localStorage.setItem("agrismart_crop", chosenCrop); recent = []; spokenKey = null; };
+    sel.onchange = () => { chosenCrop = sel.value; trustedCrop = ""; localStorage.setItem("agrismart_crop", chosenCrop); recent = []; spokenKey = null; };
   }
 
   // ---- voice ---------------------------------------------------------------
@@ -277,7 +270,7 @@
 
   // speaks the result in the chosen language: automatically the first steps, "Listen" reads all of them
   function speakResult(best, data, maxSteps) {
-    if (data && data.crop_matches === false) return say(t("crop_mismatch"));
+    if (data && data.crop_matches === false) return say(`${t("is_this").replace("{crop}", cropName(chosenCrop))} ${t("confirm_crop")}`);
     let steps = adviceSteps(best);
     if (maxSteps < 50) steps = steps.filter((s) => s.key !== "safety" && s.key !== "expert").slice(0, maxSteps);
     say([spokenText(best), ...steps.map((s) => s.text)].join(" "));
@@ -355,7 +348,7 @@
     for (;;) {
       if (mode === "camera" && !paused && stream && video.readyState >= 2 && video.videoWidth) {
         try {
-          const data = await scanOnce();
+          const data = applyTrust(await scanOnce());
           setConn("ok", `${t("title")} · ${data.ms} ms`);
           consider(data);
         } catch (err) { setConn("bad", "Can't reach the model."); }
@@ -379,7 +372,6 @@
     }
     recent.push({ item: best, matches: data.crop_matches });
     if (recent.length > WINDOW) recent.shift();
-    renderAlts(data);
 
     if (best.p < UNSURE) {
       unsureStreak += 1;
@@ -405,17 +397,31 @@
   function renderIdle() {
     $("askCrop").hidden = true; $("advice").hidden = true;
     setChip("", ""); $("crop").textContent = ""; $("disease").textContent = t("subtitle");
-    $("fill").style.width = "0%"; $("conf").textContent = ""; $("alts").innerHTML = "";
+    $("fill").style.width = "0%"; $("conf").textContent = "";
     $("listenBtn").hidden = true;
   }
 
   function renderSure(best, meanP, agree, data) {
     shown = best; $("result").classList.remove("stale"); $("askCrop").hidden = true;
     if (data.crop_matches === false) {
+      // the photo does not look like the chosen crop: ask the farmer, who knows their own field
       $("advice").hidden = true;
       setChip("disease", t("crop_mismatch"));
-      $("crop").textContent = cropName(chosenCrop);
-      $("disease").textContent = `${cropName(best.crop)} · ${termName(best.label)}`;
+      $("crop").textContent = "";
+      $("disease").textContent = t("is_this").replace("{crop}", cropName(chosenCrop));
+      $("askCropHint").textContent = t("confirm_crop");
+      const btns = $("cropBtns"); btns.innerHTML = "";
+      const yes = document.createElement("button"); yes.type = "button"; yes.className = "primary"; yes.textContent = t("yes");
+      yes.onclick = () => {
+        trustedCrop = chosenCrop; data.crop_matches = true;
+        renderSure(best, meanP, agree, data);
+        lastResult = { kind: "sure", item: best, meanP, agree, data };
+        speakResult(best, data, 99); spokenKey = gclass(best);
+      };
+      const no = document.createElement("button"); no.type = "button"; no.textContent = t("no");
+      no.onclick = () => chooseCrop("");
+      btns.append(yes, no);
+      $("askCrop").hidden = false;
       box.className = "box disease";
     } else {
       const kind = best.healthy ? "healthy" : "disease";
@@ -425,8 +431,9 @@
       $("fill").className = "fill " + kind; box.className = "box " + kind;
       renderAdvice(best);
     }
-    $("fill").style.width = Math.round(meanP * 100) + "%";
-    $("conf").textContent = `${t("how_sure")}: ${Math.round(meanP * 100)}% · ${agree}/${recent.length}`;
+    const shownP = data.crop_matches === false ? 0 : meanP;   // no confidence while asking "is this your crop?"
+    $("fill").style.width = Math.round(shownP * 100) + "%";
+    $("conf").textContent = shownP ? `${t("how_sure")}: ${Math.round(shownP * 100)}%` : "";
     $("listenBtn").hidden = false;
     $("listenBtn").textContent = t("listen");
     $("listenBtn").onclick = () => speakResult(best, data, 99);
@@ -443,7 +450,6 @@
     setChip("", t("not_sure")); $("crop").textContent = ""; $("disease").textContent = t("not_sure");
     $("fill").className = "fill"; $("fill").style.width = "0%"; $("conf").textContent = "";
     $("listenBtn").hidden = true; box.className = "box";
-    if (data) renderAlts(data);
   }
 
   function renderAskCrop(data) {
@@ -460,30 +466,12 @@
       btns.appendChild(b);
     });
     $("askCrop").hidden = false;
-    renderAlts(data);
   }
 
   function chooseCrop(id) {
-    $("cropSelect").value = id; chosenCrop = id; localStorage.setItem("agrismart_crop", id);
+    $("cropSelect").value = id; chosenCrop = id; trustedCrop = ""; localStorage.setItem("agrismart_crop", id);
     recent = []; spokenKey = null; $("askCrop").hidden = true;
     if (mode === "photo" && lastFile) handleFile(lastFile); else renderChecking();
-  }
-
-  function renderAlts(data) {
-    const list = $("alts"); list.innerHTML = "";
-    (data.top || []).forEach((item) => {
-      const li = document.createElement("li");
-      const name = document.createElement("span"); name.className = "name";
-      const cropTag = document.createElement("span"); cropTag.className = "cropTag"; cropTag.textContent = cropName(item.crop);
-      const labelSpan = document.createElement("span");
-      labelSpan.textContent = item.healthy ? t("healthy_result").replace(/\..*/, "") : termName(item.label);
-      name.append(cropTag, labelSpan);
-      const pct = document.createElement("span"); pct.className = "pct"; pct.textContent = Math.round(item.p * 100) + "%";
-      const track = document.createElement("div"); track.className = "track";
-      const fillEl = document.createElement("span"); fillEl.style.width = (item.p * 100).toFixed(1) + "%";
-      track.appendChild(fillEl);
-      li.append(name, pct, track); list.appendChild(li);
-    });
   }
 
   function render(last) {
@@ -504,7 +492,7 @@
     box.className = "box"; setChip("", t("checking")); $("disease").textContent = t("checking");
     recent = []; spokenKey = null;
     try {
-      const data = await callPredict(file);
+      const data = applyTrust(await callPredict(file));
       setConn("ok", `${t("title")} · ${data.ms} ms`);
       const best = data.top[0];
       if (data.crop_ambiguous) { renderAskCrop(data); say(t("which_crop")); return; }

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Legacy icon (Android 7): a leaf on a green rounded square -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp" android:height="48dp" android:viewportWidth="64" android:viewportHeight="64">
+    <path android:fillColor="#2E7A38" android:pathData="M14,0h36a14,14 0 0 1 14,14v36a14,14 0 0 1 -14,14h-36a14,14 0 0 1 -14,-14v-36a14,14 0 0 1 14,-14z" />
+    <path android:fillColor="#E2EFE0" android:pathData="M16,48C16,28 28,16 50,16C50,38 38,50 18,50Z" />
+    <path android:strokeColor="#2E7A38" android:strokeWidth="3" android:strokeLineCap="round" android:pathData="M18,46C26,36 34,28 44,22" />
+</vector>
