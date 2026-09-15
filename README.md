@@ -44,6 +44,18 @@ its baseline and the final class list are published at kickoff.
 
 Full details: [report/model_report.md](report/model_report.md) · every run: [report/experiments.md](report/experiments.md).
 
+## Results (India model v1: 59 crops, 387 classes)
+
+On 27,900 test photos (near-copies of training photos left out), it names the exact crop and disease for **92.9%**
+and the right crop for **98.3%**. On real field photos it gets **74.7%** exact and **86.5%** right crop.
+
+![India v1 crop confusion matrix](report/figures/india_v1_confusion_crops.png)
+
+More: [field photos only](report/figures/india_v1_confusion_crops_field.png) ·
+[all 387 classes](report/figures/india_v1_confusion_full.png) ·
+[most frequent mix-ups](report/results/india_v1_top_confusions.csv) ·
+[`model/india/README.md`](model/india/README.md).
+
 ## Quick start (about 5 minutes)
 
 Needs Python 3.11–3.13. Runs on CPU; no GPU needed.

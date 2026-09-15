@@ -49,8 +49,8 @@ non-commercial research and education, and the photos themselves are not redistr
   crop's own classes — no retraining needed for that; see `model/india/predict.py` (written by the
   training notebook) and its `crop_classes` mapping in `model.pt`.
 - **App:** [`server/live_camera_india/live_camera_india.py`](../../server/live_camera_india/live_camera_india.py) —
-  a live camera / photo-upload page with a crop picker, a full statistics panel of every class considered,
-  and spoken results in 12 Indian languages plus English (see
+  a live camera / photo-upload page with a crop picker, what to do for each disease, and spoken results in
+  12 Indian languages plus English (see
   [`server/live_camera_india/india_translations.json`](../../server/live_camera_india/india_translations.json)).
   Until `model/india/model.pt` exists, it runs in a clearly labelled **mock mode** over the same taxonomy,
   so the whole app can be built and tested before training finishes.
@@ -91,6 +91,33 @@ of 80k class-balanced draws each. The run took 4.8 h on a Kaggle T4. The full sc
   cauliflower 0.78. Most of these are field-photo classes with few examples. The model tells field
   photos apart much less reliably than lab photos. Choosing the crop in the app helps most exactly
   there.
+
+### Confusion matrix
+
+Drawn from the run's saved test predictions ([`test_predictions.csv`](test_predictions.csv), one row per
+test photo) by
+[`model/training/india/03_eval/india_confusion.py`](../training/india/03_eval/india_confusion.py). Each row is
+a true crop and sums to 100%; the dark diagonal is right answers.
+
+![India v1: which crop does the model see?](../../report/figures/india_v1_confusion_crops.png)
+
+- **Right crop for 98.3%** of the 27,900 clean test photos, and 86.5% of the field photos
+  ([field-only matrix](../../report/figures/india_v1_confusion_crops_field.png)).
+- **Hardest crops:** ginger is recognised 67% of the time (10% taken for wheat, 10% for rice, 6% for
+  turmeric), garlic 79% (10% wheat, 7% onion), tobacco 88% (6% cauliflower, 6% potato), bean 89% and
+  squash 92% (7% cucumber). In field photos, bean drops to 58% (19% taken for soybean) and squash to 71%
+  (25% cucumber).
+- **Within a crop** the classes are shown in the
+  [all-387-class matrix](../../report/figures/india_v1_confusion_full.png). The most frequent mix-ups
+  ([top 30](../../report/results/india_v1_top_confusions.csv)) are:
+
+  | True | Predicted as | photos | share of the true class |
+  |---|---|---:|---:|
+  | Brinjal, healthy | Brinjal, mosaic virus | 56 | 16.5% |
+  | Groundnut, tikka leaf spot | Groundnut, healthy | 27 | 10.2% |
+  | Lentil, powdery mildew | Lentil, healthy | 24 | 14.0% |
+  | Lentil, healthy | Lentil, Ascochyta blight | 21 | 8.8% |
+  | Squash, powdery mildew | Cucumber, powdery mildew | 19 | 6.4% |
 
 **Weights.** They are stored in GitHub Release `india-model-v1` (344 MB). See
 [`weights.json`](weights.json) for the URL and SHA-256. To switch the live-scan app from mock mode to
