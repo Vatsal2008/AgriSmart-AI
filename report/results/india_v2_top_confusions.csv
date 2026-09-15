@@ -1,0 +1,31 @@
+true,predicted,photos,share_of_true_class,same_crop
+brinjal_eggplant::Healthy,brinjal_eggplant::Mosaic virus,57,0.168,True
+groundnut::Tikka leaf spot,groundnut::Healthy,30,0.113,True
+lentil::Healthy,lentil::Ascochyta blight,24,0.1,True
+brinjal_eggplant::Healthy,brinjal_eggplant::Insect pest damage,22,0.065,True
+lentil::Powdery mildew,lentil::Healthy,21,0.122,True
+lentil::Healthy,lentil::Powdery mildew,21,0.088,True
+squash::Powdery mildew,cucumber::Powdery mildew,20,0.067,False
+tomato::Bacterial spot,tomato::Early blight,18,0.052,True
+tomato::Yellow leaf curl virus,tomato::Septoria leaf spot,17,0.049,True
+brinjal_eggplant::Healthy,brinjal_eggplant::Cercospora leaf spot,17,0.05,True
+brinjal_eggplant::Cercospora leaf spot,brinjal_eggplant::Insect pest damage,16,0.203,True
+soybean::Semilooper caterpillar (pest),soybean::Rust,16,0.063,True
+soybean::Semilooper caterpillar (pest),soybean::Mosaic virus,15,0.059,True
+rice::Blast,rice::Brown spot,15,0.052,True
+lentil::Healthy,lentil::Rust,13,0.054,True
+cauliflower::Black rot,cauliflower::Insect pest damage,13,0.074,True
+corn_maize::Northern leaf blight,corn_maize::Gray leaf spot,13,0.044,True
+lentil::Ascochyta blight,lentil::Healthy,12,0.066,True
+wheat::Tan spot,wheat::Leaf blight,12,0.164,True
+rice::Blast,rice::Bacterial leaf blight,11,0.038,True
+spinach::Insect pest damage,spinach::Bacterial spot,11,0.149,True
+tea::Brown blight,tea::Algal leaf spot,11,0.089,True
+groundnut::Healthy,groundnut::Tikka leaf spot,11,0.062,True
+pomegranate::Anthracnose,pomegranate::Fruit borer (pest),10,0.04,True
+rice::Blast,rice::Leaf scald,10,0.035,True
+brinjal_eggplant::Mosaic virus,brinjal_eggplant::Cercospora leaf spot,10,0.052,True
+citrus_orange::Citrus greening (HLB),citrus_orange::Citrus canker,10,0.034,True
+brinjal_eggplant::Mosaic virus,brinjal_eggplant::Insect pest damage,10,0.052,True
+tomato::Yellow leaf curl virus,tomato::Mosaic virus,10,0.029,True
+brinjal_eggplant::Mosaic virus,brinjal_eggplant::Healthy,10,0.052,True

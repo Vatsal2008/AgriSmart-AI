@@ -92,12 +92,28 @@ of 80k class-balanced draws each. The run took 4.8 h on a Kaggle T4. The full sc
   photos apart much less reliably than lab photos. Choosing the crop in the app helps most exactly
   there.
 
-### Confusion matrix
+### Confusion matrices
 
-Drawn from the run's saved test predictions ([`test_predictions.csv`](test_predictions.csv), one row per
-test photo) by
-[`model/training/india/03_eval/india_confusion.py`](../training/india/03_eval/india_confusion.py). Each row is
-a true crop and sums to 100%; the dark diagonal is right answers.
+Drawn from each run's saved test predictions (one row per test photo:
+[`test_predictions_v2.csv`](test_predictions_v2.csv) for v2, [`test_predictions.csv`](test_predictions.csv)
+for v1) by [`model/training/india/03_eval/india_confusion.py`](../training/india/03_eval/india_confusion.py)
+(`--model v2` or `--model v1`). Each row is a true crop and sums to 100%; the dark diagonal is right answers.
+
+**Latest model, v2** ([crops](../../report/figures/india_v2_confusion_crops.png) ·
+[field photos](../../report/figures/india_v2_confusion_crops_field.png) ·
+[all 387 classes](../../report/figures/india_v2_confusion_full.png) ·
+[top 30 mix-ups](../../report/results/india_v2_top_confusions.csv)):
+
+![India v2: which crop does the model see?](../../report/figures/india_v2_confusion_crops.png)
+
+- Right crop for **98.3%** of the 27,900 clean test photos (exact class 92.7%), and **86.6%** of the field
+  photos (exact 74.7%).
+- Hardest crops: ginger 69%, tobacco 81%, garlic 82%, bean 90%, squash 91%.
+- Most frequent mix-ups: healthy brinjal taken for mosaic virus (57 photos), groundnut tikka leaf spot taken
+  for healthy (30), healthy lentil taken for Ascochyta blight (24), healthy brinjal taken for insect damage
+  (22), lentil powdery mildew taken for healthy (21).
+
+**Released model, v1**, below:
 
 ![India v1: which crop does the model see?](../../report/figures/india_v1_confusion_crops.png)
 
