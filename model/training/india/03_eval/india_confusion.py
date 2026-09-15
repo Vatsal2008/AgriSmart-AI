@@ -6,11 +6,11 @@
 Reads the run's test predictions (one row per test photo: crop, label, domain, near_train_cos, predicted; saved
 by the Kaggle training run) - model/india/test_predictions_v2.csv for v2, model/india/test_predictions.csv for
 v1 - and writes, with <m> = v2 or v1:
-  report/figures/india_<m>_confusion_crops.png        which crop the model thinks a photo shows (59 x 59), clean test set
-  report/figures/india_<m>_confusion_crops_field.png  the same on real field photos only
-  report/figures/india_<m>_confusion_full.png         all 387 classes, grouped by crop
-  report/results/india_<m>_confusion_crops.csv        the counts behind the first figure
-  report/results/india_<m>_top_confusions.csv         the most frequent class mix-ups, with counts and shares
+  confusion_matrix/india_<m>/india_<m>_confusion_crops.png        which crop the model thinks a photo shows (59 x 59), clean test set
+  confusion_matrix/india_<m>/india_<m>_confusion_crops_field.png  the same on real field photos only
+  confusion_matrix/india_<m>/india_<m>_confusion_full.png         all 387 classes, grouped by crop
+  confusion_matrix/india_<m>/india_<m>_confusion_crops.csv        the counts behind the first figure
+  confusion_matrix/india_<m>/india_<m>_top_confusions.csv         the most frequent class mix-ups, with counts and shares
 The clean test set leaves out test photos with a near-identical twin in the training set (cosine >= 0.95), the
 same filter as the reported clean scores.
 """
@@ -31,8 +31,7 @@ ROOT = Path(__file__).resolve().parents[4]
 PREDICTIONS = {"v2": ROOT / "model" / "india" / "test_predictions_v2.csv",   # 13 Sep 2026, 336 px (latest)
                "v1": ROOT / "model" / "india" / "test_predictions.csv"}      # 12 Sep 2026, 224 px (released)
 NAMES = ROOT / "server" / "live_camera_india" / "india_translations.json"
-FIG = ROOT / "report" / "figures"
-RES = ROOT / "report" / "results"
+OUT = ROOT / "confusion_matrix"            # one sub-folder per model: india_v2/, india_v1/
 TWIN_COS = 0.95
 MIN_FIELD = 10          # crops with fewer field test photos are left out of the field figure
 
@@ -112,6 +111,7 @@ def main():
     ap.add_argument("--model", choices=sorted(PREDICTIONS), default="v2")
     m = ap.parse_args().model
     tag, label = f"india_{m}", f"India model {m}"
+    out = OUT / tag
     tr = json.loads(NAMES.read_text(encoding="utf-8"))
     name = lambda crop: (tr["crops"].get(crop) or {}).get("en") or crop.replace("_", " ").capitalize()
     d = pd.read_csv(PREDICTIONS[m])
@@ -125,14 +125,13 @@ def main():
     # 1. crops, clean test set
     crops = sorted(clean["crop"].unique(), key=name)
     cm = pd.crosstab(clean["crop"], clean["pcrop"]).reindex(index=crops, columns=crops, fill_value=0)
-    RES.mkdir(parents=True, exist_ok=True)
-    FIG.mkdir(parents=True, exist_ok=True)
-    cm.rename(index=name, columns=name).to_csv(RES / f"{tag}_confusion_crops.csv", encoding="utf-8")
+    out.mkdir(parents=True, exist_ok=True)
+    cm.rename(index=name, columns=name).to_csv(out / f"{tag}_confusion_crops.csv", encoding="utf-8")
     draw(cm.to_numpy(), [name(c) for c in crops], [name(c) for c in crops],
          f"{label}: which crop does the model see?",
          f"{len(clean):,} test photos (near-copies of training photos left out) · right crop {crop_acc:.1%} · "
          "labels: mix-ups of 5% or more, and crops recognised less than 90% of the time",
-         FIG / f"{tag}_confusion_crops.png", size=(13.5, 13.8), tick_size=7.5, annotate=crop_labels)
+         out / f"{tag}_confusion_crops.png", size=(13.5, 13.8), tick_size=7.5, annotate=crop_labels)
 
     # 2. crops, field photos only
     field = clean[clean["domain"] == "field"]
@@ -146,7 +145,7 @@ def main():
          f"{label} on real field photos: which crop does the model see?",
          f"{len(f):,} field test photos of the {len(fcrops)} crops with at least {MIN_FIELD} of them · "
          f"right crop {f_acc:.1%} · same labels as the full test set figure",
-         FIG / f"{tag}_confusion_crops_field.png", size=(11.5, 11.2), tick_size=8, annotate=crop_labels)
+         out / f"{tag}_confusion_crops_field.png", size=(11.5, 11.2), tick_size=8, annotate=crop_labels)
 
     # 3. all classes, grouped by crop
     classes = sorted(clean["true"].unique(), key=lambda g: (name(g.split("::")[0]), g.split("::")[1] != "Healthy", g))
@@ -158,7 +157,7 @@ def main():
          f"{label}: all {len(classes)} classes (crop and disease)",
          f"{len(clean):,} test photos · exact class {acc:.1%} · classes grouped by crop, healthy first; "
          "the dark diagonal is right answers, dots off it are mix-ups",
-         FIG / f"{tag}_confusion_full.png", size=(17, 17.3), tick_size=6,
+         out / f"{tag}_confusion_full.png", size=(17, 17.3), tick_size=6,
          blocks=(edges, centres, [name(owner[a]) for a in edges[:-1]]))
 
     # the table view: the most frequent mix-ups
@@ -167,8 +166,8 @@ def main():
     top = wrong.groupby(["true", "predicted"]).size().sort_values(ascending=False).head(30).reset_index(name="photos")
     top["share_of_true_class"] = (top["photos"] / top["true"].map(per_class)).round(3)
     top["same_crop"] = top["true"].str.split("::").str[0] == top["predicted"].str.split("::").str[0]
-    top.to_csv(RES / f"{tag}_top_confusions.csv", index=False, encoding="utf-8")
-    print(f"wrote {(RES / f'{tag}_top_confusions.csv').relative_to(ROOT)}; top 5:")
+    top.to_csv(out / f"{tag}_top_confusions.csv", index=False, encoding="utf-8")
+    print(f"wrote {(out / f'{tag}_top_confusions.csv').relative_to(ROOT)}; top 5:")
     print(top.head(5).to_string(index=False))
 
 

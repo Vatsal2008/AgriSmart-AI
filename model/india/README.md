@@ -99,12 +99,12 @@ Drawn from each run's saved test predictions (one row per test photo:
 for v1) by [`model/training/india/03_eval/india_confusion.py`](../training/india/03_eval/india_confusion.py)
 (`--model v2` or `--model v1`). Each row is a true crop and sums to 100%; the dark diagonal is right answers.
 
-**Latest model, v2** ([crops](../../report/figures/india_v2_confusion_crops.png) ·
-[field photos](../../report/figures/india_v2_confusion_crops_field.png) ·
-[all 387 classes](../../report/figures/india_v2_confusion_full.png) ·
-[top 30 mix-ups](../../report/results/india_v2_top_confusions.csv)):
+**Latest model, v2** ([crops](../../confusion_matrix/india_v2/india_v2_confusion_crops.png) ·
+[field photos](../../confusion_matrix/india_v2/india_v2_confusion_crops_field.png) ·
+[all 387 classes](../../confusion_matrix/india_v2/india_v2_confusion_full.png) ·
+[top 30 mix-ups](../../confusion_matrix/india_v2/india_v2_top_confusions.csv)):
 
-![India v2: which crop does the model see?](../../report/figures/india_v2_confusion_crops.png)
+![India v2: which crop does the model see?](../../confusion_matrix/india_v2/india_v2_confusion_crops.png)
 
 - Right crop for **98.3%** of the 27,900 clean test photos (exact class 92.7%), and **86.6%** of the field
   photos (exact 74.7%).
@@ -115,17 +115,17 @@ for v1) by [`model/training/india/03_eval/india_confusion.py`](../training/india
 
 **Released model, v1**, below:
 
-![India v1: which crop does the model see?](../../report/figures/india_v1_confusion_crops.png)
+![India v1: which crop does the model see?](../../confusion_matrix/india_v1/india_v1_confusion_crops.png)
 
 - **Right crop for 98.3%** of the 27,900 clean test photos, and 86.5% of the field photos
-  ([field-only matrix](../../report/figures/india_v1_confusion_crops_field.png)).
+  ([field-only matrix](../../confusion_matrix/india_v1/india_v1_confusion_crops_field.png)).
 - **Hardest crops:** ginger is recognised 67% of the time (10% taken for wheat, 10% for rice, 6% for
   turmeric), garlic 79% (10% wheat, 7% onion), tobacco 88% (6% cauliflower, 6% potato), bean 89% and
   squash 92% (7% cucumber). In field photos, bean drops to 58% (19% taken for soybean) and squash to 71%
   (25% cucumber).
 - **Within a crop** the classes are shown in the
-  [all-387-class matrix](../../report/figures/india_v1_confusion_full.png). The most frequent mix-ups
-  ([top 30](../../report/results/india_v1_top_confusions.csv)) are:
+  [all-387-class matrix](../../confusion_matrix/india_v1/india_v1_confusion_full.png). The most frequent mix-ups
+  ([top 30](../../confusion_matrix/india_v1/india_v1_top_confusions.csv)) are:
 
   | True | Predicted as | photos | share of the true class |
   |---|---|---:|---:|

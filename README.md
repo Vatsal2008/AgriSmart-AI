@@ -28,6 +28,8 @@ models fall apart.
 | **Windows app** (unzip, double-click `run.bat`) | [AgriSmart-offline-windows.zip](https://github.com/Vatsal2008/AgriSmart-AI/releases/download/offline-app-v1/AgriSmart-offline-windows.zip) (194 MB) |
 | Core model weights (13 crops, 28 classes) | [`model-v2` release](https://github.com/Vatsal2008/AgriSmart-AI/releases/tag/model-v2) (83 MB; `predict.py` downloads it by itself) |
 | India model weights (59 crops, 387 classes) | [`india-model-v1` release](https://github.com/Vatsal2008/AgriSmart-AI/releases/tag/india-model-v1) (328 MB) |
+| India model v2 weights (latest) | [`india-model-v2` release](https://github.com/Vatsal2008/AgriSmart-AI/releases/tag/india-model-v2) (329 MB) |
+| **All models in one place** | [`models/`](models) folder: the 3 app models and links to all 3 PyTorch files |
 
 ## Results (model v2)
 
@@ -40,7 +42,7 @@ For comparison, a PlantVillage-only ResNet-50 scores 0.285 macro-F1 on PlantDoc
 ([PMC13236948](https://pmc.ncbi.nlm.nih.gov/articles/PMC13236948/)). The organizers' hidden field set is the real test;
 its baseline and the final class list are published at kickoff.
 
-![Field confusion matrix](report/figures/confusion_field.png)
+![Field confusion matrix](confusion_matrix/core_v2/confusion_field.png)
 
 Full details: [report/model_report.md](report/model_report.md) · every run: [report/experiments.md](report/experiments.md).
 
@@ -51,15 +53,15 @@ photos (near-copies of training photos left out) and the right crop for **98.3%*
 **74.7%** exact and **86.6%** right crop. The released model, **v1** (12 Sep, 224 px), scores about the same
 (92.9% exact, 98.3% right crop) and stays the default in the apps.
 
-![India v2 crop confusion matrix](report/figures/india_v2_confusion_crops.png)
+![India v2 crop confusion matrix](confusion_matrix/india_v2/india_v2_confusion_crops.png)
 
-More for v2: [field photos only](report/figures/india_v2_confusion_crops_field.png) ·
-[all 387 classes](report/figures/india_v2_confusion_full.png) ·
-[most frequent mix-ups](report/results/india_v2_top_confusions.csv).
-The same for v1: [crops](report/figures/india_v1_confusion_crops.png) ·
-[field photos](report/figures/india_v1_confusion_crops_field.png) ·
-[all classes](report/figures/india_v1_confusion_full.png) ·
-[mix-ups](report/results/india_v1_top_confusions.csv).
+More for v2: [field photos only](confusion_matrix/india_v2/india_v2_confusion_crops_field.png) ·
+[all 387 classes](confusion_matrix/india_v2/india_v2_confusion_full.png) ·
+[most frequent mix-ups](confusion_matrix/india_v2/india_v2_top_confusions.csv).
+The same for v1: [crops](confusion_matrix/india_v1/india_v1_confusion_crops.png) ·
+[field photos](confusion_matrix/india_v1/india_v1_confusion_crops_field.png) ·
+[all classes](confusion_matrix/india_v1/india_v1_confusion_full.png) ·
+[mix-ups](confusion_matrix/india_v1/india_v1_top_confusions.csv).
 Details: [`model/india/README.md`](model/india/README.md).
 
 ## Quick start (about 5 minutes)
@@ -149,6 +151,8 @@ Training runs on Kaggle's free T4 GPUs; see [model/README.md](model/README.md) t
 app/        Android client (Kotlin)
 server/     live camera scan: local web page + server (core and India models)
 offline/    offline app: web page with the models inside, Windows run.bat, Android APK project, build tools
+models/     all models: the 3 app models (ONNX) + links to the 3 PyTorch originals
+confusion_matrix/  confusion matrices of every model (India v2, India v1, core v2)
 model/      predict.py interface, labels, weight download info, Kaggle training notebooks
 report/     one-page model report, experiment log, results, figures, dataset card
 samples/    4 PlantDoc field photos for a quick test (CC BY 4.0)

@@ -1,0 +1,4364 @@
+{
+ "models": [
+  {
+   "id": "india_v1",
+   "name": "India v1 - 59 crops, 387 diseases (recommended)",
+   "file": "models/india_v1.onnx",
+   "img_size": 224,
+   "mean": [
+    0.485,
+    0.456,
+    0.406
+   ],
+   "std": [
+    0.229,
+    0.224,
+    0.225
+   ],
+   "crop_pct": 0.9,
+   "labels": [
+    {
+     "crop": "apple",
+     "label": "Alternaria leaf blotch"
+    },
+    {
+     "crop": "apple",
+     "label": "Apple scab"
+    },
+    {
+     "crop": "apple",
+     "label": "Black rot"
+    },
+    {
+     "crop": "apple",
+     "label": "Cedar apple rust"
+    },
+    {
+     "crop": "apple",
+     "label": "Healthy"
+    },
+    {
+     "crop": "apple",
+     "label": "Mosaic virus"
+    },
+    {
+     "crop": "ash_gourd",
+     "label": "Aphid (pest)"
+    },
+    {
+     "crop": "ash_gourd",
+     "label": "Downy mildew"
+    },
+    {
+     "crop": "ash_gourd",
+     "label": "Healthy"
+    },
+    {
+     "crop": "ash_gourd",
+     "label": "Leaf curl virus"
+    },
+    {
+     "crop": "banana",
+     "label": "Anthracnose"
+    },
+    {
+     "crop": "banana",
+     "label": "Aphid (pest)"
+    },
+    {
+     "crop": "banana",
+     "label": "Bacterial soft rot"
+    },
+    {
+     "crop": "banana",
+     "label": "Bract mosaic virus"
+    },
+    {
+     "crop": "banana",
+     "label": "Bunchy top virus"
+    },
+    {
+     "crop": "banana",
+     "label": "Cigar end rot"
+    },
+    {
+     "crop": "banana",
+     "label": "Cordana leaf spot"
+    },
+    {
+     "crop": "banana",
+     "label": "Fruit scarring beetle (pest)"
+    },
+    {
+     "crop": "banana",
+     "label": "Healthy"
+    },
+    {
+     "crop": "banana",
+     "label": "Insect pest damage"
+    },
+    {
+     "crop": "banana",
+     "label": "Moko (bacterial wilt)"
+    },
+    {
+     "crop": "banana",
+     "label": "Panama disease (fusarium wilt)"
+    },
+    {
+     "crop": "banana",
+     "label": "Pestalotiopsis leaf spot"
+    },
+    {
+     "crop": "banana",
+     "label": "Potassium deficiency"
+    },
+    {
+     "crop": "banana",
+     "label": "Pseudostem weevil (pest)"
+    },
+    {
+     "crop": "banana",
+     "label": "Sigatoka leaf spot"
+    },
+    {
+     "crop": "bean",
+     "label": "Anthracnose"
+    },
+    {
+     "crop": "bean",
+     "label": "Blight"
+    },
+    {
+     "crop": "bean",
+     "label": "Halo blight"
+    },
+    {
+     "crop": "bean",
+     "label": "Healthy"
+    },
+    {
+     "crop": "bean",
+     "label": "Mosaic virus"
+    },
+    {
+     "crop": "bean",
+     "label": "Rust"
+    },
+    {
+     "crop": "bell_pepper",
+     "label": "Bacterial spot"
+    },
+    {
+     "crop": "bell_pepper",
+     "label": "Blossom end rot"
+    },
+    {
+     "crop": "bell_pepper",
+     "label": "Healthy"
+    },
+    {
+     "crop": "betel",
+     "label": "Bacterial leaf disease"
+    },
+    {
+     "crop": "betel",
+     "label": "Dried leaf"
+    },
+    {
+     "crop": "betel",
+     "label": "Fungal brown spot"
+    },
+    {
+     "crop": "betel",
+     "label": "Healthy"
+    },
+    {
+     "crop": "betel",
+     "label": "Leaf rot"
+    },
+    {
+     "crop": "betel",
+     "label": "Leaf spot"
+    },
+    {
+     "crop": "bitter_gourd",
+     "label": "Downy mildew"
+    },
+    {
+     "crop": "bitter_gourd",
+     "label": "Fusarium wilt"
+    },
+    {
+     "crop": "bitter_gourd",
+     "label": "Healthy"
+    },
+    {
+     "crop": "bitter_gourd",
+     "label": "Mosaic virus"
+    },
+    {
+     "crop": "black_gram",
+     "label": "Anthracnose"
+    },
+    {
+     "crop": "black_gram",
+     "label": "Cercospora leaf spot"
+    },
+    {
+     "crop": "black_gram",
+     "label": "Healthy"
+    },
+    {
+     "crop": "black_gram",
+     "label": "Insect pest damage"
+    },
+    {
+     "crop": "black_gram",
+     "label": "Leaf crinkle virus"
+    },
+    {
+     "crop": "black_gram",
+     "label": "Powdery mildew"
+    },
+    {
+     "crop": "black_gram",
+     "label": "Yellow mosaic virus"
+    },
+    {
+     "crop": "blueberry",
+     "label": "Healthy"
+    },
+    {
+     "crop": "bottle_gourd",
+     "label": "Alternaria leaf blight"
+    },
+    {
+     "crop": "bottle_gourd",
+     "label": "Anthracnose"
+    },
+    {
+     "crop": "bottle_gourd",
+     "label": "Downy mildew"
+    },
+    {
+     "crop": "bottle_gourd",
+     "label": "Healthy"
+    },
+    {
+     "crop": "bottle_gourd",
+     "label": "Mosaic virus"
+    },
+    {
+     "crop": "brinjal_eggplant",
+     "label": "Begomovirus leaf curl"
+    },
+    {
+     "crop": "brinjal_eggplant",
+     "label": "Cercospora leaf spot"
+    },
+    {
+     "crop": "brinjal_eggplant",
+     "label": "Fruit cracking"
+    },
+    {
+     "crop": "brinjal_eggplant",
+     "label": "Fruit rot"
+    },
+    {
+     "crop": "brinjal_eggplant",
+     "label": "Healthy"
+    },
+    {
+     "crop": "brinjal_eggplant",
+     "label": "Insect pest damage"
+    },
+    {
+     "crop": "brinjal_eggplant",
+     "label": "Mosaic virus"
+    },
+    {
+     "crop": "brinjal_eggplant",
+     "label": "Phomopsis blight"
+    },
+    {
+     "crop": "brinjal_eggplant",
+     "label": "Shoot and fruit borer (pest)"
+    },
+    {
+     "crop": "brinjal_eggplant",
+     "label": "White mold"
+    },
+    {
+     "crop": "brinjal_eggplant",
+     "label": "Wilt"
+    },
+    {
+     "crop": "cabbage",
+     "label": "Alternaria leaf spot"
+    },
+    {
+     "crop": "cabbage",
+     "label": "Black rot"
+    },
+    {
+     "crop": "cabbage",
+     "label": "Downy mildew"
+    },
+    {
+     "crop": "cabbage",
+     "label": "Healthy"
+    },
+    {
+     "crop": "cashew",
+     "label": "Anthracnose"
+    },
+    {
+     "crop": "cashew",
+     "label": "Gummosis"
+    },
+    {
+     "crop": "cashew",
+     "label": "Healthy"
+    },
+    {
+     "crop": "cashew",
+     "label": "Leaf miner (pest)"
+    },
+    {
+     "crop": "cashew",
+     "label": "Red rust (algal)"
+    },
+    {
+     "crop": "cauliflower",
+     "label": "Alternaria leaf spot"
+    },
+    {
+     "crop": "cauliflower",
+     "label": "Bacterial soft rot"
+    },
+    {
+     "crop": "cauliflower",
+     "label": "Black rot"
+    },
+    {
+     "crop": "cauliflower",
+     "label": "Downy mildew"
+    },
+    {
+     "crop": "cauliflower",
+     "label": "Healthy"
+    },
+    {
+     "crop": "cauliflower",
+     "label": "Insect pest damage"
+    },
+    {
+     "crop": "cherry",
+     "label": "Healthy"
+    },
+    {
+     "crop": "cherry",
+     "label": "Leaf spot"
+    },
+    {
+     "crop": "cherry",
+     "label": "Powdery mildew"
+    },
+    {
+     "crop": "chilli",
+     "label": "Cercospora leaf spot"
+    },
+    {
+     "crop": "chilli",
+     "label": "Healthy"
+    },
+    {
+     "crop": "chilli",
+     "label": "Mites and thrips (pest)"
+    },
+    {
+     "crop": "chilli",
+     "label": "Nutrient deficiency"
+    },
+    {
+     "crop": "chilli",
+     "label": "Powdery mildew"
+    },
+    {
+     "crop": "citrus_orange",
+     "label": "Black spot"
+    },
+    {
+     "crop": "citrus_orange",
+     "label": "Citrus canker"
+    },
+    {
+     "crop": "citrus_orange",
+     "label": "Citrus greening (HLB)"
+    },
+    {
+     "crop": "citrus_orange",
+     "label": "Dieback"
+    },
+    {
+     "crop": "citrus_orange",
+     "label": "Greasy spot"
+    },
+    {
+     "crop": "citrus_orange",
+     "label": "Healthy"
+    },
+    {
+     "crop": "citrus_orange",
+     "label": "Leaf miner (pest)"
+    },
+    {
+     "crop": "citrus_orange",
+     "label": "Mealybug (pest)"
+    },
+    {
+     "crop": "citrus_orange",
+     "label": "Mite damage"
+    },
+    {
+     "crop": "citrus_orange",
+     "label": "Nutrient deficiency"
+    },
+    {
+     "crop": "citrus_orange",
+     "label": "Powdery mildew"
+    },
+    {
+     "crop": "citrus_orange",
+     "label": "Scale insect (pest)"
+    },
+    {
+     "crop": "citrus_orange",
+     "label": "Shot hole"
+    },
+    {
+     "crop": "citrus_orange",
+     "label": "Spiny whitefly (pest)"
+    },
+    {
+     "crop": "coconut",
+     "label": "Bud root dropping"
+    },
+    {
+     "crop": "coconut",
+     "label": "Bud rot"
+    },
+    {
+     "crop": "coconut",
+     "label": "Grey leaf spot"
+    },
+    {
+     "crop": "coconut",
+     "label": "Leaf rot"
+    },
+    {
+     "crop": "coconut",
+     "label": "Stem bleeding"
+    },
+    {
+     "crop": "coffee",
+     "label": "Cercospora leaf spot"
+    },
+    {
+     "crop": "coffee",
+     "label": "Healthy"
+    },
+    {
+     "crop": "coffee",
+     "label": "Leaf miner (pest)"
+    },
+    {
+     "crop": "coffee",
+     "label": "Leaf rust"
+    },
+    {
+     "crop": "coffee",
+     "label": "Phoma leaf spot"
+    },
+    {
+     "crop": "corn_maize",
+     "label": "Common rust"
+    },
+    {
+     "crop": "corn_maize",
+     "label": "Common smut"
+    },
+    {
+     "crop": "corn_maize",
+     "label": "Curvularia leaf spot"
+    },
+    {
+     "crop": "corn_maize",
+     "label": "Fall armyworm (pest)"
+    },
+    {
+     "crop": "corn_maize",
+     "label": "Grasshopper (pest)"
+    },
+    {
+     "crop": "corn_maize",
+     "label": "Gray leaf spot"
+    },
+    {
+     "crop": "corn_maize",
+     "label": "Healthy"
+    },
+    {
+     "crop": "corn_maize",
+     "label": "Leaf beetle (pest)"
+    },
+    {
+     "crop": "corn_maize",
+     "label": "Northern leaf blight"
+    },
+    {
+     "crop": "cotton",
+     "label": "Alternaria leaf spot"
+    },
+    {
+     "crop": "cotton",
+     "label": "Bacterial blight"
+    },
+    {
+     "crop": "cotton",
+     "label": "Fusarium wilt"
+    },
+    {
+     "crop": "cotton",
+     "label": "Healthy"
+    },
+    {
+     "crop": "cotton",
+     "label": "Herbicide damage"
+    },
+    {
+     "crop": "cotton",
+     "label": "Leaf curl virus"
+    },
+    {
+     "crop": "cotton",
+     "label": "Leaf reddening"
+    },
+    {
+     "crop": "cotton",
+     "label": "Leaf variegation"
+    },
+    {
+     "crop": "cotton",
+     "label": "Leafhopper / jassid (pest)"
+    },
+    {
+     "crop": "cotton",
+     "label": "Verticillium wilt"
+    },
+    {
+     "crop": "cowpea",
+     "label": "Bacterial wilt"
+    },
+    {
+     "crop": "cowpea",
+     "label": "Healthy"
+    },
+    {
+     "crop": "cowpea",
+     "label": "Mosaic virus"
+    },
+    {
+     "crop": "cowpea",
+     "label": "Septoria leaf spot"
+    },
+    {
+     "crop": "cucumber",
+     "label": "Angular leaf spot"
+    },
+    {
+     "crop": "cucumber",
+     "label": "Anthracnose"
+    },
+    {
+     "crop": "cucumber",
+     "label": "Bacterial wilt"
+    },
+    {
+     "crop": "cucumber",
+     "label": "Belly rot (fruit)"
+    },
+    {
+     "crop": "cucumber",
+     "label": "Downy mildew"
+    },
+    {
+     "crop": "cucumber",
+     "label": "Gummy stem blight"
+    },
+    {
+     "crop": "cucumber",
+     "label": "Healthy"
+    },
+    {
+     "crop": "cucumber",
+     "label": "Powdery mildew"
+    },
+    {
+     "crop": "cucumber",
+     "label": "Pythium fruit rot"
+    },
+    {
+     "crop": "custard_apple",
+     "label": "Anthracnose"
+    },
+    {
+     "crop": "custard_apple",
+     "label": "Black canker"
+    },
+    {
+     "crop": "custard_apple",
+     "label": "Diplodia fruit rot"
+    },
+    {
+     "crop": "custard_apple",
+     "label": "Fruit spot"
+    },
+    {
+     "crop": "custard_apple",
+     "label": "Leaf spot"
+    },
+    {
+     "crop": "custard_apple",
+     "label": "Mealybug (pest)"
+    },
+    {
+     "crop": "finger_millet_ragi",
+     "label": "Downy mildew"
+    },
+    {
+     "crop": "finger_millet_ragi",
+     "label": "Healthy"
+    },
+    {
+     "crop": "finger_millet_ragi",
+     "label": "Mottle streak virus"
+    },
+    {
+     "crop": "finger_millet_ragi",
+     "label": "Smut"
+    },
+    {
+     "crop": "finger_millet_ragi",
+     "label": "Wilt"
+    },
+    {
+     "crop": "garlic",
+     "label": "Healthy"
+    },
+    {
+     "crop": "garlic",
+     "label": "Leaf blight"
+    },
+    {
+     "crop": "garlic",
+     "label": "Rust"
+    },
+    {
+     "crop": "ginger",
+     "label": "Healthy"
+    },
+    {
+     "crop": "ginger",
+     "label": "Leaf spot"
+    },
+    {
+     "crop": "ginger",
+     "label": "Sheath blight"
+    },
+    {
+     "crop": "grape",
+     "label": "Bacterial leaf spot"
+    },
+    {
+     "crop": "grape",
+     "label": "Black rot"
+    },
+    {
+     "crop": "grape",
+     "label": "Downy mildew"
+    },
+    {
+     "crop": "grape",
+     "label": "Esca (black measles)"
+    },
+    {
+     "crop": "grape",
+     "label": "Healthy"
+    },
+    {
+     "crop": "grape",
+     "label": "Isariopsis leaf spot"
+    },
+    {
+     "crop": "grape",
+     "label": "Leafroll virus"
+    },
+    {
+     "crop": "grape",
+     "label": "Powdery mildew"
+    },
+    {
+     "crop": "groundnut",
+     "label": "Alternaria leaf spot"
+    },
+    {
+     "crop": "groundnut",
+     "label": "Healthy"
+    },
+    {
+     "crop": "groundnut",
+     "label": "Nutrient deficiency"
+    },
+    {
+     "crop": "groundnut",
+     "label": "Rosette virus"
+    },
+    {
+     "crop": "groundnut",
+     "label": "Rust"
+    },
+    {
+     "crop": "groundnut",
+     "label": "Tikka leaf spot"
+    },
+    {
+     "crop": "guava",
+     "label": "Anthracnose"
+    },
+    {
+     "crop": "guava",
+     "label": "Canker"
+    },
+    {
+     "crop": "guava",
+     "label": "Dot (algal spot)"
+    },
+    {
+     "crop": "guava",
+     "label": "Fruit mummification"
+    },
+    {
+     "crop": "guava",
+     "label": "Healthy"
+    },
+    {
+     "crop": "guava",
+     "label": "Phytophthora fruit rot"
+    },
+    {
+     "crop": "guava",
+     "label": "Red rust"
+    },
+    {
+     "crop": "guava",
+     "label": "Scab"
+    },
+    {
+     "crop": "guava",
+     "label": "Styler end rot"
+    },
+    {
+     "crop": "jamun",
+     "label": "Bacterial spot"
+    },
+    {
+     "crop": "jamun",
+     "label": "Brown blight"
+    },
+    {
+     "crop": "jamun",
+     "label": "Dry leaf"
+    },
+    {
+     "crop": "jamun",
+     "label": "Healthy"
+    },
+    {
+     "crop": "jamun",
+     "label": "Powdery mildew"
+    },
+    {
+     "crop": "jamun",
+     "label": "Sooty mould"
+    },
+    {
+     "crop": "jute",
+     "label": "Dieback"
+    },
+    {
+     "crop": "jute",
+     "label": "Healthy"
+    },
+    {
+     "crop": "jute",
+     "label": "Mosaic virus"
+    },
+    {
+     "crop": "jute",
+     "label": "Pest-holed leaf"
+    },
+    {
+     "crop": "jute",
+     "label": "Stem rot"
+    },
+    {
+     "crop": "lemon",
+     "label": "Anthracnose"
+    },
+    {
+     "crop": "lemon",
+     "label": "Bacterial blight"
+    },
+    {
+     "crop": "lemon",
+     "label": "Citrus canker"
+    },
+    {
+     "crop": "lemon",
+     "label": "Dry leaf"
+    },
+    {
+     "crop": "lemon",
+     "label": "Healthy"
+    },
+    {
+     "crop": "lemon",
+     "label": "Leaf curl virus"
+    },
+    {
+     "crop": "lemon",
+     "label": "Nutrient deficiency"
+    },
+    {
+     "crop": "lemon",
+     "label": "Sooty mould"
+    },
+    {
+     "crop": "lemon",
+     "label": "Spider mites (pest)"
+    },
+    {
+     "crop": "lentil",
+     "label": "Ascochyta blight"
+    },
+    {
+     "crop": "lentil",
+     "label": "Healthy"
+    },
+    {
+     "crop": "lentil",
+     "label": "Powdery mildew"
+    },
+    {
+     "crop": "lentil",
+     "label": "Rust"
+    },
+    {
+     "crop": "malabar_spinach",
+     "label": "Anthracnose leaf spot"
+    },
+    {
+     "crop": "malabar_spinach",
+     "label": "Healthy"
+    },
+    {
+     "crop": "malabar_spinach",
+     "label": "Mite damage"
+    },
+    {
+     "crop": "mango",
+     "label": "Anthracnose"
+    },
+    {
+     "crop": "mango",
+     "label": "Bacterial canker"
+    },
+    {
+     "crop": "mango",
+     "label": "Cutting weevil (pest)"
+    },
+    {
+     "crop": "mango",
+     "label": "Die back"
+    },
+    {
+     "crop": "mango",
+     "label": "Gall midge (pest)"
+    },
+    {
+     "crop": "mango",
+     "label": "Healthy"
+    },
+    {
+     "crop": "mango",
+     "label": "Powdery mildew"
+    },
+    {
+     "crop": "mango",
+     "label": "Sooty mould"
+    },
+    {
+     "crop": "moringa",
+     "label": "Bacterial leaf spot"
+    },
+    {
+     "crop": "moringa",
+     "label": "Cercospora leaf spot"
+    },
+    {
+     "crop": "moringa",
+     "label": "Healthy"
+    },
+    {
+     "crop": "moringa",
+     "label": "Yellowing leaf"
+    },
+    {
+     "crop": "okra",
+     "label": "Alternaria leaf spot"
+    },
+    {
+     "crop": "okra",
+     "label": "Cercospora leaf spot"
+    },
+    {
+     "crop": "okra",
+     "label": "Downy mildew"
+    },
+    {
+     "crop": "okra",
+     "label": "Healthy"
+    },
+    {
+     "crop": "okra",
+     "label": "Leaf curl virus"
+    },
+    {
+     "crop": "okra",
+     "label": "Phyllosticta leaf spot"
+    },
+    {
+     "crop": "okra",
+     "label": "Yellow vein mosaic virus"
+    },
+    {
+     "crop": "onion",
+     "label": "Botrytis leaf blight"
+    },
+    {
+     "crop": "onion",
+     "label": "Caterpillar (pest)"
+    },
+    {
+     "crop": "onion",
+     "label": "Downy mildew"
+    },
+    {
+     "crop": "onion",
+     "label": "Fusarium basal rot"
+    },
+    {
+     "crop": "onion",
+     "label": "Healthy"
+    },
+    {
+     "crop": "onion",
+     "label": "Iris yellow spot virus"
+    },
+    {
+     "crop": "onion",
+     "label": "Purple blotch"
+    },
+    {
+     "crop": "onion",
+     "label": "Rust"
+    },
+    {
+     "crop": "onion",
+     "label": "Stemphylium / Colletotrichum blight"
+    },
+    {
+     "crop": "onion",
+     "label": "Xanthomonas leaf blight"
+    },
+    {
+     "crop": "papaya",
+     "label": "Anthracnose"
+    },
+    {
+     "crop": "papaya",
+     "label": "Bacterial spot"
+    },
+    {
+     "crop": "papaya",
+     "label": "Healthy"
+    },
+    {
+     "crop": "papaya",
+     "label": "Leaf curl virus"
+    },
+    {
+     "crop": "papaya",
+     "label": "Mealybug (pest)"
+    },
+    {
+     "crop": "papaya",
+     "label": "Mite damage"
+    },
+    {
+     "crop": "papaya",
+     "label": "Mosaic virus"
+    },
+    {
+     "crop": "papaya",
+     "label": "Ring spot virus"
+    },
+    {
+     "crop": "peach",
+     "label": "Bacterial spot"
+    },
+    {
+     "crop": "peach",
+     "label": "Brown rot"
+    },
+    {
+     "crop": "peach",
+     "label": "Healthy"
+    },
+    {
+     "crop": "peach",
+     "label": "Leaf curl"
+    },
+    {
+     "crop": "peach",
+     "label": "Scab"
+    },
+    {
+     "crop": "pomegranate",
+     "label": "Alternaria fruit spot"
+    },
+    {
+     "crop": "pomegranate",
+     "label": "Anthracnose"
+    },
+    {
+     "crop": "pomegranate",
+     "label": "Bacterial blight (oily spot)"
+    },
+    {
+     "crop": "pomegranate",
+     "label": "Cercospora fruit spot"
+    },
+    {
+     "crop": "pomegranate",
+     "label": "Fruit borer (pest)"
+    },
+    {
+     "crop": "pomegranate",
+     "label": "Healthy"
+    },
+    {
+     "crop": "pomegranate",
+     "label": "Sunburn"
+    },
+    {
+     "crop": "potato",
+     "label": "Early blight"
+    },
+    {
+     "crop": "potato",
+     "label": "Healthy"
+    },
+    {
+     "crop": "potato",
+     "label": "Insect pest damage"
+    },
+    {
+     "crop": "potato",
+     "label": "Late blight"
+    },
+    {
+     "crop": "potato",
+     "label": "Virus disease"
+    },
+    {
+     "crop": "pumpkin",
+     "label": "Bacterial leaf spot"
+    },
+    {
+     "crop": "pumpkin",
+     "label": "Downy mildew"
+    },
+    {
+     "crop": "pumpkin",
+     "label": "Healthy"
+    },
+    {
+     "crop": "pumpkin",
+     "label": "Mosaic virus"
+    },
+    {
+     "crop": "pumpkin",
+     "label": "Powdery mildew"
+    },
+    {
+     "crop": "radish",
+     "label": "Black leaf spot"
+    },
+    {
+     "crop": "radish",
+     "label": "Downy mildew"
+    },
+    {
+     "crop": "radish",
+     "label": "Flea beetle (pest)"
+    },
+    {
+     "crop": "radish",
+     "label": "Healthy"
+    },
+    {
+     "crop": "radish",
+     "label": "Mosaic virus"
+    },
+    {
+     "crop": "raspberry",
+     "label": "Healthy"
+    },
+    {
+     "crop": "rice",
+     "label": "Bacterial leaf blight"
+    },
+    {
+     "crop": "rice",
+     "label": "Bacterial leaf streak"
+    },
+    {
+     "crop": "rice",
+     "label": "Bacterial panicle blight"
+    },
+    {
+     "crop": "rice",
+     "label": "Blast"
+    },
+    {
+     "crop": "rice",
+     "label": "Brown spot"
+    },
+    {
+     "crop": "rice",
+     "label": "Dead heart (stem borer)"
+    },
+    {
+     "crop": "rice",
+     "label": "Downy mildew"
+    },
+    {
+     "crop": "rice",
+     "label": "Healthy"
+    },
+    {
+     "crop": "rice",
+     "label": "Hispa (pest)"
+    },
+    {
+     "crop": "rice",
+     "label": "Leaf folder (pest)"
+    },
+    {
+     "crop": "rice",
+     "label": "Leaf scald"
+    },
+    {
+     "crop": "rice",
+     "label": "Sheath blight"
+    },
+    {
+     "crop": "rice",
+     "label": "Tungro"
+    },
+    {
+     "crop": "soybean",
+     "label": "Bacterial blight"
+    },
+    {
+     "crop": "soybean",
+     "label": "Downy mildew"
+    },
+    {
+     "crop": "soybean",
+     "label": "Dry leaf"
+    },
+    {
+     "crop": "soybean",
+     "label": "Frogeye leaf spot"
+    },
+    {
+     "crop": "soybean",
+     "label": "Healthy"
+    },
+    {
+     "crop": "soybean",
+     "label": "Mosaic virus"
+    },
+    {
+     "crop": "soybean",
+     "label": "Rust"
+    },
+    {
+     "crop": "soybean",
+     "label": "Semilooper caterpillar (pest)"
+    },
+    {
+     "crop": "soybean",
+     "label": "Septoria brown spot"
+    },
+    {
+     "crop": "soybean",
+     "label": "Vein necrosis"
+    },
+    {
+     "crop": "spinach",
+     "label": "Anthracnose"
+    },
+    {
+     "crop": "spinach",
+     "label": "Bacterial spot"
+    },
+    {
+     "crop": "spinach",
+     "label": "Downy mildew"
+    },
+    {
+     "crop": "spinach",
+     "label": "Healthy"
+    },
+    {
+     "crop": "spinach",
+     "label": "Insect pest damage"
+    },
+    {
+     "crop": "squash",
+     "label": "Healthy"
+    },
+    {
+     "crop": "squash",
+     "label": "Powdery mildew"
+    },
+    {
+     "crop": "strawberry",
+     "label": "Anthracnose"
+    },
+    {
+     "crop": "strawberry",
+     "label": "Healthy"
+    },
+    {
+     "crop": "strawberry",
+     "label": "Leaf scorch"
+    },
+    {
+     "crop": "sugarcane",
+     "label": "Banded chlorosis"
+    },
+    {
+     "crop": "sugarcane",
+     "label": "Brown spot"
+    },
+    {
+     "crop": "sugarcane",
+     "label": "Dried leaf"
+    },
+    {
+     "crop": "sugarcane",
+     "label": "Grassy shoot"
+    },
+    {
+     "crop": "sugarcane",
+     "label": "Healthy"
+    },
+    {
+     "crop": "sugarcane",
+     "label": "Mosaic virus"
+    },
+    {
+     "crop": "sugarcane",
+     "label": "Pokkah boeng"
+    },
+    {
+     "crop": "sugarcane",
+     "label": "Red rot"
+    },
+    {
+     "crop": "sugarcane",
+     "label": "Rust"
+    },
+    {
+     "crop": "sugarcane",
+     "label": "Sett rot"
+    },
+    {
+     "crop": "sugarcane",
+     "label": "Smut"
+    },
+    {
+     "crop": "sugarcane",
+     "label": "Yellow leaf disease"
+    },
+    {
+     "crop": "sunflower",
+     "label": "Downy mildew"
+    },
+    {
+     "crop": "sunflower",
+     "label": "Gray mold"
+    },
+    {
+     "crop": "sunflower",
+     "label": "Healthy"
+    },
+    {
+     "crop": "sunflower",
+     "label": "Leaf scars"
+    },
+    {
+     "crop": "tea",
+     "label": "Algal leaf spot"
+    },
+    {
+     "crop": "tea",
+     "label": "Blister blight"
+    },
+    {
+     "crop": "tea",
+     "label": "Brown blight"
+    },
+    {
+     "crop": "tea",
+     "label": "Gray blight"
+    },
+    {
+     "crop": "tea",
+     "label": "Green mirid bug (pest)"
+    },
+    {
+     "crop": "tea",
+     "label": "Healthy"
+    },
+    {
+     "crop": "tea",
+     "label": "Red leaf spot"
+    },
+    {
+     "crop": "tea",
+     "label": "Red rust (algal)"
+    },
+    {
+     "crop": "tea",
+     "label": "Red spider mite (pest)"
+    },
+    {
+     "crop": "tea",
+     "label": "Tea mosquito bug (helopeltis)"
+    },
+    {
+     "crop": "tobacco",
+     "label": "Brown spot"
+    },
+    {
+     "crop": "tobacco",
+     "label": "Healthy"
+    },
+    {
+     "crop": "tobacco",
+     "label": "Mosaic virus"
+    },
+    {
+     "crop": "tomato",
+     "label": "Bacterial spot"
+    },
+    {
+     "crop": "tomato",
+     "label": "Blossom end rot"
+    },
+    {
+     "crop": "tomato",
+     "label": "Early blight"
+    },
+    {
+     "crop": "tomato",
+     "label": "Fruit borer (pest)"
+    },
+    {
+     "crop": "tomato",
+     "label": "Healthy"
+    },
+    {
+     "crop": "tomato",
+     "label": "Late blight"
+    },
+    {
+     "crop": "tomato",
+     "label": "Leaf miner (pest)"
+    },
+    {
+     "crop": "tomato",
+     "label": "Leaf mold"
+    },
+    {
+     "crop": "tomato",
+     "label": "Magnesium deficiency"
+    },
+    {
+     "crop": "tomato",
+     "label": "Mosaic virus"
+    },
+    {
+     "crop": "tomato",
+     "label": "Nitrogen deficiency"
+    },
+    {
+     "crop": "tomato",
+     "label": "Potassium deficiency"
+    },
+    {
+     "crop": "tomato",
+     "label": "Septoria leaf spot"
+    },
+    {
+     "crop": "tomato",
+     "label": "Spider mites (pest)"
+    },
+    {
+     "crop": "tomato",
+     "label": "Spotted wilt virus"
+    },
+    {
+     "crop": "tomato",
+     "label": "Sunscald"
+    },
+    {
+     "crop": "tomato",
+     "label": "Target spot"
+    },
+    {
+     "crop": "tomato",
+     "label": "Yellow leaf curl virus"
+    },
+    {
+     "crop": "turmeric",
+     "label": "Aphid (pest)"
+    },
+    {
+     "crop": "turmeric",
+     "label": "Dry leaf"
+    },
+    {
+     "crop": "turmeric",
+     "label": "Healthy"
+    },
+    {
+     "crop": "turmeric",
+     "label": "Healthy rhizome"
+    },
+    {
+     "crop": "turmeric",
+     "label": "Leaf blotch"
+    },
+    {
+     "crop": "turmeric",
+     "label": "Leaf spot"
+    },
+    {
+     "crop": "turmeric",
+     "label": "Rhizome rot"
+    },
+    {
+     "crop": "watermelon",
+     "label": "Anthracnose"
+    },
+    {
+     "crop": "watermelon",
+     "label": "Downy mildew"
+    },
+    {
+     "crop": "watermelon",
+     "label": "Healthy"
+    },
+    {
+     "crop": "watermelon",
+     "label": "Mosaic virus"
+    },
+    {
+     "crop": "wheat",
+     "label": "Aphid (pest)"
+    },
+    {
+     "crop": "wheat",
+     "label": "Bacterial leaf streak"
+    },
+    {
+     "crop": "wheat",
+     "label": "Black (stem) rust"
+    },
+    {
+     "crop": "wheat",
+     "label": "Blast"
+    },
+    {
+     "crop": "wheat",
+     "label": "Brown (leaf) rust"
+    },
+    {
+     "crop": "wheat",
+     "label": "Common root rot"
+    },
+    {
+     "crop": "wheat",
+     "label": "Fusarium head blight"
+    },
+    {
+     "crop": "wheat",
+     "label": "Healthy"
+    },
+    {
+     "crop": "wheat",
+     "label": "Leaf blight"
+    },
+    {
+     "crop": "wheat",
+     "label": "Mite (pest)"
+    },
+    {
+     "crop": "wheat",
+     "label": "Powdery mildew"
+    },
+    {
+     "crop": "wheat",
+     "label": "Septoria blotch"
+    },
+    {
+     "crop": "wheat",
+     "label": "Smut"
+    },
+    {
+     "crop": "wheat",
+     "label": "Stem fly (pest)"
+    },
+    {
+     "crop": "wheat",
+     "label": "Tan spot"
+    },
+    {
+     "crop": "wheat",
+     "label": "Yellow (stripe) rust"
+    }
+   ],
+   "crop_classes": {
+    "apple": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "ash_gourd": [
+     6,
+     7,
+     8,
+     9
+    ],
+    "banana": [
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18,
+     19,
+     20,
+     21,
+     22,
+     23,
+     24,
+     25
+    ],
+    "bean": [
+     26,
+     27,
+     28,
+     29,
+     30,
+     31
+    ],
+    "bell_pepper": [
+     32,
+     33,
+     34
+    ],
+    "betel": [
+     35,
+     36,
+     37,
+     38,
+     39,
+     40
+    ],
+    "bitter_gourd": [
+     41,
+     42,
+     43,
+     44
+    ],
+    "black_gram": [
+     45,
+     46,
+     47,
+     48,
+     49,
+     50,
+     51
+    ],
+    "blueberry": [
+     52
+    ],
+    "bottle_gourd": [
+     53,
+     54,
+     55,
+     56,
+     57
+    ],
+    "brinjal_eggplant": [
+     58,
+     59,
+     60,
+     61,
+     62,
+     63,
+     64,
+     65,
+     66,
+     67,
+     68
+    ],
+    "cabbage": [
+     69,
+     70,
+     71,
+     72
+    ],
+    "cashew": [
+     73,
+     74,
+     75,
+     76,
+     77
+    ],
+    "cauliflower": [
+     78,
+     79,
+     80,
+     81,
+     82,
+     83
+    ],
+    "cherry": [
+     84,
+     85,
+     86
+    ],
+    "chilli": [
+     87,
+     88,
+     89,
+     90,
+     91
+    ],
+    "citrus_orange": [
+     92,
+     93,
+     94,
+     95,
+     96,
+     97,
+     98,
+     99,
+     100,
+     101,
+     102,
+     103,
+     104,
+     105
+    ],
+    "coconut": [
+     106,
+     107,
+     108,
+     109,
+     110
+    ],
+    "coffee": [
+     111,
+     112,
+     113,
+     114,
+     115
+    ],
+    "corn_maize": [
+     116,
+     117,
+     118,
+     119,
+     120,
+     121,
+     122,
+     123,
+     124
+    ],
+    "cotton": [
+     125,
+     126,
+     127,
+     128,
+     129,
+     130,
+     131,
+     132,
+     133,
+     134
+    ],
+    "cowpea": [
+     135,
+     136,
+     137,
+     138
+    ],
+    "cucumber": [
+     139,
+     140,
+     141,
+     142,
+     143,
+     144,
+     145,
+     146,
+     147
+    ],
+    "custard_apple": [
+     148,
+     149,
+     150,
+     151,
+     152,
+     153
+    ],
+    "finger_millet_ragi": [
+     154,
+     155,
+     156,
+     157,
+     158
+    ],
+    "garlic": [
+     159,
+     160,
+     161
+    ],
+    "ginger": [
+     162,
+     163,
+     164
+    ],
+    "grape": [
+     165,
+     166,
+     167,
+     168,
+     169,
+     170,
+     171,
+     172
+    ],
+    "groundnut": [
+     173,
+     174,
+     175,
+     176,
+     177,
+     178
+    ],
+    "guava": [
+     179,
+     180,
+     181,
+     182,
+     183,
+     184,
+     185,
+     186,
+     187
+    ],
+    "jamun": [
+     188,
+     189,
+     190,
+     191,
+     192,
+     193
+    ],
+    "jute": [
+     194,
+     195,
+     196,
+     197,
+     198
+    ],
+    "lemon": [
+     199,
+     200,
+     201,
+     202,
+     203,
+     204,
+     205,
+     206,
+     207
+    ],
+    "lentil": [
+     208,
+     209,
+     210,
+     211
+    ],
+    "malabar_spinach": [
+     212,
+     213,
+     214
+    ],
+    "mango": [
+     215,
+     216,
+     217,
+     218,
+     219,
+     220,
+     221,
+     222
+    ],
+    "moringa": [
+     223,
+     224,
+     225,
+     226
+    ],
+    "okra": [
+     227,
+     228,
+     229,
+     230,
+     231,
+     232,
+     233
+    ],
+    "onion": [
+     234,
+     235,
+     236,
+     237,
+     238,
+     239,
+     240,
+     241,
+     242,
+     243
+    ],
+    "papaya": [
+     244,
+     245,
+     246,
+     247,
+     248,
+     249,
+     250,
+     251
+    ],
+    "peach": [
+     252,
+     253,
+     254,
+     255,
+     256
+    ],
+    "pomegranate": [
+     257,
+     258,
+     259,
+     260,
+     261,
+     262,
+     263
+    ],
+    "potato": [
+     264,
+     265,
+     266,
+     267,
+     268
+    ],
+    "pumpkin": [
+     269,
+     270,
+     271,
+     272,
+     273
+    ],
+    "radish": [
+     274,
+     275,
+     276,
+     277,
+     278
+    ],
+    "raspberry": [
+     279
+    ],
+    "rice": [
+     280,
+     281,
+     282,
+     283,
+     284,
+     285,
+     286,
+     287,
+     288,
+     289,
+     290,
+     291,
+     292
+    ],
+    "soybean": [
+     293,
+     294,
+     295,
+     296,
+     297,
+     298,
+     299,
+     300,
+     301,
+     302
+    ],
+    "spinach": [
+     303,
+     304,
+     305,
+     306,
+     307
+    ],
+    "squash": [
+     308,
+     309
+    ],
+    "strawberry": [
+     310,
+     311,
+     312
+    ],
+    "sugarcane": [
+     313,
+     314,
+     315,
+     316,
+     317,
+     318,
+     319,
+     320,
+     321,
+     322,
+     323,
+     324
+    ],
+    "sunflower": [
+     325,
+     326,
+     327,
+     328
+    ],
+    "tea": [
+     329,
+     330,
+     331,
+     332,
+     333,
+     334,
+     335,
+     336,
+     337,
+     338
+    ],
+    "tobacco": [
+     339,
+     340,
+     341
+    ],
+    "tomato": [
+     342,
+     343,
+     344,
+     345,
+     346,
+     347,
+     348,
+     349,
+     350,
+     351,
+     352,
+     353,
+     354,
+     355,
+     356,
+     357,
+     358,
+     359
+    ],
+    "turmeric": [
+     360,
+     361,
+     362,
+     363,
+     364,
+     365,
+     366
+    ],
+    "watermelon": [
+     367,
+     368,
+     369,
+     370
+    ],
+    "wheat": [
+     371,
+     372,
+     373,
+     374,
+     375,
+     376,
+     377,
+     378,
+     379,
+     380,
+     381,
+     382,
+     383,
+     384,
+     385,
+     386
+    ]
+   },
+   "size_mb": 57.6,
+   "sha256": "f6b0ad51ea7175a7426d40a08b2f56bade93f4de5c89da9ebe2540d3c81a27b4",
+   "weight_bits": 4,
+   "quant_agreement": 0.9964,
+   "cpu_ms_per_photo": 333,
+   "scores": {
+    "clean_macro_f1": 0.906,
+    "crop_given_macro_f1": 0.926,
+    "field_macro_f1": 0.744
+   }
+  },
+  {
+   "id": "india_v2",
+   "name": "India v2 - 59 crops, 387 diseases, 336 px",
+   "file": "models/india_v2.onnx",
+   "img_size": 336,
+   "mean": [
+    0.485,
+    0.456,
+    0.406
+   ],
+   "std": [
+    0.229,
+    0.224,
+    0.225
+   ],
+   "crop_pct": 0.9,
+   "labels": [
+    {
+     "crop": "apple",
+     "label": "Alternaria leaf blotch"
+    },
+    {
+     "crop": "apple",
+     "label": "Apple scab"
+    },
+    {
+     "crop": "apple",
+     "label": "Black rot"
+    },
+    {
+     "crop": "apple",
+     "label": "Cedar apple rust"
+    },
+    {
+     "crop": "apple",
+     "label": "Healthy"
+    },
+    {
+     "crop": "apple",
+     "label": "Mosaic virus"
+    },
+    {
+     "crop": "ash_gourd",
+     "label": "Aphid (pest)"
+    },
+    {
+     "crop": "ash_gourd",
+     "label": "Downy mildew"
+    },
+    {
+     "crop": "ash_gourd",
+     "label": "Healthy"
+    },
+    {
+     "crop": "ash_gourd",
+     "label": "Leaf curl virus"
+    },
+    {
+     "crop": "banana",
+     "label": "Anthracnose"
+    },
+    {
+     "crop": "banana",
+     "label": "Aphid (pest)"
+    },
+    {
+     "crop": "banana",
+     "label": "Bacterial soft rot"
+    },
+    {
+     "crop": "banana",
+     "label": "Bract mosaic virus"
+    },
+    {
+     "crop": "banana",
+     "label": "Bunchy top virus"
+    },
+    {
+     "crop": "banana",
+     "label": "Cigar end rot"
+    },
+    {
+     "crop": "banana",
+     "label": "Cordana leaf spot"
+    },
+    {
+     "crop": "banana",
+     "label": "Fruit scarring beetle (pest)"
+    },
+    {
+     "crop": "banana",
+     "label": "Healthy"
+    },
+    {
+     "crop": "banana",
+     "label": "Insect pest damage"
+    },
+    {
+     "crop": "banana",
+     "label": "Moko (bacterial wilt)"
+    },
+    {
+     "crop": "banana",
+     "label": "Panama disease (fusarium wilt)"
+    },
+    {
+     "crop": "banana",
+     "label": "Pestalotiopsis leaf spot"
+    },
+    {
+     "crop": "banana",
+     "label": "Potassium deficiency"
+    },
+    {
+     "crop": "banana",
+     "label": "Pseudostem weevil (pest)"
+    },
+    {
+     "crop": "banana",
+     "label": "Sigatoka leaf spot"
+    },
+    {
+     "crop": "bean",
+     "label": "Anthracnose"
+    },
+    {
+     "crop": "bean",
+     "label": "Blight"
+    },
+    {
+     "crop": "bean",
+     "label": "Halo blight"
+    },
+    {
+     "crop": "bean",
+     "label": "Healthy"
+    },
+    {
+     "crop": "bean",
+     "label": "Mosaic virus"
+    },
+    {
+     "crop": "bean",
+     "label": "Rust"
+    },
+    {
+     "crop": "bell_pepper",
+     "label": "Bacterial spot"
+    },
+    {
+     "crop": "bell_pepper",
+     "label": "Blossom end rot"
+    },
+    {
+     "crop": "bell_pepper",
+     "label": "Healthy"
+    },
+    {
+     "crop": "betel",
+     "label": "Bacterial leaf disease"
+    },
+    {
+     "crop": "betel",
+     "label": "Dried leaf"
+    },
+    {
+     "crop": "betel",
+     "label": "Fungal brown spot"
+    },
+    {
+     "crop": "betel",
+     "label": "Healthy"
+    },
+    {
+     "crop": "betel",
+     "label": "Leaf rot"
+    },
+    {
+     "crop": "betel",
+     "label": "Leaf spot"
+    },
+    {
+     "crop": "bitter_gourd",
+     "label": "Downy mildew"
+    },
+    {
+     "crop": "bitter_gourd",
+     "label": "Fusarium wilt"
+    },
+    {
+     "crop": "bitter_gourd",
+     "label": "Healthy"
+    },
+    {
+     "crop": "bitter_gourd",
+     "label": "Mosaic virus"
+    },
+    {
+     "crop": "black_gram",
+     "label": "Anthracnose"
+    },
+    {
+     "crop": "black_gram",
+     "label": "Cercospora leaf spot"
+    },
+    {
+     "crop": "black_gram",
+     "label": "Healthy"
+    },
+    {
+     "crop": "black_gram",
+     "label": "Insect pest damage"
+    },
+    {
+     "crop": "black_gram",
+     "label": "Leaf crinkle virus"
+    },
+    {
+     "crop": "black_gram",
+     "label": "Powdery mildew"
+    },
+    {
+     "crop": "black_gram",
+     "label": "Yellow mosaic virus"
+    },
+    {
+     "crop": "blueberry",
+     "label": "Healthy"
+    },
+    {
+     "crop": "bottle_gourd",
+     "label": "Alternaria leaf blight"
+    },
+    {
+     "crop": "bottle_gourd",
+     "label": "Anthracnose"
+    },
+    {
+     "crop": "bottle_gourd",
+     "label": "Downy mildew"
+    },
+    {
+     "crop": "bottle_gourd",
+     "label": "Healthy"
+    },
+    {
+     "crop": "bottle_gourd",
+     "label": "Mosaic virus"
+    },
+    {
+     "crop": "brinjal_eggplant",
+     "label": "Begomovirus leaf curl"
+    },
+    {
+     "crop": "brinjal_eggplant",
+     "label": "Cercospora leaf spot"
+    },
+    {
+     "crop": "brinjal_eggplant",
+     "label": "Fruit cracking"
+    },
+    {
+     "crop": "brinjal_eggplant",
+     "label": "Fruit rot"
+    },
+    {
+     "crop": "brinjal_eggplant",
+     "label": "Healthy"
+    },
+    {
+     "crop": "brinjal_eggplant",
+     "label": "Insect pest damage"
+    },
+    {
+     "crop": "brinjal_eggplant",
+     "label": "Mosaic virus"
+    },
+    {
+     "crop": "brinjal_eggplant",
+     "label": "Phomopsis blight"
+    },
+    {
+     "crop": "brinjal_eggplant",
+     "label": "Shoot and fruit borer (pest)"
+    },
+    {
+     "crop": "brinjal_eggplant",
+     "label": "White mold"
+    },
+    {
+     "crop": "brinjal_eggplant",
+     "label": "Wilt"
+    },
+    {
+     "crop": "cabbage",
+     "label": "Alternaria leaf spot"
+    },
+    {
+     "crop": "cabbage",
+     "label": "Black rot"
+    },
+    {
+     "crop": "cabbage",
+     "label": "Downy mildew"
+    },
+    {
+     "crop": "cabbage",
+     "label": "Healthy"
+    },
+    {
+     "crop": "cashew",
+     "label": "Anthracnose"
+    },
+    {
+     "crop": "cashew",
+     "label": "Gummosis"
+    },
+    {
+     "crop": "cashew",
+     "label": "Healthy"
+    },
+    {
+     "crop": "cashew",
+     "label": "Leaf miner (pest)"
+    },
+    {
+     "crop": "cashew",
+     "label": "Red rust (algal)"
+    },
+    {
+     "crop": "cauliflower",
+     "label": "Alternaria leaf spot"
+    },
+    {
+     "crop": "cauliflower",
+     "label": "Bacterial soft rot"
+    },
+    {
+     "crop": "cauliflower",
+     "label": "Black rot"
+    },
+    {
+     "crop": "cauliflower",
+     "label": "Downy mildew"
+    },
+    {
+     "crop": "cauliflower",
+     "label": "Healthy"
+    },
+    {
+     "crop": "cauliflower",
+     "label": "Insect pest damage"
+    },
+    {
+     "crop": "cherry",
+     "label": "Healthy"
+    },
+    {
+     "crop": "cherry",
+     "label": "Leaf spot"
+    },
+    {
+     "crop": "cherry",
+     "label": "Powdery mildew"
+    },
+    {
+     "crop": "chilli",
+     "label": "Cercospora leaf spot"
+    },
+    {
+     "crop": "chilli",
+     "label": "Healthy"
+    },
+    {
+     "crop": "chilli",
+     "label": "Mites and thrips (pest)"
+    },
+    {
+     "crop": "chilli",
+     "label": "Nutrient deficiency"
+    },
+    {
+     "crop": "chilli",
+     "label": "Powdery mildew"
+    },
+    {
+     "crop": "citrus_orange",
+     "label": "Black spot"
+    },
+    {
+     "crop": "citrus_orange",
+     "label": "Citrus canker"
+    },
+    {
+     "crop": "citrus_orange",
+     "label": "Citrus greening (HLB)"
+    },
+    {
+     "crop": "citrus_orange",
+     "label": "Dieback"
+    },
+    {
+     "crop": "citrus_orange",
+     "label": "Greasy spot"
+    },
+    {
+     "crop": "citrus_orange",
+     "label": "Healthy"
+    },
+    {
+     "crop": "citrus_orange",
+     "label": "Leaf miner (pest)"
+    },
+    {
+     "crop": "citrus_orange",
+     "label": "Mealybug (pest)"
+    },
+    {
+     "crop": "citrus_orange",
+     "label": "Mite damage"
+    },
+    {
+     "crop": "citrus_orange",
+     "label": "Nutrient deficiency"
+    },
+    {
+     "crop": "citrus_orange",
+     "label": "Powdery mildew"
+    },
+    {
+     "crop": "citrus_orange",
+     "label": "Scale insect (pest)"
+    },
+    {
+     "crop": "citrus_orange",
+     "label": "Shot hole"
+    },
+    {
+     "crop": "citrus_orange",
+     "label": "Spiny whitefly (pest)"
+    },
+    {
+     "crop": "coconut",
+     "label": "Bud root dropping"
+    },
+    {
+     "crop": "coconut",
+     "label": "Bud rot"
+    },
+    {
+     "crop": "coconut",
+     "label": "Grey leaf spot"
+    },
+    {
+     "crop": "coconut",
+     "label": "Leaf rot"
+    },
+    {
+     "crop": "coconut",
+     "label": "Stem bleeding"
+    },
+    {
+     "crop": "coffee",
+     "label": "Cercospora leaf spot"
+    },
+    {
+     "crop": "coffee",
+     "label": "Healthy"
+    },
+    {
+     "crop": "coffee",
+     "label": "Leaf miner (pest)"
+    },
+    {
+     "crop": "coffee",
+     "label": "Leaf rust"
+    },
+    {
+     "crop": "coffee",
+     "label": "Phoma leaf spot"
+    },
+    {
+     "crop": "corn_maize",
+     "label": "Common rust"
+    },
+    {
+     "crop": "corn_maize",
+     "label": "Common smut"
+    },
+    {
+     "crop": "corn_maize",
+     "label": "Curvularia leaf spot"
+    },
+    {
+     "crop": "corn_maize",
+     "label": "Fall armyworm (pest)"
+    },
+    {
+     "crop": "corn_maize",
+     "label": "Grasshopper (pest)"
+    },
+    {
+     "crop": "corn_maize",
+     "label": "Gray leaf spot"
+    },
+    {
+     "crop": "corn_maize",
+     "label": "Healthy"
+    },
+    {
+     "crop": "corn_maize",
+     "label": "Leaf beetle (pest)"
+    },
+    {
+     "crop": "corn_maize",
+     "label": "Northern leaf blight"
+    },
+    {
+     "crop": "cotton",
+     "label": "Alternaria leaf spot"
+    },
+    {
+     "crop": "cotton",
+     "label": "Bacterial blight"
+    },
+    {
+     "crop": "cotton",
+     "label": "Fusarium wilt"
+    },
+    {
+     "crop": "cotton",
+     "label": "Healthy"
+    },
+    {
+     "crop": "cotton",
+     "label": "Herbicide damage"
+    },
+    {
+     "crop": "cotton",
+     "label": "Leaf curl virus"
+    },
+    {
+     "crop": "cotton",
+     "label": "Leaf reddening"
+    },
+    {
+     "crop": "cotton",
+     "label": "Leaf variegation"
+    },
+    {
+     "crop": "cotton",
+     "label": "Leafhopper / jassid (pest)"
+    },
+    {
+     "crop": "cotton",
+     "label": "Verticillium wilt"
+    },
+    {
+     "crop": "cowpea",
+     "label": "Bacterial wilt"
+    },
+    {
+     "crop": "cowpea",
+     "label": "Healthy"
+    },
+    {
+     "crop": "cowpea",
+     "label": "Mosaic virus"
+    },
+    {
+     "crop": "cowpea",
+     "label": "Septoria leaf spot"
+    },
+    {
+     "crop": "cucumber",
+     "label": "Angular leaf spot"
+    },
+    {
+     "crop": "cucumber",
+     "label": "Anthracnose"
+    },
+    {
+     "crop": "cucumber",
+     "label": "Bacterial wilt"
+    },
+    {
+     "crop": "cucumber",
+     "label": "Belly rot (fruit)"
+    },
+    {
+     "crop": "cucumber",
+     "label": "Downy mildew"
+    },
+    {
+     "crop": "cucumber",
+     "label": "Gummy stem blight"
+    },
+    {
+     "crop": "cucumber",
+     "label": "Healthy"
+    },
+    {
+     "crop": "cucumber",
+     "label": "Powdery mildew"
+    },
+    {
+     "crop": "cucumber",
+     "label": "Pythium fruit rot"
+    },
+    {
+     "crop": "custard_apple",
+     "label": "Anthracnose"
+    },
+    {
+     "crop": "custard_apple",
+     "label": "Black canker"
+    },
+    {
+     "crop": "custard_apple",
+     "label": "Diplodia fruit rot"
+    },
+    {
+     "crop": "custard_apple",
+     "label": "Fruit spot"
+    },
+    {
+     "crop": "custard_apple",
+     "label": "Leaf spot"
+    },
+    {
+     "crop": "custard_apple",
+     "label": "Mealybug (pest)"
+    },
+    {
+     "crop": "finger_millet_ragi",
+     "label": "Downy mildew"
+    },
+    {
+     "crop": "finger_millet_ragi",
+     "label": "Healthy"
+    },
+    {
+     "crop": "finger_millet_ragi",
+     "label": "Mottle streak virus"
+    },
+    {
+     "crop": "finger_millet_ragi",
+     "label": "Smut"
+    },
+    {
+     "crop": "finger_millet_ragi",
+     "label": "Wilt"
+    },
+    {
+     "crop": "garlic",
+     "label": "Healthy"
+    },
+    {
+     "crop": "garlic",
+     "label": "Leaf blight"
+    },
+    {
+     "crop": "garlic",
+     "label": "Rust"
+    },
+    {
+     "crop": "ginger",
+     "label": "Healthy"
+    },
+    {
+     "crop": "ginger",
+     "label": "Leaf spot"
+    },
+    {
+     "crop": "ginger",
+     "label": "Sheath blight"
+    },
+    {
+     "crop": "grape",
+     "label": "Bacterial leaf spot"
+    },
+    {
+     "crop": "grape",
+     "label": "Black rot"
+    },
+    {
+     "crop": "grape",
+     "label": "Downy mildew"
+    },
+    {
+     "crop": "grape",
+     "label": "Esca (black measles)"
+    },
+    {
+     "crop": "grape",
+     "label": "Healthy"
+    },
+    {
+     "crop": "grape",
+     "label": "Isariopsis leaf spot"
+    },
+    {
+     "crop": "grape",
+     "label": "Leafroll virus"
+    },
+    {
+     "crop": "grape",
+     "label": "Powdery mildew"
+    },
+    {
+     "crop": "groundnut",
+     "label": "Alternaria leaf spot"
+    },
+    {
+     "crop": "groundnut",
+     "label": "Healthy"
+    },
+    {
+     "crop": "groundnut",
+     "label": "Nutrient deficiency"
+    },
+    {
+     "crop": "groundnut",
+     "label": "Rosette virus"
+    },
+    {
+     "crop": "groundnut",
+     "label": "Rust"
+    },
+    {
+     "crop": "groundnut",
+     "label": "Tikka leaf spot"
+    },
+    {
+     "crop": "guava",
+     "label": "Anthracnose"
+    },
+    {
+     "crop": "guava",
+     "label": "Canker"
+    },
+    {
+     "crop": "guava",
+     "label": "Dot (algal spot)"
+    },
+    {
+     "crop": "guava",
+     "label": "Fruit mummification"
+    },
+    {
+     "crop": "guava",
+     "label": "Healthy"
+    },
+    {
+     "crop": "guava",
+     "label": "Phytophthora fruit rot"
+    },
+    {
+     "crop": "guava",
+     "label": "Red rust"
+    },
+    {
+     "crop": "guava",
+     "label": "Scab"
+    },
+    {
+     "crop": "guava",
+     "label": "Styler end rot"
+    },
+    {
+     "crop": "jamun",
+     "label": "Bacterial spot"
+    },
+    {
+     "crop": "jamun",
+     "label": "Brown blight"
+    },
+    {
+     "crop": "jamun",
+     "label": "Dry leaf"
+    },
+    {
+     "crop": "jamun",
+     "label": "Healthy"
+    },
+    {
+     "crop": "jamun",
+     "label": "Powdery mildew"
+    },
+    {
+     "crop": "jamun",
+     "label": "Sooty mould"
+    },
+    {
+     "crop": "jute",
+     "label": "Dieback"
+    },
+    {
+     "crop": "jute",
+     "label": "Healthy"
+    },
+    {
+     "crop": "jute",
+     "label": "Mosaic virus"
+    },
+    {
+     "crop": "jute",
+     "label": "Pest-holed leaf"
+    },
+    {
+     "crop": "jute",
+     "label": "Stem rot"
+    },
+    {
+     "crop": "lemon",
+     "label": "Anthracnose"
+    },
+    {
+     "crop": "lemon",
+     "label": "Bacterial blight"
+    },
+    {
+     "crop": "lemon",
+     "label": "Citrus canker"
+    },
+    {
+     "crop": "lemon",
+     "label": "Dry leaf"
+    },
+    {
+     "crop": "lemon",
+     "label": "Healthy"
+    },
+    {
+     "crop": "lemon",
+     "label": "Leaf curl virus"
+    },
+    {
+     "crop": "lemon",
+     "label": "Nutrient deficiency"
+    },
+    {
+     "crop": "lemon",
+     "label": "Sooty mould"
+    },
+    {
+     "crop": "lemon",
+     "label": "Spider mites (pest)"
+    },
+    {
+     "crop": "lentil",
+     "label": "Ascochyta blight"
+    },
+    {
+     "crop": "lentil",
+     "label": "Healthy"
+    },
+    {
+     "crop": "lentil",
+     "label": "Powdery mildew"
+    },
+    {
+     "crop": "lentil",
+     "label": "Rust"
+    },
+    {
+     "crop": "malabar_spinach",
+     "label": "Anthracnose leaf spot"
+    },
+    {
+     "crop": "malabar_spinach",
+     "label": "Healthy"
+    },
+    {
+     "crop": "malabar_spinach",
+     "label": "Mite damage"
+    },
+    {
+     "crop": "mango",
+     "label": "Anthracnose"
+    },
+    {
+     "crop": "mango",
+     "label": "Bacterial canker"
+    },
+    {
+     "crop": "mango",
+     "label": "Cutting weevil (pest)"
+    },
+    {
+     "crop": "mango",
+     "label": "Die back"
+    },
+    {
+     "crop": "mango",
+     "label": "Gall midge (pest)"
+    },
+    {
+     "crop": "mango",
+     "label": "Healthy"
+    },
+    {
+     "crop": "mango",
+     "label": "Powdery mildew"
+    },
+    {
+     "crop": "mango",
+     "label": "Sooty mould"
+    },
+    {
+     "crop": "moringa",
+     "label": "Bacterial leaf spot"
+    },
+    {
+     "crop": "moringa",
+     "label": "Cercospora leaf spot"
+    },
+    {
+     "crop": "moringa",
+     "label": "Healthy"
+    },
+    {
+     "crop": "moringa",
+     "label": "Yellowing leaf"
+    },
+    {
+     "crop": "okra",
+     "label": "Alternaria leaf spot"
+    },
+    {
+     "crop": "okra",
+     "label": "Cercospora leaf spot"
+    },
+    {
+     "crop": "okra",
+     "label": "Downy mildew"
+    },
+    {
+     "crop": "okra",
+     "label": "Healthy"
+    },
+    {
+     "crop": "okra",
+     "label": "Leaf curl virus"
+    },
+    {
+     "crop": "okra",
+     "label": "Phyllosticta leaf spot"
+    },
+    {
+     "crop": "okra",
+     "label": "Yellow vein mosaic virus"
+    },
+    {
+     "crop": "onion",
+     "label": "Botrytis leaf blight"
+    },
+    {
+     "crop": "onion",
+     "label": "Caterpillar (pest)"
+    },
+    {
+     "crop": "onion",
+     "label": "Downy mildew"
+    },
+    {
+     "crop": "onion",
+     "label": "Fusarium basal rot"
+    },
+    {
+     "crop": "onion",
+     "label": "Healthy"
+    },
+    {
+     "crop": "onion",
+     "label": "Iris yellow spot virus"
+    },
+    {
+     "crop": "onion",
+     "label": "Purple blotch"
+    },
+    {
+     "crop": "onion",
+     "label": "Rust"
+    },
+    {
+     "crop": "onion",
+     "label": "Stemphylium / Colletotrichum blight"
+    },
+    {
+     "crop": "onion",
+     "label": "Xanthomonas leaf blight"
+    },
+    {
+     "crop": "papaya",
+     "label": "Anthracnose"
+    },
+    {
+     "crop": "papaya",
+     "label": "Bacterial spot"
+    },
+    {
+     "crop": "papaya",
+     "label": "Healthy"
+    },
+    {
+     "crop": "papaya",
+     "label": "Leaf curl virus"
+    },
+    {
+     "crop": "papaya",
+     "label": "Mealybug (pest)"
+    },
+    {
+     "crop": "papaya",
+     "label": "Mite damage"
+    },
+    {
+     "crop": "papaya",
+     "label": "Mosaic virus"
+    },
+    {
+     "crop": "papaya",
+     "label": "Ring spot virus"
+    },
+    {
+     "crop": "peach",
+     "label": "Bacterial spot"
+    },
+    {
+     "crop": "peach",
+     "label": "Brown rot"
+    },
+    {
+     "crop": "peach",
+     "label": "Healthy"
+    },
+    {
+     "crop": "peach",
+     "label": "Leaf curl"
+    },
+    {
+     "crop": "peach",
+     "label": "Scab"
+    },
+    {
+     "crop": "pomegranate",
+     "label": "Alternaria fruit spot"
+    },
+    {
+     "crop": "pomegranate",
+     "label": "Anthracnose"
+    },
+    {
+     "crop": "pomegranate",
+     "label": "Bacterial blight (oily spot)"
+    },
+    {
+     "crop": "pomegranate",
+     "label": "Cercospora fruit spot"
+    },
+    {
+     "crop": "pomegranate",
+     "label": "Fruit borer (pest)"
+    },
+    {
+     "crop": "pomegranate",
+     "label": "Healthy"
+    },
+    {
+     "crop": "pomegranate",
+     "label": "Sunburn"
+    },
+    {
+     "crop": "potato",
+     "label": "Early blight"
+    },
+    {
+     "crop": "potato",
+     "label": "Healthy"
+    },
+    {
+     "crop": "potato",
+     "label": "Insect pest damage"
+    },
+    {
+     "crop": "potato",
+     "label": "Late blight"
+    },
+    {
+     "crop": "potato",
+     "label": "Virus disease"
+    },
+    {
+     "crop": "pumpkin",
+     "label": "Bacterial leaf spot"
+    },
+    {
+     "crop": "pumpkin",
+     "label": "Downy mildew"
+    },
+    {
+     "crop": "pumpkin",
+     "label": "Healthy"
+    },
+    {
+     "crop": "pumpkin",
+     "label": "Mosaic virus"
+    },
+    {
+     "crop": "pumpkin",
+     "label": "Powdery mildew"
+    },
+    {
+     "crop": "radish",
+     "label": "Black leaf spot"
+    },
+    {
+     "crop": "radish",
+     "label": "Downy mildew"
+    },
+    {
+     "crop": "radish",
+     "label": "Flea beetle (pest)"
+    },
+    {
+     "crop": "radish",
+     "label": "Healthy"
+    },
+    {
+     "crop": "radish",
+     "label": "Mosaic virus"
+    },
+    {
+     "crop": "raspberry",
+     "label": "Healthy"
+    },
+    {
+     "crop": "rice",
+     "label": "Bacterial leaf blight"
+    },
+    {
+     "crop": "rice",
+     "label": "Bacterial leaf streak"
+    },
+    {
+     "crop": "rice",
+     "label": "Bacterial panicle blight"
+    },
+    {
+     "crop": "rice",
+     "label": "Blast"
+    },
+    {
+     "crop": "rice",
+     "label": "Brown spot"
+    },
+    {
+     "crop": "rice",
+     "label": "Dead heart (stem borer)"
+    },
+    {
+     "crop": "rice",
+     "label": "Downy mildew"
+    },
+    {
+     "crop": "rice",
+     "label": "Healthy"
+    },
+    {
+     "crop": "rice",
+     "label": "Hispa (pest)"
+    },
+    {
+     "crop": "rice",
+     "label": "Leaf folder (pest)"
+    },
+    {
+     "crop": "rice",
+     "label": "Leaf scald"
+    },
+    {
+     "crop": "rice",
+     "label": "Sheath blight"
+    },
+    {
+     "crop": "rice",
+     "label": "Tungro"
+    },
+    {
+     "crop": "soybean",
+     "label": "Bacterial blight"
+    },
+    {
+     "crop": "soybean",
+     "label": "Downy mildew"
+    },
+    {
+     "crop": "soybean",
+     "label": "Dry leaf"
+    },
+    {
+     "crop": "soybean",
+     "label": "Frogeye leaf spot"
+    },
+    {
+     "crop": "soybean",
+     "label": "Healthy"
+    },
+    {
+     "crop": "soybean",
+     "label": "Mosaic virus"
+    },
+    {
+     "crop": "soybean",
+     "label": "Rust"
+    },
+    {
+     "crop": "soybean",
+     "label": "Semilooper caterpillar (pest)"
+    },
+    {
+     "crop": "soybean",
+     "label": "Septoria brown spot"
+    },
+    {
+     "crop": "soybean",
+     "label": "Vein necrosis"
+    },
+    {
+     "crop": "spinach",
+     "label": "Anthracnose"
+    },
+    {
+     "crop": "spinach",
+     "label": "Bacterial spot"
+    },
+    {
+     "crop": "spinach",
+     "label": "Downy mildew"
+    },
+    {
+     "crop": "spinach",
+     "label": "Healthy"
+    },
+    {
+     "crop": "spinach",
+     "label": "Insect pest damage"
+    },
+    {
+     "crop": "squash",
+     "label": "Healthy"
+    },
+    {
+     "crop": "squash",
+     "label": "Powdery mildew"
+    },
+    {
+     "crop": "strawberry",
+     "label": "Anthracnose"
+    },
+    {
+     "crop": "strawberry",
+     "label": "Healthy"
+    },
+    {
+     "crop": "strawberry",
+     "label": "Leaf scorch"
+    },
+    {
+     "crop": "sugarcane",
+     "label": "Banded chlorosis"
+    },
+    {
+     "crop": "sugarcane",
+     "label": "Brown spot"
+    },
+    {
+     "crop": "sugarcane",
+     "label": "Dried leaf"
+    },
+    {
+     "crop": "sugarcane",
+     "label": "Grassy shoot"
+    },
+    {
+     "crop": "sugarcane",
+     "label": "Healthy"
+    },
+    {
+     "crop": "sugarcane",
+     "label": "Mosaic virus"
+    },
+    {
+     "crop": "sugarcane",
+     "label": "Pokkah boeng"
+    },
+    {
+     "crop": "sugarcane",
+     "label": "Red rot"
+    },
+    {
+     "crop": "sugarcane",
+     "label": "Rust"
+    },
+    {
+     "crop": "sugarcane",
+     "label": "Sett rot"
+    },
+    {
+     "crop": "sugarcane",
+     "label": "Smut"
+    },
+    {
+     "crop": "sugarcane",
+     "label": "Yellow leaf disease"
+    },
+    {
+     "crop": "sunflower",
+     "label": "Downy mildew"
+    },
+    {
+     "crop": "sunflower",
+     "label": "Gray mold"
+    },
+    {
+     "crop": "sunflower",
+     "label": "Healthy"
+    },
+    {
+     "crop": "sunflower",
+     "label": "Leaf scars"
+    },
+    {
+     "crop": "tea",
+     "label": "Algal leaf spot"
+    },
+    {
+     "crop": "tea",
+     "label": "Blister blight"
+    },
+    {
+     "crop": "tea",
+     "label": "Brown blight"
+    },
+    {
+     "crop": "tea",
+     "label": "Gray blight"
+    },
+    {
+     "crop": "tea",
+     "label": "Green mirid bug (pest)"
+    },
+    {
+     "crop": "tea",
+     "label": "Healthy"
+    },
+    {
+     "crop": "tea",
+     "label": "Red leaf spot"
+    },
+    {
+     "crop": "tea",
+     "label": "Red rust (algal)"
+    },
+    {
+     "crop": "tea",
+     "label": "Red spider mite (pest)"
+    },
+    {
+     "crop": "tea",
+     "label": "Tea mosquito bug (helopeltis)"
+    },
+    {
+     "crop": "tobacco",
+     "label": "Brown spot"
+    },
+    {
+     "crop": "tobacco",
+     "label": "Healthy"
+    },
+    {
+     "crop": "tobacco",
+     "label": "Mosaic virus"
+    },
+    {
+     "crop": "tomato",
+     "label": "Bacterial spot"
+    },
+    {
+     "crop": "tomato",
+     "label": "Blossom end rot"
+    },
+    {
+     "crop": "tomato",
+     "label": "Early blight"
+    },
+    {
+     "crop": "tomato",
+     "label": "Fruit borer (pest)"
+    },
+    {
+     "crop": "tomato",
+     "label": "Healthy"
+    },
+    {
+     "crop": "tomato",
+     "label": "Late blight"
+    },
+    {
+     "crop": "tomato",
+     "label": "Leaf miner (pest)"
+    },
+    {
+     "crop": "tomato",
+     "label": "Leaf mold"
+    },
+    {
+     "crop": "tomato",
+     "label": "Magnesium deficiency"
+    },
+    {
+     "crop": "tomato",
+     "label": "Mosaic virus"
+    },
+    {
+     "crop": "tomato",
+     "label": "Nitrogen deficiency"
+    },
+    {
+     "crop": "tomato",
+     "label": "Potassium deficiency"
+    },
+    {
+     "crop": "tomato",
+     "label": "Septoria leaf spot"
+    },
+    {
+     "crop": "tomato",
+     "label": "Spider mites (pest)"
+    },
+    {
+     "crop": "tomato",
+     "label": "Spotted wilt virus"
+    },
+    {
+     "crop": "tomato",
+     "label": "Sunscald"
+    },
+    {
+     "crop": "tomato",
+     "label": "Target spot"
+    },
+    {
+     "crop": "tomato",
+     "label": "Yellow leaf curl virus"
+    },
+    {
+     "crop": "turmeric",
+     "label": "Aphid (pest)"
+    },
+    {
+     "crop": "turmeric",
+     "label": "Dry leaf"
+    },
+    {
+     "crop": "turmeric",
+     "label": "Healthy"
+    },
+    {
+     "crop": "turmeric",
+     "label": "Healthy rhizome"
+    },
+    {
+     "crop": "turmeric",
+     "label": "Leaf blotch"
+    },
+    {
+     "crop": "turmeric",
+     "label": "Leaf spot"
+    },
+    {
+     "crop": "turmeric",
+     "label": "Rhizome rot"
+    },
+    {
+     "crop": "watermelon",
+     "label": "Anthracnose"
+    },
+    {
+     "crop": "watermelon",
+     "label": "Downy mildew"
+    },
+    {
+     "crop": "watermelon",
+     "label": "Healthy"
+    },
+    {
+     "crop": "watermelon",
+     "label": "Mosaic virus"
+    },
+    {
+     "crop": "wheat",
+     "label": "Aphid (pest)"
+    },
+    {
+     "crop": "wheat",
+     "label": "Bacterial leaf streak"
+    },
+    {
+     "crop": "wheat",
+     "label": "Black (stem) rust"
+    },
+    {
+     "crop": "wheat",
+     "label": "Blast"
+    },
+    {
+     "crop": "wheat",
+     "label": "Brown (leaf) rust"
+    },
+    {
+     "crop": "wheat",
+     "label": "Common root rot"
+    },
+    {
+     "crop": "wheat",
+     "label": "Fusarium head blight"
+    },
+    {
+     "crop": "wheat",
+     "label": "Healthy"
+    },
+    {
+     "crop": "wheat",
+     "label": "Leaf blight"
+    },
+    {
+     "crop": "wheat",
+     "label": "Mite (pest)"
+    },
+    {
+     "crop": "wheat",
+     "label": "Powdery mildew"
+    },
+    {
+     "crop": "wheat",
+     "label": "Septoria blotch"
+    },
+    {
+     "crop": "wheat",
+     "label": "Smut"
+    },
+    {
+     "crop": "wheat",
+     "label": "Stem fly (pest)"
+    },
+    {
+     "crop": "wheat",
+     "label": "Tan spot"
+    },
+    {
+     "crop": "wheat",
+     "label": "Yellow (stripe) rust"
+    }
+   ],
+   "crop_classes": {
+    "apple": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5
+    ],
+    "ash_gourd": [
+     6,
+     7,
+     8,
+     9
+    ],
+    "banana": [
+     10,
+     11,
+     12,
+     13,
+     14,
+     15,
+     16,
+     17,
+     18,
+     19,
+     20,
+     21,
+     22,
+     23,
+     24,
+     25
+    ],
+    "bean": [
+     26,
+     27,
+     28,
+     29,
+     30,
+     31
+    ],
+    "bell_pepper": [
+     32,
+     33,
+     34
+    ],
+    "betel": [
+     35,
+     36,
+     37,
+     38,
+     39,
+     40
+    ],
+    "bitter_gourd": [
+     41,
+     42,
+     43,
+     44
+    ],
+    "black_gram": [
+     45,
+     46,
+     47,
+     48,
+     49,
+     50,
+     51
+    ],
+    "blueberry": [
+     52
+    ],
+    "bottle_gourd": [
+     53,
+     54,
+     55,
+     56,
+     57
+    ],
+    "brinjal_eggplant": [
+     58,
+     59,
+     60,
+     61,
+     62,
+     63,
+     64,
+     65,
+     66,
+     67,
+     68
+    ],
+    "cabbage": [
+     69,
+     70,
+     71,
+     72
+    ],
+    "cashew": [
+     73,
+     74,
+     75,
+     76,
+     77
+    ],
+    "cauliflower": [
+     78,
+     79,
+     80,
+     81,
+     82,
+     83
+    ],
+    "cherry": [
+     84,
+     85,
+     86
+    ],
+    "chilli": [
+     87,
+     88,
+     89,
+     90,
+     91
+    ],
+    "citrus_orange": [
+     92,
+     93,
+     94,
+     95,
+     96,
+     97,
+     98,
+     99,
+     100,
+     101,
+     102,
+     103,
+     104,
+     105
+    ],
+    "coconut": [
+     106,
+     107,
+     108,
+     109,
+     110
+    ],
+    "coffee": [
+     111,
+     112,
+     113,
+     114,
+     115
+    ],
+    "corn_maize": [
+     116,
+     117,
+     118,
+     119,
+     120,
+     121,
+     122,
+     123,
+     124
+    ],
+    "cotton": [
+     125,
+     126,
+     127,
+     128,
+     129,
+     130,
+     131,
+     132,
+     133,
+     134
+    ],
+    "cowpea": [
+     135,
+     136,
+     137,
+     138
+    ],
+    "cucumber": [
+     139,
+     140,
+     141,
+     142,
+     143,
+     144,
+     145,
+     146,
+     147
+    ],
+    "custard_apple": [
+     148,
+     149,
+     150,
+     151,
+     152,
+     153
+    ],
+    "finger_millet_ragi": [
+     154,
+     155,
+     156,
+     157,
+     158
+    ],
+    "garlic": [
+     159,
+     160,
+     161
+    ],
+    "ginger": [
+     162,
+     163,
+     164
+    ],
+    "grape": [
+     165,
+     166,
+     167,
+     168,
+     169,
+     170,
+     171,
+     172
+    ],
+    "groundnut": [
+     173,
+     174,
+     175,
+     176,
+     177,
+     178
+    ],
+    "guava": [
+     179,
+     180,
+     181,
+     182,
+     183,
+     184,
+     185,
+     186,
+     187
+    ],
+    "jamun": [
+     188,
+     189,
+     190,
+     191,
+     192,
+     193
+    ],
+    "jute": [
+     194,
+     195,
+     196,
+     197,
+     198
+    ],
+    "lemon": [
+     199,
+     200,
+     201,
+     202,
+     203,
+     204,
+     205,
+     206,
+     207
+    ],
+    "lentil": [
+     208,
+     209,
+     210,
+     211
+    ],
+    "malabar_spinach": [
+     212,
+     213,
+     214
+    ],
+    "mango": [
+     215,
+     216,
+     217,
+     218,
+     219,
+     220,
+     221,
+     222
+    ],
+    "moringa": [
+     223,
+     224,
+     225,
+     226
+    ],
+    "okra": [
+     227,
+     228,
+     229,
+     230,
+     231,
+     232,
+     233
+    ],
+    "onion": [
+     234,
+     235,
+     236,
+     237,
+     238,
+     239,
+     240,
+     241,
+     242,
+     243
+    ],
+    "papaya": [
+     244,
+     245,
+     246,
+     247,
+     248,
+     249,
+     250,
+     251
+    ],
+    "peach": [
+     252,
+     253,
+     254,
+     255,
+     256
+    ],
+    "pomegranate": [
+     257,
+     258,
+     259,
+     260,
+     261,
+     262,
+     263
+    ],
+    "potato": [
+     264,
+     265,
+     266,
+     267,
+     268
+    ],
+    "pumpkin": [
+     269,
+     270,
+     271,
+     272,
+     273
+    ],
+    "radish": [
+     274,
+     275,
+     276,
+     277,
+     278
+    ],
+    "raspberry": [
+     279
+    ],
+    "rice": [
+     280,
+     281,
+     282,
+     283,
+     284,
+     285,
+     286,
+     287,
+     288,
+     289,
+     290,
+     291,
+     292
+    ],
+    "soybean": [
+     293,
+     294,
+     295,
+     296,
+     297,
+     298,
+     299,
+     300,
+     301,
+     302
+    ],
+    "spinach": [
+     303,
+     304,
+     305,
+     306,
+     307
+    ],
+    "squash": [
+     308,
+     309
+    ],
+    "strawberry": [
+     310,
+     311,
+     312
+    ],
+    "sugarcane": [
+     313,
+     314,
+     315,
+     316,
+     317,
+     318,
+     319,
+     320,
+     321,
+     322,
+     323,
+     324
+    ],
+    "sunflower": [
+     325,
+     326,
+     327,
+     328
+    ],
+    "tea": [
+     329,
+     330,
+     331,
+     332,
+     333,
+     334,
+     335,
+     336,
+     337,
+     338
+    ],
+    "tobacco": [
+     339,
+     340,
+     341
+    ],
+    "tomato": [
+     342,
+     343,
+     344,
+     345,
+     346,
+     347,
+     348,
+     349,
+     350,
+     351,
+     352,
+     353,
+     354,
+     355,
+     356,
+     357,
+     358,
+     359
+    ],
+    "turmeric": [
+     360,
+     361,
+     362,
+     363,
+     364,
+     365,
+     366
+    ],
+    "watermelon": [
+     367,
+     368,
+     369,
+     370
+    ],
+    "wheat": [
+     371,
+     372,
+     373,
+     374,
+     375,
+     376,
+     377,
+     378,
+     379,
+     380,
+     381,
+     382,
+     383,
+     384,
+     385,
+     386
+    ]
+   },
+   "size_mb": 58.6,
+   "sha256": "807cb6d4120d1f28757b3cc9b90386a3150204e031dbf6620804340bb8a43bf7",
+   "weight_bits": 4,
+   "quant_agreement": 1.0,
+   "cpu_ms_per_photo": 1353,
+   "scores": {
+    "clean_macro_f1": 0.902,
+    "crop_given_macro_f1": 0.923,
+    "field_macro_f1": 0.741
+   }
+  },
+  {
+   "id": "core",
+   "name": "Core model - 13 crops, 28 classes (hackathon)",
+   "file": "models/core.onnx",
+   "img_size": 224,
+   "mean": [
+    0.485,
+    0.456,
+    0.406
+   ],
+   "std": [
+    0.229,
+    0.224,
+    0.225
+   ],
+   "crop_pct": 0.9,
+   "labels": [
+    {
+     "crop": "apple",
+     "label": "Apple scab"
+    },
+    {
+     "crop": "apple",
+     "label": "Cedar apple rust"
+    },
+    {
+     "crop": "apple",
+     "label": "Healthy"
+    },
+    {
+     "crop": "blueberry",
+     "label": "Healthy"
+    },
+    {
+     "crop": "cherry",
+     "label": "Healthy"
+    },
+    {
+     "crop": "corn_maize",
+     "label": "Gray leaf spot"
+    },
+    {
+     "crop": "corn_maize",
+     "label": "Common rust"
+    },
+    {
+     "crop": "corn_maize",
+     "label": "Northern leaf blight"
+    },
+    {
+     "crop": "grape",
+     "label": "Black rot"
+    },
+    {
+     "crop": "grape",
+     "label": "Healthy"
+    },
+    {
+     "crop": "peach",
+     "label": "Healthy"
+    },
+    {
+     "crop": "bell_pepper",
+     "label": "Bacterial spot"
+    },
+    {
+     "crop": "bell_pepper",
+     "label": "Healthy"
+    },
+    {
+     "crop": "potato",
+     "label": "Early blight"
+    },
+    {
+     "crop": "potato",
+     "label": "Late blight"
+    },
+    {
+     "crop": "raspberry",
+     "label": "Healthy"
+    },
+    {
+     "crop": "soybean",
+     "label": "Healthy"
+    },
+    {
+     "crop": "squash",
+     "label": "Powdery mildew"
+    },
+    {
+     "crop": "strawberry",
+     "label": "Healthy"
+    },
+    {
+     "crop": "tomato",
+     "label": "Bacterial spot"
+    },
+    {
+     "crop": "tomato",
+     "label": "Early blight"
+    },
+    {
+     "crop": "tomato",
+     "label": "Late blight"
+    },
+    {
+     "crop": "tomato",
+     "label": "Leaf mold"
+    },
+    {
+     "crop": "tomato",
+     "label": "Septoria leaf spot"
+    },
+    {
+     "crop": "tomato",
+     "label": "Spider mites (pest)"
+    },
+    {
+     "crop": "tomato",
+     "label": "Yellow leaf curl virus"
+    },
+    {
+     "crop": "tomato",
+     "label": "Mosaic virus"
+    },
+    {
+     "crop": "tomato",
+     "label": "Healthy"
+    }
+   ],
+   "crop_classes": {
+    "apple": [
+     0,
+     1,
+     2
+    ],
+    "blueberry": [
+     3
+    ],
+    "cherry": [
+     4
+    ],
+    "corn_maize": [
+     5,
+     6,
+     7
+    ],
+    "grape": [
+     8,
+     9
+    ],
+    "peach": [
+     10
+    ],
+    "bell_pepper": [
+     11,
+     12
+    ],
+    "potato": [
+     13,
+     14
+    ],
+    "raspberry": [
+     15
+    ],
+    "soybean": [
+     16
+    ],
+    "squash": [
+     17
+    ],
+    "strawberry": [
+     18
+    ],
+    "tomato": [
+     19,
+     20,
+     21,
+     22,
+     23,
+     24,
+     25,
+     26,
+     27
+    ]
+   },
+   "size_mb": 25.7,
+   "sha256": "950a80eeac7982be5cd9965645f91aa8f78617455143996fe64cf5b98db78bdb",
+   "weight_bits": 8,
+   "quant_agreement": 0.9857,
+   "cpu_ms_per_photo": 614
+  }
+ ]
+}

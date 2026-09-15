@@ -12,7 +12,7 @@
 | **Baseline** | Organizers' baseline: published at kickoff (pending). Reference: a PlantVillage-only ResNet-50 scores 0.285 macro-F1 on PlantDoc (21 classes, PMC13236948). Our own lab-only smoke test scored 0.390 on 4 classes. |
 | **Limitations** | (1) PlantDoc chose the checkpoint; the last epoch won, so the bias is small, but 0.714 is slightly optimistic. (2) Small-spot tomato diseases (bacterial spot ↔ septoria) and potato early ↔ late blight are often confused; corn northern leaf blight is often called gray leaf spot. (3) Tomato spider mites has only 2 PlantDoc photos, so its F1 (0.0) means nothing. (4) PlantDoc contains label noise (e.g. a raspberry leaf labelled soybean) and watermarked stock photos. (5) The model always picks one of 28 classes and cannot say "not a leaf". (6) Photos of a phone screen add glare and moiré. |
 
-![Field confusion matrix](figures/confusion_field.png)
+![Field confusion matrix](../confusion_matrix/core_v2/confusion_field.png)
 
 ![Training curves](figures/training_curves.png)
 
